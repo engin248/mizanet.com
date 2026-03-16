@@ -2,23 +2,22 @@ import { NextResponse } from 'next/server';
 
 // go2rtc stream sunucu sağlık kontrolü
 export const dynamic = 'force-dynamic';
-export const maxDuration = 5; // Vercel Serverless: max 5s — 503 önlemi
+export const maxDuration = 5;
 
 export async function GET() {
     const go2rtcUrl = process.env.NEXT_PUBLIC_GO2RTC_URL || process.env.GO2RTC_URL || 'http://localhost:1984';
 
-    // Vercel/production ortamında go2rtc lokal servis — 200 ile kapali döndür
-    // ÖNEMLİ: 503 yerine 200 kullanılıyor — tarayıcı konsol hatası önleniyor
-    if (process.env.VERCEL === '1' || process.env.VERCEL_URL) {
+    // Eğer URL localhost ise (production sunucusunda go2rtc yoktur) — 200 ile kapali döndür
+    // NOT: 503 değil 200 kullanılıyor — tarayıcı konsol kırmızı hatası önleniyor
+    const isLocalhost = go2rtcUrl.includes('localhost') || go2rtcUrl.includes('127.0.0.1');
+    if (isLocalhost && (process.env.VERCEL || process.env.VERCEL_URL || process.env.NODE_ENV === 'production')) {
         return NextResponse.json({
             durum: 'kapali',
             url: go2rtcUrl,
-            mesaj: 'go2rtc Vercel ortamında çalışmaz — yerel sunucu gerekli',
+            mesaj: 'go2rtc production ortamında çalışmaz — yerel NVR/sunucu gerekli',
         }, {
             status: 200,
-            headers: {
-                'Cache-Control': 'public, max-age=300',  // 5 dakika cache — gereksiz istekleri azaltır
-            }
+            headers: { 'Cache-Control': 'public, max-age=300' }
         });
     }
 
@@ -46,13 +45,15 @@ export async function GET() {
             });
         }
 
-        return NextResponse.json({ durum: 'hata', url: go2rtcUrl, mesaj: `HTTP ${res.status}` });
+        // HTTP hata — ama 503 döndürme, 200 ile hata durumunu bildir
+        return NextResponse.json({ durum: 'hata', url: go2rtcUrl, mesaj: `HTTP ${res.status}` }, { status: 200 });
 
     } catch {
+        // Bağlantı hatası — 200 döndür, durum 'kapali' yap
         return NextResponse.json({
             durum: 'kapali',
             url: go2rtcUrl,
-            mesaj: 'fetch failed',
-        });
+            mesaj: 'NVR sunucusuna bağlanılamadı',
+        }, { status: 200 });
     }
 }
