@@ -59,6 +59,7 @@ export default function ArgeSayfasi() {
     const [filtre, setFiltre] = useState('tumu');
     const [secilenTrend, setSecilenTrend] = useState(null);
     const [agentLoglari, setAgentLoglari] = useState(/** @type {any[]} */([]));
+    const [hermaiKararlari, setHermaiKararlari] = useState(/** @type {any[]} */([])); // EKLENDİ (HermAI)
     const [duzenleId, setDuzenleId] = useState(null);
     // Zamansal Doğrulama
     const [yenidenAraniyor, setYenidenAraniyor] = useState(null);
@@ -135,13 +136,15 @@ export default function ArgeSayfasi() {
             // K Kriteri Onarımı: Promise.allSettled kullanılarak n+1 ağ darboğazı ve çökme engeli getirildi.
             // 🔴 YENİ KÖR NOKTA (Query Boyutu): LIMIT değeri, İstatistik Grafikleri ve Geçmiş Trend analizi için yeterli veri havuzuna ihtiyaç duyar.
             // Bu nedenle LIMIT 200 optimumdur. Ancak "SELECT" daraltıldığı için (base64 resimler ve uzun yazılar hariç tutuldu) 200 adet verinin inmesi 50 adet veriyle aynı hıza ve %90 daha düşük milisaniyeye indirgenmiştir.
-            const [trendlerRes, loglarRes] = await Promise.allSettled([
+            const [trendlerRes, loglarRes, hermKararRes] = await Promise.allSettled([
                 supabase.from('b1_arge_trendler').select('id, baslik, baslik_ar, platform, kategori, hedef_kitle, talep_skoru, zorluk_derecesi, durum, created_at, referans_linkler').order('created_at', { ascending: false }).limit(200),
-                supabase.from('b1_agent_loglari').select('id, ajan_adi, islem_tipi, mesaj, created_at, sonuc').eq('ajan_adi', 'Trend Kâşifi').order('created_at', { ascending: false }).limit(5)
+                supabase.from('b1_agent_loglari').select('id, ajan_adi, islem_tipi, mesaj, created_at, sonuc').eq('ajan_adi', 'Trend Kâşifi').order('created_at', { ascending: false }).limit(5),
+                supabase.from('b0_herm_ai_kararlar').select('id, model_referans_id, karar, guven_skoru, ajan_tavsiyesi, created_at').order('created_at', { ascending: false }).limit(20) // EKLENDİ
             ]);
 
             if (trendlerRes.status === 'fulfilled' && trendlerRes.value.data) setTrendler(trendlerRes.value.data);
             if (loglarRes.status === 'fulfilled' && loglarRes.value.data) setAgentLoglari(loglarRes.value.data);
+            if (hermKararRes.status === 'fulfilled' && hermKararRes.value.data) setHermaiKararlari(hermKararRes.value.data); // EKLENDİ
 
             if (trendlerRes.status === 'rejected') throw trendlerRes.reason;
         } catch (error) {
@@ -799,6 +802,51 @@ export default function ArgeSayfasi() {
                         <button onClick={() => setAiPanelAcik(false)} style={{ marginTop: 8, fontSize: '0.72rem', color: '#64748b', background: 'none', border: 'none', cursor: 'pointer' }}>Sonuçları Kapat</button>
                     </div>
                 )}
+
+                {/* ── 🤖 YENİ: HERMAI GÜNLÜKLERİ PANELI (Toggle) ──────────────────────── */}
+                <div style={{ marginTop: '2rem', marginBottom: '1rem' }}>
+                    <button
+                        onClick={() => setDuzenleId(duzenleId === 'hermai_gunlugu' ? null : 'hermai_gunlugu')}
+                        style={{ display: 'flex', alignItems: 'center', gap: '8px', background: 'transparent', border: '1px solid #cbd5e1', color: '#475569', padding: '8px 16px', borderRadius: '8px', fontWeight: 600, fontSize: '0.8rem', cursor: 'pointer', transition: 'all 0.2s' }}
+                    >
+                        <Network size={16} />
+                        {duzenleId === 'hermai_gunlugu' ? 'HermAI Günlüklerini Gizle' : 'HermAI Günlüklerini Göster'}
+                        <ChevronDown size={16} style={{ transform: duzenleId === 'hermai_gunlugu' ? 'rotate(180deg)' : 'none', transition: '0.3s' }} />
+                    </button>
+
+                    {duzenleId === 'hermai_gunlugu' && (
+                        <div style={{ marginTop: '1rem', background: 'white', borderRadius: '16px', border: '1px solid #e2e8f0', overflow: 'hidden', boxShadow: '0 10px 25px -5px rgba(0,0,0,0.05)' }}>
+                            <div style={{ padding: '1rem 1.5rem', background: '#f8fafc', borderBottom: '1px solid #e2e8f0', display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                <Bot size={20} color="#047857" />
+                                <h3 style={{ margin: 0, fontSize: '0.95rem', fontWeight: 800, color: '#0f172a' }}>HermAI Otonom Karar Günlüğü</h3>
+                            </div>
+                            <div style={{ padding: '1rem', maxHeight: '400px', overflowY: 'auto' }}>
+                                {/* b0_herm_ai_kararlar tablosundan readonly veri çekilecek */}
+                                {hermaiKararlari.length > 0 ? (
+                                    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                                        {hermaiKararlari.map((karar, index) => (
+                                            <div key={index} style={{ padding: '12px', background: karar.karar === 'RED' ? '#fef2f2' : (karar.karar === 'ONAY' ? '#ecfdf5' : '#f8fafc'), borderLeft: `4px solid ${karar.karar === 'RED' ? '#ef4444' : (karar.karar === 'ONAY' ? '#10b981' : '#f59e0b')}`, borderRadius: '8px' }}>
+                                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
+                                                    <span style={{ fontWeight: 800, fontSize: '0.8rem', color: karar.karar === 'RED' ? '#991b1b' : (karar.karar === 'ONAY' ? '#065f46' : '#92400e') }}>
+                                                        {karar.karar === 'RED' ? '❌ İPTAL/BLOKAJ' : (karar.karar === 'ONAY' ? '✅ UYGUN' : '⚠️ İNCELEME')}
+                                                    </span>
+                                                    <span style={{ fontSize: '0.7rem', color: '#64748b' }}>{formatTarih(karar.created_at)}</span>
+                                                </div>
+                                                <div style={{ fontSize: '0.8rem', color: '#334155' }}>{karar.ajan_tavsiyesi}</div>
+                                                <div style={{ marginTop: '8px', fontSize: '0.7rem', color: '#475569', fontWeight: 600 }}>Güven Skoru: {karar.guven_skoru}/10</div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                ) : (
+                                    <div style={{ textAlign: 'center', padding: '2rem', color: '#64748b', fontSize: '0.85rem' }}>
+                                        <Database size={32} style={{ opacity: 0.3, margin: '0 auto 10px' }} />
+                                        <span>Şu an kaydedilmiş sistem hafızası veya HermAI engellemesi bulunmuyor.</span>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    )}
+                </div>
 
                 {/* YENİ TREND FORMU */}
 

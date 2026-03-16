@@ -153,7 +153,7 @@ export default function ImalatMainContainer() {
                 model_adi: yeniFoy.model_name.trim(),
                 iscilik_suresi: 60, // Teknik görüşteki temel veri
                 numune_maliyeti: parseFloat(yeniFoy.maliyet_siniri_tl),
-                notlar: `Kumaş: ${yeniFoy.zorunlu_kumas_miktari_mt}mt, Esneme: %${yeniFoy.esneme_payi_yuzde}. URL: ${yeniFoy.orjinal_gorsel_url}`
+                aciklama: `Kumaş: ${yeniFoy.zorunlu_kumas_miktari_mt}mt, Esneme: %${yeniFoy.esneme_payi_yuzde}. URL: ${yeniFoy.orjinal_gorsel_url}`
             }]);
 
             if (!error) {

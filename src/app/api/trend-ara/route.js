@@ -1,22 +1,26 @@
 import { NextResponse } from 'next/server';
+import { Ratelimit } from '@upstash/ratelimit';
+import { Redis } from '@upstash/redis';
 
-const istekSayaci = new Map();
-function rateLimitKontrol(ip) {
-    const simdi = Date.now();
-    const kayit = istekSayaci.get(ip) || { sayi: 0, baslangic: simdi };
-    if (simdi - kayit.baslangic > 60 * 1000) {
-        istekSayaci.set(ip, { sayi: 1, baslangic: simdi });
-        return true;
-    }
-    if (kayit.sayi >= 30) return false;
-    istekSayaci.set(ip, { ...kayit, sayi: kayit.sayi + 1 });
-    return true;
-}
+// IP tabanlı kalıcı rate limit (Dakikada maksimum 5 istek / Burst Rate)
+const ratelimit = new Ratelimit({
+    redis: Redis.fromEnv(),
+    limiter: Ratelimit.slidingWindow(5, '1 m'),
+    analytics: true,
+});
 
 export async function POST(request) {
-    const ip = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown';
-    if (!rateLimitKontrol(ip)) {
-        return NextResponse.json({ error: 'Çok fazla istek. 1 dakika bekleyin.' }, { status: 429 });
+    const ip = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || '127.0.0.1';
+
+    // Güvenlik Kalkanı (Perplexity Spam & Bütçe Kalkanı)
+    try {
+        const { success } = await ratelimit.limit(`trend-ara_${ip}`);
+        if (!success) {
+            return NextResponse.json({ error: 'Çok fazla istek. Sistem bütçe korumasına geçti, 1 dakika bekleyin.' }, { status: 429 });
+        }
+    } catch (error) {
+        // Redis bağlanamazsa işlemi kesme, logla ve devam et (Fallback)
+        console.warn('Upstash Rate Limiter Hatası (Fallback Devrede):', error.message);
     }
 
     const { sorgu } = await request.json();

@@ -95,6 +95,21 @@ export default function M1_TrendSonucKarti({ sonuc, onKaydet, isAR }) {
                         💰 <strong>Fiyat:</strong> {sonuc.fiyat_araligi}
                     </div>
                 )}
+                {sonuc.hedef_musteri && (
+                    <div style={{ marginBottom: 6 }}>
+                        🎯 <strong>Hedef Kitle:</strong> {sonuc.hedef_musteri}
+                    </div>
+                )}
+                {sonuc.pazar_uyumu && (
+                    <div style={{ marginBottom: 6, color: '#3b82f6' }}>
+                        🌍 <strong>Pazar Uyumu:</strong> {sonuc.pazar_uyumu}
+                    </div>
+                )}
+                {sonuc.kategori && (
+                    <div style={{ marginBottom: 6, color: '#8b5cf6', textTransform: 'capitalize' }}>
+                        🏷️ <strong>Kategori:</strong> {sonuc.kategori}
+                    </div>
+                )}
                 {sonuc.risk_seviyesi && (
                     <div style={{ marginBottom: 6, color: sonuc.risk_seviyesi === 'Yüksek' ? '#ef4444' : '#f59e0b' }}>
                         ⚠️ <strong>Risk:</strong> {sonuc.risk_seviyesi}
