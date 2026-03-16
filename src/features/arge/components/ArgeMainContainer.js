@@ -716,13 +716,13 @@ export default function ArgeSayfasi() {
                 {/* AI SONUÇLARI */}
                 {aiSonuclar && aiPanelAcik && (
                     <div style={{ marginTop: '1rem' }}>
-                        {/** @type {any} */ (aiSonuclar).ozet && (
+                        {/** @type {any} */(aiSonuclar).ozet && (
                             <div style={{ background: '#1e293b', borderRadius: 10, padding: '0.75rem 1rem', marginBottom: '0.75rem', color: '#cbd5e1', fontSize: '0.82rem', lineHeight: 1.6, borderLeft: '3px solid #059669' }}>
-                                💡 {/** @type {any} */ (aiSonuclar).ozet}
+                                💡 {/** @type {any} */(aiSonuclar).ozet}
                             </div>
                         )}
                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(320px,1fr))', gap: '1rem' }}>
-                            {(/** @type {any} */ (aiSonuclar).sonuclar || []).map((/** @type {any} */ s, /** @type {any} */ i) => (
+                            {(/** @type {any} */(aiSonuclar).sonuclar || []).map((/** @type {any} */ s, /** @type {any} */ i) => (
                                 <M1_TrendSonucKarti
                                     key={i}
                                     sonuc={s}
