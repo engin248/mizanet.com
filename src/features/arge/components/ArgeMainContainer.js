@@ -260,6 +260,30 @@ export default function ArgeSayfasi() {
             return goster(isAR ? 'رابط المرجع طويل جداً!' : 'Referans link 500 karakteri geçemez!', 'error');
         }
 
+        // 🧬 SİSTEM HAFIZASI GERİ BİLDİRİM KONTROLÜ (Yeni — HermAI Kalkan)
+        // Form submit ÖNCE geçmiş başarısız/zarar eden kayıtlarla benzerlik tara
+        try {
+            const hafizaKontrol = await fetch('/api/rapor/sistem-hafizasi', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ baslik: form.baslik.trim(), kategori: form.kategori, hedef_kitle: form.hedef_kitle }),
+            }).then(r => r.json());
+
+            if (hafizaKontrol.engel) {
+                // %90+ benzerlik → TAM ENGEL
+                return goster(`🚫 SİSTEM HAFIZASI ENGELLEDİ: ${hafizaKontrol.mesaj}`, 'error');
+            }
+            if (hafizaKontrol.uyari) {
+                // %60-90 benzerlik → Uyarı (ama devam edebilir)
+                goster(`⚠️ Sistem Hafızası Uyarısı: ${hafizaKontrol.mesaj}`, 'error');
+                // 2 saniye bekle — kullanıcı görsün, sonra devam et
+                await new Promise(r => setTimeout(r, 2000));
+            }
+        } catch {
+            // API çağrısı başarısız olsa bile kaydetme işlemi engellenmez
+        }
+
+
         // U Kriteri Onarımı (Mükerrer Link Kontrolü)
         if (form.referans_link && form.referans_link.trim().length > 0) {
             const { data: linkMevcut } = await supabase.from('b1_arge_trendler').select('id').contains('referans_linkler', [form.referans_link.trim()]);

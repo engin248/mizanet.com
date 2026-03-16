@@ -56,6 +56,8 @@ export const ERISIM_MATRISI = {
     '/gorevler': { tam: 'full', uretim: 'full', genel: 'read' },
     '/kameralar': { tam: 'full', uretim: 'full', genel: 'read' },
     '/tasarim': { tam: 'full', uretim: null, genel: null },
+    '/haberlesme': { tam: 'full', uretim: 'full', genel: 'read' },  // YENİ: Haberleşme modülü erişim tanımı eklendi
+    '/arge_test_paneli': { tam: 'full', uretim: null, genel: null }, // YENİ: Test paneli sadece koordinatöre açık (güvenlik açığı kapatıldı)
 };
 
 // ─── AUTH CONTEXT ─────────────────────────────────────────────

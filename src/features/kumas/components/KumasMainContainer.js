@@ -332,6 +332,22 @@ export default function KumasArsiviSayfasi() {
         );
     }
 
+    // ─── ATİL SERMAYE UYARISI (180+ gün hareketsiz kumaş) ─────
+    const [atilSermayeUyari, setAtilSermayeUyari] = useState(/** @type {any} */(null));
+
+    useEffect(() => {
+        fetch('/api/rapor/atil-sermaye?esik_gun=180')
+            .then(r => r.json())
+            .then(d => {
+                if (d.basarili && d.ozet.tahmini_bagli_sermaye_tl > 0) {
+                    setAtilSermayeUyari(d.ozet);
+                }
+            })
+            .catch(() => { });
+    }, []);
+
+    // ─────────────────────────────────────────────────────────
+
     return (
         <div dir={isAR ? 'rtl' : 'ltr'}>
             {/* BAŞLIK */}
@@ -363,7 +379,42 @@ export default function KumasArsiviSayfasi() {
                 </div>
             </div>
 
+            {/* 💤 ATİL SERMAYE UYARI BARI */}
+            {atilSermayeUyari && (
+                <div style={{
+                    background: 'linear-gradient(135deg, #fff7ed, #ffedd5)',
+                    border: '2px solid #f97316',
+                    borderRadius: 12,
+                    padding: '12px 20px',
+                    marginBottom: '1rem',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 12,
+                    justifyContent: 'space-between',
+                }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                        <span style={{ fontSize: 24 }}>💤</span>
+                        <div>
+                            <div style={{ fontWeight: 800, color: '#c2410c', fontSize: '0.9rem' }}>
+                                ATİL SERMAYE TESPİT EDİLDİ — {atilSermayeUyari.toplam_atil_kayit} hareketsiz kayıt
+                            </div>
+                            <div style={{ fontSize: '0.78rem', color: '#9a3412', fontWeight: 600 }}>
+                                {atilSermayeUyari.atil_kumas_sayisi} kumaş + {atilSermayeUyari.atil_stok_sayisi} stok.
+                                Tahmini bağlı sermaye: <strong>₺{atilSermayeUyari.tahmini_bagli_sermaye_tl.toLocaleString('tr-TR')}</strong>
+                                {atilSermayeUyari.kritik_kayit > 0 && ` — ${atilSermayeUyari.kritik_kayit} kritik (1 yılı aşkın)`}
+                            </div>
+                        </div>
+                    </div>
+                    <button
+                        onClick={() => window.open('/api/rapor/atil-sermaye', '_blank')}
+                        style={{ background: '#f97316', color: 'white', border: 'none', borderRadius: 8, padding: '6px 14px', fontWeight: 800, cursor: 'pointer', fontSize: '0.78rem', whiteSpace: 'nowrap' }}>
+                        Raporu Gör
+                    </button>
+                </div>
+            )}
+
             {/* İSTATİSTİK KARTLARI */}
+
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
                 {[
                     { label: 'Toplam Kumaş', val: kumaslar.length, color: 'text-emerald-600', bg: 'bg-emerald-50', border: 'border-emerald-200' },

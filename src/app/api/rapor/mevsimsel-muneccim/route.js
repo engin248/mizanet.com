@@ -48,12 +48,12 @@ export async function GET(req) {
                 yil,
                 ay: hedefAy,
                 trend_sayisi: (trendler || []).length,
-                ortalama_talep_skoru: trendler?.length > 0
-                    ? parseFloat((trendler.reduce((s, t) => s + (t.talep_skoru || 0), 0) / trendler.length).toFixed(1))
+                ortalama_talep_skoru: (trendler || []).length > 0
+                    ? parseFloat(((trendler || []).reduce((s, t) => s + (t.talep_skoru || 0), 0) / (trendler || []).length).toFixed(1))
                     : 0,
                 siparis_adedi: (siparisler || []).length,
                 siparis_ciro: parseFloat(siparisToplam.toFixed(2)),
-                en_cok_talep: trendler?.sort((a, b) => (b.talep_skoru || 0) - (a.talep_skoru || 0))[0]?.baslik || null,
+                en_cok_talep: (trendler || []).sort((a, b) => (b.talep_skoru || 0) - (a.talep_skoru || 0))[0]?.baslik || null,
             });
         }
 

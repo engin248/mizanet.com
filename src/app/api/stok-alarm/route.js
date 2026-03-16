@@ -10,9 +10,9 @@ export async function GET(request) {
         // Kritik stok altındakileri bul
         const { data: kritikUrunler, error } = await supabase
             .from('b2_urun_katalogu')
-            .select('id, urun_adi, urun_kodu, stok_adedi, kategori')
-            .lt('stok_adedi', STOK_ESIGI)
-            .order('stok_adedi', { ascending: true })
+            .select('id, urun_adi, urun_kodu, stok_adeti')
+            .lt('stok_adeti', STOK_ESIGI)
+            .order('stok_adeti', { ascending: true })
             .limit(50);
 
         if (error) throw error;
@@ -36,9 +36,9 @@ export async function POST(request) {
         // Kritik stok altındakileri bul
         const { data: kritikUrunler, error } = await supabase
             .from('b2_urun_katalogu')
-            .select('id, urun_adi, urun_kodu, stok_adedi, kategori')
-            .lt('stok_adedi', STOK_ESIGI)
-            .order('stok_adedi', { ascending: true })
+            .select('id, urun_adi, urun_kodu, stok_adeti')
+            .lt('stok_adeti', STOK_ESIGI)
+            .order('stok_adeti', { ascending: true })
             .limit(20);
 
         if (error) throw error;
@@ -49,7 +49,7 @@ export async function POST(request) {
 
         // Telegram mesajı oluştur
         const satirlar = kritikUrunler.map(u =>
-            `  • ${u.urun_adi} (${u.urun_kodu || '—'}): ${u.stok_adedi} adet`
+            `  • ${u.urun_adi} (${u.urun_kodu || '—'}): ${u.stok_adeti} adet`
         ).join('\n');
 
         const mesaj = `⚠️ KRİTİK STOK UYARISI\n${new Date().toLocaleString('tr-TR')}\n\n${kritikUrunler.length} ürün kritik stok altında:\n${satirlar}\n\n📦 Hemen tedarik başlatın!`;
@@ -76,13 +76,14 @@ export async function POST(request) {
             telegramOk = tRes?.ok || false;
         }
 
-        // Log yaz
-        await supabase.from('b0_sistem_loglari').insert([{
-            tablo_adi: 'b2_urun_katalogu',
-            islem_tipi: 'STOK_ALARM',
-            kullanici_adi: 'sistem',
-            eski_veri: { kritik_urun_sayisi: kritikUrunler.length, manuel, telegram: telegramOk },
-        }]).catch(() => null);
+        try {
+            await supabase.from('b0_sistem_loglari').insert([{
+                tablo_adi: 'b2_urun_katalogu',
+                islem_tipi: 'STOK_ALARM',
+                kullanici_adi: 'sistem',
+                eski_veri: { kritik_urun_sayisi: kritikUrunler.length, manuel, telegram: telegramOk },
+            }]);
+        } catch (logHata) { /* log hatası sistemi durdurmasın */ }
 
         return NextResponse.json({
             kritik: kritikUrunler,
