@@ -60,7 +60,7 @@ const sentryOptions = {
     hideSourceMaps: true,
     disableLogger: true,
     automaticVercelMonitors: true,
-    tunnelRoute: '/monitoring',
+    tunnelRoute: '/api/sys-health',
 };
 
 // Sentry'nin dev ortamında Webpack JS/CSS chunklarını bozmasını (500 ERR_ABORTED) engellemek için
