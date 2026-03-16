@@ -135,10 +135,10 @@ export async function middleware(request) {
             '/api/kumas-ekle',
             '/api/personel-ekle',
             '/api/stok-alarm',
-            // ─── GÜVENLİK YAMASI: Daha önce korumasız olan 8 rota eklendi ───
+            // ─── GÜVENLİK YAMASI: Daha önce korumasız olan rotalar ───
             '/api/veri-getir',
             '/api/trend-ara',
-            '/api/stream-durum',
+            // '/api/stream-durum' → [FIX] KALDIRILDI: Public sağlık endpoint'i, JWT gerektirmemeli
             '/api/telegram-foto',
             '/api/model-hafizasi',
             '/api/kur',
