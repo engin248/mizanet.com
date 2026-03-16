@@ -105,9 +105,8 @@ export function KarargahMainContainer() {
         return () => { clearInterval(iv); document.removeEventListener('visibilitychange', handleVisibility); };
     }, []);
 
-    const gun45Once = new Date(Date.now() - 45 * 24 * 60 * 60 * 1000).toISOString();
-
     const mesajlariGetir = useCallback(async () => {
+        const gun45Once = new Date(Date.now() - 45 * 24 * 60 * 60 * 1000).toISOString();
         try {
             const { count } = await supabase.from('b1_ic_mesajlar').select('id', { count: 'exact', head: true }).is('okundu_at', null);
             setMesajSayisi(count || 0);
@@ -119,7 +118,7 @@ export function KarargahMainContainer() {
             const { data: model } = await supabase.from('b1_ic_mesajlar').select('id, konu, oncelik, urun_id, urun_kodu, urun_adi, gonderen_adi, created_at, okundu_at').not('urun_id', 'is', null).order('created_at', { ascending: false }).limit(50);
             setModelArsiv(model || []);
         } catch { /* sessiz */ }
-    }, [gun45Once]);
+    }, []);
 
     useEffect(() => { mesajlariGetir(); }, [mesajlariGetir]);
 
