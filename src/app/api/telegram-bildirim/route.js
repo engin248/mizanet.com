@@ -114,8 +114,11 @@ export async function POST(request) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ chat_id: TELEGRAM_CHAT_ID, text: mesaj, parse_mode: 'HTML' })
         });
-        const data = await res.json();
-        return NextResponse.json({ success: data.ok, data });
+
+        let veri = {};
+        try { veri = await res.json(); } catch { /* ignore */ }
+
+        return NextResponse.json({ success: res.ok, data: veri }, { status: res.ok ? 200 : 500 });
 
     } catch (error) {
         return NextResponse.json({ success: false, error: error.message }, { status: 500 });

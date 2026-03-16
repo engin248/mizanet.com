@@ -77,29 +77,30 @@ export function useKarargah() {
             // Bugünkü maliyetler
             const { data: maliyetData } = await supabase
                 .from('b1_maliyet_kayitlari')
-                .select('tutar_tl, maliyet_tipi')
+                .select('tutar_tl, kalem_turu')
                 .gte('created_at', bugunISO);
 
             const maliyet = (maliyetData || [])
                 .reduce((t, m) => t + parseFloat(m.tutar_tl || 0), 0);
 
             const personel = (maliyetData || [])
-                .filter(m => m.maliyet_tipi === 'personel_iscilik')
+                .filter(m => m.kalem_turu === 'personel_iscilik')
                 .reduce((t, m) => t + parseFloat(m.tutar_tl || 0), 0);
 
             // Aktif sistem uyarıları
             const { data: alarmData } = await supabase
                 .from('b1_sistem_uyarilari')
-                .select('id, baslik, mesaj, seviye')
+                .select('id, uyari_tipi, tahmini_zarar_tl, kok_neden, olusturulma_tarihi')
                 .eq('durum', 'aktif')
+                .order('olusturulma_tarihi', { ascending: false })
                 .limit(10);
 
             const alarmlar = (alarmData || []).map(a => ({
                 id: a.id,
-                text: a.baslik || a.mesaj || 'Uyarı',
-                tip: a.seviye === 'kritik' ? 'kirmizi' : 'sari',
-                zarar: 0,
-                neden: a.mesaj || 'Analiz bekleniyor.'
+                text: a.uyari_tipi || 'Sistem Uyarısı',
+                tip: 'kirmizi',
+                zarar: parseFloat(a.tahmini_zarar_tl || 0),
+                neden: a.kok_neden || 'Analiz bekleniyor.'
             }));
 
             setPing(Math.round(performance.now() - t0));
