@@ -52,7 +52,7 @@ const nextConfig = {
     reactStrictMode: true,
 };
 
-export default withSentryConfig(nextConfig, {
+const sentryOptions = {
     org: process.env.SENTRY_ORG, // Vercel environment variable
     project: process.env.SENTRY_PROJECT, // Vercel environment variable
     silent: true,
@@ -61,4 +61,8 @@ export default withSentryConfig(nextConfig, {
     disableLogger: true,
     automaticVercelMonitors: true,
     tunnelRoute: '/monitoring',
-});
+};
+
+// Sentry'nin dev ortamında Webpack JS/CSS chunklarını bozmasını (500 ERR_ABORTED) engellemek için
+// köklü çözüm olarak Sentry wrapper'ını dev ortamında iptal ediyoruz.
+export default process.env.NODE_ENV === 'development' ? nextConfig : withSentryConfig(nextConfig, sentryOptions);

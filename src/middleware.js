@@ -76,168 +76,178 @@ export async function middleware(request) {
     const ip = request.headers.get('x-forwarded-for')?.split(',')[0].trim() || 'bilinmeyen';
     const userAgent = (request.headers.get('user-agent') || '').toLowerCase();
 
-    // ─── DEV MODE: Tüm kısıtlamaları kaldır ──────────────────
-    if (process.env.NODE_ENV === 'development') {
-        const response = NextResponse.next();
-        response.headers.set('X-Powered-By', 'THE ORDER / NIZAM v2 [DEV]');
-        return response;
-    }
+    // -- HATA İZLEME (500)
+    console.log('[MIDDLEWARE TETİKLENDİ]', url);
 
-    // ─── 1. BOT/CRAWLER TESPİTİ ───────────────────────────────
-    if (url.startsWith('/api/')) {
-        const botTespitEdildi = BOT_IMZALARI.some(imza => userAgent.includes(imza));
-        if (botTespitEdildi) {
-            return new NextResponse(
-                JSON.stringify({ hata: 'Bot erişimi engellendi.' }),
-                { status: 403, headers: { 'Content-Type': 'application/json' } }
-            );
+    try {
+
+        // ─── DEV MODE: Tüm kısıtlamaları kaldır ──────────────────
+        if (process.env.NODE_ENV === 'development') {
+            const response = NextResponse.next();
+            response.headers.set('X-Powered-By', 'THE ORDER / NIZAM v2 [DEV]');
+            return response;
         }
 
-        // ─── 1.5 API RATE LIMITING (In-Memory) ───────────────────
-        // Her IP için dakikada maksimum 60 istek (brute-force / spam koruması)
-        const simdi = Date.now();
-        const pencere = 60 * 1000; // 1 dakika
-        const maxIstek = 60;
-        const kayit = RATE_LIMIT_BELLEK.get(ip);
+        // ─── 1. BOT/CRAWLER TESPİTİ ───────────────────────────────
+        if (url.startsWith('/api/')) {
+            const botTespitEdildi = BOT_IMZALARI.some(imza => userAgent.includes(imza));
+            if (botTespitEdildi) {
+                return new NextResponse(
+                    JSON.stringify({ hata: 'Bot erişimi engellendi.' }),
+                    { status: 403, headers: { 'Content-Type': 'application/json' } }
+                );
+            }
 
-        if (kayit) {
-            // Pencere süresi geçtiyse sıfırla
-            if (simdi - kayit.baslangic > pencere) {
-                RATE_LIMIT_BELLEK.set(ip, { sayi: 1, baslangic: simdi });
+            // ─── 1.5 API RATE LIMITING (In-Memory) ───────────────────
+            // Her IP için dakikada maksimum 60 istek (brute-force / spam koruması)
+            const simdi = Date.now();
+            const pencere = 60 * 1000; // 1 dakika
+            const maxIstek = 60;
+            const kayit = RATE_LIMIT_BELLEK.get(ip);
+
+            if (kayit) {
+                // Pencere süresi geçtiyse sıfırla
+                if (simdi - kayit.baslangic > pencere) {
+                    RATE_LIMIT_BELLEK.set(ip, { sayi: 1, baslangic: simdi });
+                } else {
+                    kayit.sayi += 1;
+                    if (kayit.sayi > maxIstek) {
+                        return new NextResponse(
+                            JSON.stringify({ hata: 'Çok fazla istek. 1 dakika bekleyin.', kalanSaniye: Math.ceil((pencere - (simdi - kayit.baslangic)) / 1000) }),
+                            { status: 429, headers: { 'Content-Type': 'application/json', 'Retry-After': '60' } }
+                        );
+                    }
+                }
             } else {
-                kayit.sayi += 1;
-                if (kayit.sayi > maxIstek) {
-                    return new NextResponse(
-                        JSON.stringify({ hata: 'Çok fazla istek. 1 dakika bekleyin.', kalanSaniye: Math.ceil((pencere - (simdi - kayit.baslangic)) / 1000) }),
-                        { status: 429, headers: { 'Content-Type': 'application/json', 'Retry-After': '60' } }
+                RATE_LIMIT_BELLEK.set(ip, { sayi: 1, baslangic: simdi });
+            }
+        }
+
+        // ─── 2. KORUNAN API ROUTE'LAR — JWT Zorunlu ───────────────
+        const korunanApiRotalar = [
+            '/api/ajan-calistir',
+            '/api/ajan-tetikle',
+            '/api/musteri-ekle',
+            '/api/siparis-ekle',
+            '/api/stok-hareket-ekle',
+            '/api/gorev-ekle',
+            '/api/is-emri-ekle',
+            '/api/kumas-ekle',
+            '/api/personel-ekle',
+            '/api/stok-alarm',
+            // ─── GÜVENLİK YAMASI: Daha önce korumasız olan 8 rota eklendi ───
+            '/api/veri-getir',
+            '/api/trend-ara',
+            '/api/stream-durum',
+            '/api/telegram-foto',
+            '/api/model-hafizasi',
+            '/api/kur',
+            '/api/test-arge',
+            '/api/agent/kasif',
+        ];
+        const apiKorumalı = korunanApiRotalar.some(r => url.startsWith(r));
+
+        if (apiKorumalı) {
+            // İç servis anahtarı varsa — geç (cron, sunucu-sunucu çağrıları, edge-watcher)
+            const dahiliKey = request.headers.get('x-internal-api-key');
+            // ─── MİMARİ DÜZELTME: Hardcoded fallback kaldırıldı ───────────────────
+            // ESKİ: process.env.INTERNAL_API_KEY || 'NIZAM_LOKAL_GIZLI_ANAHTAR_47'
+            // Bu plain-text değer herkes tarafından bilinebilirdi → tüm API bypass.
+            const sunucuGecerliKey = process.env.INTERNAL_API_KEY?.replace(/[\\r\\n'"]/g, '').trim();
+
+            if (dahiliKey && sunucuGecerliKey && dahiliKey === sunucuGecerliKey) {
+                // ─── İç servis çağrısı (cron, edge-watcher) — JWT atla ───
+            } else {
+                // ─── Dışarıdan gelen istek — JWT doğrulama zorunlu ────────
+                const authHeader = request.headers.get('authorization') || '';
+                const cookieToken = request.cookies.get('sb47_jwt_token')?.value;
+                const token = authHeader.replace('Bearer ', '') || cookieToken;
+
+                const sirri = process.env.JWT_SIRRI || process.env.INTERNAL_API_KEY;
+                const payload = await jwtDogrula(token, sirri);
+
+                const sadeceTamRotalar = ['/api/ajan-calistir', '/api/ajan-tetikle'];
+                const sadeceTam = sadeceTamRotalar.some(r => url.startsWith(r));
+                const yetkiliGrup = sadeceTam
+                    ? payload?.grup === 'tam'
+                    : (payload?.grup === 'tam' || payload?.grup === 'uretim');
+
+                if (!payload || !yetkiliGrup) {
+                    return NextResponse.json(
+                        { hata: 'Yetkisiz — JWT geçersiz veya süresi dolmuş.' },
+                        { status: 401 }
                     );
                 }
             }
-        } else {
-            RATE_LIMIT_BELLEK.set(ip, { sayi: 1, baslangic: simdi });
         }
-    }
 
-    // ─── 2. KORUNAN API ROUTE'LAR — JWT Zorunlu ───────────────
-    const korunanApiRotalar = [
-        '/api/ajan-calistir',
-        '/api/ajan-tetikle',
-        '/api/musteri-ekle',
-        '/api/siparis-ekle',
-        '/api/stok-hareket-ekle',
-        '/api/gorev-ekle',
-        '/api/is-emri-ekle',
-        '/api/kumas-ekle',
-        '/api/personel-ekle',
-        '/api/stok-alarm',
-        // ─── GÜVENLİK YAMASI: Daha önce korumasız olan 8 rota eklendi ───
-        '/api/veri-getir',
-        '/api/trend-ara',
-        '/api/stream-durum',
-        '/api/telegram-foto',
-        '/api/model-hafizasi',
-        '/api/kur',
-        '/api/test-arge',
-        '/api/agent/kasif',
-    ];
-    const apiKorumalı = korunanApiRotalar.some(r => url.startsWith(r));
+        // ─── 3. KORUNAN SAYFA ROUTE'LAR — Cookie Auth ─────────────
+        const korunanSayfaRotalar = [
+            '/imalat', '/kesim', '/modelhane', '/muhasebe', '/kasa',
+            '/ayarlar', '/guvenlik', '/denetmen', '/personel', '/arge',
+            '/kumas', '/kalip', '/maliyet', '/musteriler',
+            '/siparisler', '/stok', '/katalog', '/gorevler', '/raporlar', '/ajanlar',
+            '/kameralar', '/tasarim'
+        ];
 
-    if (apiKorumalı) {
-        // İç servis anahtarı varsa — geç (cron, sunucu-sunucu çağrıları, edge-watcher)
-        const dahiliKey = request.headers.get('x-internal-api-key');
-        // ─── MİMARİ DÜZELTME: Hardcoded fallback kaldırıldı ───────────────────
-        // ESKİ: process.env.INTERNAL_API_KEY || 'NIZAM_LOKAL_GIZLI_ANAHTAR_47'
-        // Bu plain-text değer herkes tarafından bilinebilirdi → tüm API bypass.
-        const sunucuGecerliKey = process.env.INTERNAL_API_KEY?.replace(/[\\r\\n'"]/g, '').trim();
+        const eslesenRota = korunanSayfaRotalar.find(rota => url.startsWith(rota));
 
-        if (dahiliKey && sunucuGecerliKey && dahiliKey === sunucuGecerliKey) {
-            // ─── İç servis çağrısı (cron, edge-watcher) — JWT atla ───
-        } else {
-            // ─── Dışarıdan gelen istek — JWT doğrulama zorunlu ────────
-            const authHeader = request.headers.get('authorization') || '';
-            const cookieToken = request.cookies.get('sb47_jwt_token')?.value;
-            const token = authHeader.replace('Bearer ', '') || cookieToken;
+        if (eslesenRota) {
+            const authCookie = request.cookies.get('sb47_auth_session');
+            const uretimPin = request.cookies.get('sb47_uretim_pin');
+            const genelPin = request.cookies.get('sb47_genel_pin');
 
-            const sirri = process.env.JWT_SIRRI || process.env.INTERNAL_API_KEY;
-            const payload = await jwtDogrula(token, sirri);
+            let yetkiliMi = false;
 
-            const sadeceTamRotalar = ['/api/ajan-calistir', '/api/ajan-tetikle'];
-            const sadeceTam = sadeceTamRotalar.some(r => url.startsWith(r));
-            const yetkiliGrup = sadeceTam
-                ? payload?.grup === 'tam'
-                : (payload?.grup === 'tam' || payload?.grup === 'uretim');
+            // Önce JWT token cookie'sini dene (güvenli yol)
+            const jwtCookie = request.cookies.get('sb47_jwt_token')?.value;
+            if (jwtCookie) {
+                const sirri = process.env.JWT_SIRRI || process.env.INTERNAL_API_KEY;
+                const payload = await jwtDogrula(jwtCookie, sirri);
+                if (payload?.grup) yetkiliMi = true;
+            }
 
-            if (!payload || !yetkiliGrup) {
-                return NextResponse.json(
-                    { hata: 'Yetkisiz — JWT geçersiz veya süresi dolmuş.' },
-                    { status: 401 }
-                );
+            // Fallback: Eski session cookie (geriye dönük uyumluluk)
+            if (!yetkiliMi) {
+                try {
+                    if (authCookie?.value) {
+                        const kul = JSON.parse(decodeURIComponent(authCookie.value));
+                        if (kul.grup && (kul.grup === 'tam' || kul.grup === 'uretim' || kul.grup === 'genel')) {
+                            yetkiliMi = true;
+                        }
+                    }
+                } catch { }
+            }
+
+            // Ek pin çerezleri (JWT veya geçerli session yoksa bunlar TÜR BELİRTİSİ olarak kullanılır, TEK BAŞINA YETKİ VERMEZ!)
+            // KÖR NOKTA ÇÖZÜMÜ: Daha önce herhangi bir 'sb47_genel_pin=1' çerezi yetkiyi by-pass ediyordu. 
+            // Artık sadece JWT doğrulandıysa yetki geçerli sayılacak, bu blokta "yetkiliMi = true" otomatik atanmayacak.
+            if (!yetkiliMi && (uretimPin?.value || genelPin?.value)) {
+                // SADECE JWT Token veya Auth Session GEÇERLİYSE PIN çerezleri yönlendirmeye kılavuz olur. 
+                // Bypass deliği KAPATILDI.
+            }
+
+            if (!yetkiliMi) {
+                const geriDonusUrl = new URL('/?hata=yetkisiz_erisim_middleware_kalkani', request.url);
+                return NextResponse.redirect(geriDonusUrl);
             }
         }
+
+        // ─── 4. GÜVENLİK BAŞLIKLARI ───────────────────────────────
+        const response = NextResponse.next();
+        response.headers.set('X-Content-Type-Options', 'nosniff');
+        response.headers.set('X-Frame-Options', 'DENY');
+        response.headers.set('X-XSS-Protection', '1; mode=block');
+        response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
+        response.headers.set('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
+        response.headers.set('X-Powered-By', 'THE ORDER / NIZAM v2');
+
+        return response;
+    } catch (e) {
+        console.error('[MIDDLEWARE ÖLÜMCÜL HATA]', e.message, e.stack);
+        const errorResponse = NextResponse.json({ hata: 'Sistem Kalkanı Hatası (Middleware)' }, { status: 500 });
+        return errorResponse;
     }
-
-    // ─── 3. KORUNAN SAYFA ROUTE'LAR — Cookie Auth ─────────────
-    const korunanSayfaRotalar = [
-        '/imalat', '/kesim', '/modelhane', '/muhasebe', '/kasa',
-        '/ayarlar', '/guvenlik', '/denetmen', '/personel', '/arge',
-        '/kumas', '/kalip', '/maliyet', '/musteriler',
-        '/siparisler', '/stok', '/katalog', '/gorevler', '/raporlar', '/ajanlar',
-        '/kameralar', '/tasarim'
-    ];
-
-    const eslesenRota = korunanSayfaRotalar.find(rota => url.startsWith(rota));
-
-    if (eslesenRota) {
-        const authCookie = request.cookies.get('sb47_auth_session');
-        const uretimPin = request.cookies.get('sb47_uretim_pin');
-        const genelPin = request.cookies.get('sb47_genel_pin');
-
-        let yetkiliMi = false;
-
-        // Önce JWT token cookie'sini dene (güvenli yol)
-        const jwtCookie = request.cookies.get('sb47_jwt_token')?.value;
-        if (jwtCookie) {
-            const sirri = process.env.JWT_SIRRI || process.env.INTERNAL_API_KEY;
-            const payload = await jwtDogrula(jwtCookie, sirri);
-            if (payload?.grup) yetkiliMi = true;
-        }
-
-        // Fallback: Eski session cookie (geriye dönük uyumluluk)
-        if (!yetkiliMi) {
-            try {
-                if (authCookie?.value) {
-                    const kul = JSON.parse(decodeURIComponent(authCookie.value));
-                    if (kul.grup && (kul.grup === 'tam' || kul.grup === 'uretim' || kul.grup === 'genel')) {
-                        yetkiliMi = true;
-                    }
-                }
-            } catch { }
-        }
-
-        // Ek pin çerezleri (JWT veya geçerli session yoksa bunlar TÜR BELİRTİSİ olarak kullanılır, TEK BAŞINA YETKİ VERMEZ!)
-        // KÖR NOKTA ÇÖZÜMÜ: Daha önce herhangi bir 'sb47_genel_pin=1' çerezi yetkiyi by-pass ediyordu. 
-        // Artık sadece JWT doğrulandıysa yetki geçerli sayılacak, bu blokta "yetkiliMi = true" otomatik atanmayacak.
-        if (!yetkiliMi && (uretimPin?.value || genelPin?.value)) {
-            // SADECE JWT Token veya Auth Session GEÇERLİYSE PIN çerezleri yönlendirmeye kılavuz olur. 
-            // Bypass deliği KAPATILDI.
-        }
-
-        if (!yetkiliMi) {
-            const geriDonusUrl = new URL('/?hata=yetkisiz_erisim_middleware_kalkani', request.url);
-            return NextResponse.redirect(geriDonusUrl);
-        }
-    }
-
-    // ─── 4. GÜVENLİK BAŞLIKLARI ───────────────────────────────
-    const response = NextResponse.next();
-    response.headers.set('X-Content-Type-Options', 'nosniff');
-    response.headers.set('X-Frame-Options', 'DENY');
-    response.headers.set('X-XSS-Protection', '1; mode=block');
-    response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
-    response.headers.set('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
-    response.headers.set('X-Powered-By', 'THE ORDER / NIZAM v2');
-
-    return response;
 }
 
 export const config = {

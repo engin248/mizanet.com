@@ -90,15 +90,15 @@ export function useKarargah() {
             // Aktif sistem uyarıları
             const { data: alarmData } = await supabase
                 .from('b1_sistem_uyarilari')
-                .select('id, uyari_tipi, seviye, baslik, mesaj, olusturma')
+                .select('id, uyari_tipi, seviye, mesaj, olusturma')
                 .eq('durum', 'aktif')
                 .order('olusturma', { ascending: false })
                 .limit(10);
 
             const alarmlar = (alarmData || []).map(a => ({
                 id: a.id,
-                text: a.baslik || a.uyari_tipi || 'Sistem Uyarısı',
-                tip: a.seviye === 'kritik' ? 'kirmizi' : 'sari',
+                text: a.baslik || a.uyari_tipi || 'Sistem Uyarısı', // baslik eklendi daha iyi görünüm için
+                tip: a.seviye === 'krt' ? 'kirmizi' : 'sari', // seviye krt, yk, or vs.
                 zarar: 0,
                 neden: a.mesaj || 'Analiz bekleniyor.'
             }));
