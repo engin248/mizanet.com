@@ -13,7 +13,7 @@ import M1_TrendSonucKarti from './M1_TrendSonucKarti';
 import M1_UrunRecetesi from './M1_UrunRecetesi';
 import M1_AramaMotoru from './M1_AramaMotoru';
 import { ModelMesajGecmisi } from '@/components/mesaj/ModelMesajGecmisi';
-import debounce from 'lodash/debounce'; // EKLENDİ (Render Thrashing Koruması)
+import { debounce } from 'lodash'; // EKLENDİ (Render Thrashing Koruması)
 
 
 // =========================================================================
