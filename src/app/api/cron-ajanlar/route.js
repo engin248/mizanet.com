@@ -100,27 +100,41 @@ export async function GET(req) {
 
         // ─── AR-GE ZİNCİRİ: Yargıç + Köprü Ajanı Tetikleyici ───
         if (unlem === 'arge_zincir') {
-            await supabaseAdmin.from('b1_ajan_gorevler').insert([{
-                ajan_adi: 'Yargıç',
-                gorev_adi: 'Ar-Ge Ürün Yargılaması (Gemini AI)',
-                gorev_tipi: 'analiz',
-                durum: 'bekliyor',
-                oncelik: 'yuksek',
-                gorev_emri: 'b1_arge_products tablosundaki bekleyen ürünleri Gemini AI ile analiz et ve skorla'
-            }]);
+            const domain = process.env.NEXT_PUBLIC_SITE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL || 'http://localhost:3000';
+            const cronReqHeaders = {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${process.env.CRON_SECRET || 'dev_secret'}`
+            };
 
+            // 1. Yargıcı Tetikle
+            try {
+                // Not: Cron ortamında await fetch yaparken sunucuyu bloklamamak için promise all veya bg-task kullanılabilir ama
+                // Vercel Pro/Hobby timeout limiti nedeniyle Vercel edge/serverless fonksiyonlara özel işliyoruz.
+                fetch(`${domain}/api/ajan-yargic`, { method: 'POST', headers: cronReqHeaders, body: JSON.stringify({}) }).catch(e => console.log('Yargıç Cron Tetikleme Hatası:', e));
+            } catch (e) {
+                console.log('Yargıç Cron Tetikleme Hatası', e);
+            }
+
+            // 2. Köprü Ajanı Tetikle (Kısa bir gecikmeyle — yargıcın ilk kararlarını alabilmesi için, asenkron)
+            setTimeout(() => {
+                try {
+                    fetch(`${domain}/api/kopru-ajan`, { method: 'POST', headers: cronReqHeaders, body: JSON.stringify({}) }).catch(e => console.log('Köprü Cron Tetikleme Hatası:', e));
+                } catch (err) { }
+            }, 5000);
+
+            // Log için Karargahta kayıt oluştur (Görsel İzleme için)
             await supabaseAdmin.from('b1_ajan_gorevler').insert([{
-                ajan_adi: 'Köprü Ajanı',
-                gorev_adi: 'Karar Bildirimi + Temizlik',
+                ajan_adi: 'Sistem Cron',
+                gorev_adi: 'Otonom Ar-Ge Zinciri (Yargıç+Köprü) Tetiklendi',
                 gorev_tipi: 'otomasyon',
-                durum: 'bekliyor',
-                oncelik: 'normal',
-                gorev_emri: 'Yargıç kararlarını Telegram bildir + 7 günlük çöp temizliği yap'
+                durum: 'tamamlandi',
+                oncelik: 'yuksek',
+                gorev_emri: 'Vercel Cron zamanlayıcısı otonom zinciri ateşledi.'
             }]);
 
             return NextResponse.json({
                 success: true,
-                mesaj: 'Ar-Ge zinciri tetiklendi: Yargıç + Köprü Ajanı kuyruğa eklendi'
+                mesaj: 'Ar-Ge zinciri tetiklendi: Yargıç ve Köprü Ajanı API uçlarına akıllı vuruş yapıldı.'
             });
         }
 

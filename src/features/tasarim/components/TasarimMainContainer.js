@@ -448,19 +448,15 @@ export default function TasarimMainContainer() {
                 </div>
             </div>
 
-            {/* SAĞ PANEL — CANLI SAYFA */}
-            <div className="flex-1 flex flex-col overflow-hidden">
-                <div className="flex items-center gap-3 px-4 py-2 bg-slate-800 text-white text-xs font-bold border-b border-slate-700 flex-shrink-0">
-                    <span className="bg-emerald-500 px-3 py-1 rounded-full font-black">CANLI SAYFA</span>
-                    <span className="text-slate-300 flex-1 truncate">{hedefSayfa === 'global_tema' ? '/ (Ana Karargah)' : hedefSayfa}</span>
-                    <a href={hedefSayfa === 'global_tema' ? '/' : hedefSayfa} target="_blank" rel="noopener noreferrer"
-                        className="bg-slate-600 hover:bg-slate-500 px-3 py-1 rounded-lg transition-colors font-bold flex-shrink-0">🔗 Tam Ekran Aç</a>
-                </div>
-                <iframe key={hedefSayfa} src={hedefSayfa === 'global_tema' ? '/' : hedefSayfa}
-                    className="w-full flex-1 border-0" style={{ height: 'calc(100vh - 80px)' }} title="Sayfa Önizleme" />
-                <div className="px-4 py-1.5 bg-amber-50 border-t border-amber-200 text-xs text-amber-700 font-bold flex-shrink-0">
-                    💡 Sol panelden tema/içerik düzenle → Kaydet → Değişiklikler yansır.
-                </div>
+            {/* Sağ taraf boş ve sade tutuldu, iFrame (çift sayfa karmaşası) kaldırıldı */}
+            <div className="flex-1 flex flex-col items-center justify-center p-8 text-center text-slate-400 bg-slate-50">
+                <Palette size={64} className="mb-4 opacity-20 text-slate-400" />
+                <h3 className="text-xl font-black text-slate-600 mb-2">Tasarım Stüdyosu</h3>
+                <p className="text-sm font-bold max-w-md">
+                    Sol panelden istediğiniz renk, yazı tipi ve sayfa bloğunu ayarlayarak "Kaydet" veya "Tüm Sayfalara Uygula" butonlarına basabilirsiniz.
+                    <br /><br />
+                    (Değişiklikleri görmek için işlemi bitirdikten sonra diğer sayfalara geçiş yapın.)
+                </p>
             </div>
         </div>
     );
