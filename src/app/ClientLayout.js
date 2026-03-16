@@ -179,14 +179,22 @@ function LayoutInner({ children }) {
         window.addEventListener('online', onOnline);
         window.addEventListener('offline', onOffline);
 
+        // Hard-Core PWA Cache Buster
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.getRegistrations().then(function (registrations) {
-                for (let registration of registrations) {
-                    registration.unregister();
-                }
-            }).catch(function (err) {
-                console.error('Service Worker temizleme hatası:', err);
-            });
+                for (let registration of registrations) registration.unregister();
+            }).catch(console.error);
+        }
+        if (window.caches) {
+            caches.keys().then(names => {
+                for (let name of names) caches.delete(name);
+            }).catch(console.error);
+        }
+        // Eğer önceden patlatılmadıysa 1 kez hard-reload at (Sonsuz döngüyü önler)
+        if (!sessionStorage.getItem('nizam_cache_busted_v1')) {
+            sessionStorage.setItem('nizam_cache_busted_v1', 'true');
+            console.log('Cache kırıldı, sayfa tazeleniyor...');
+            setTimeout(() => window.location.reload(), 1500);
         }
 
         return () => {
