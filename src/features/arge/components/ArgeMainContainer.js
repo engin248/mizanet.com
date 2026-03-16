@@ -50,14 +50,14 @@ export default function ArgeSayfasi() {
 
 
 
-    const [trendler, setTrendler] = useState(/** @type {any[]} */([]));
+    const [trendler, setTrendler] = useState(([]));
     const [form, setForm] = useState(BOSH_FORM);
     const [formAcik, setFormAcik] = useState(false);
     const [loading, setLoading] = useState(false);
     const [mesaj, setMesaj] = useState({ text: '', type: '' });
     const [filtre, setFiltre] = useState('tumu');
     const [secilenTrend, setSecilenTrend] = useState(null);
-    const [agentLoglari, setAgentLoglari] = useState(/** @type {any[]} */([]));
+    const [agentLoglari, setAgentLoglari] = useState(([]));
     const [duzenleId, setDuzenleId] = useState(null);
     // Zamansal Doğrulama
     const [yenidenAraniyor, setYenidenAraniyor] = useState(null);
@@ -82,9 +82,9 @@ export default function ArgeSayfasi() {
         // GÜÇLENDİRİLDİ: Karargâh ile Eşzamanlı SessionStorage ve Base64 Şifre Çözücü Mimarisine geçildi.
         let uretimPin = !!sessionStorage.getItem('sb47_uretim_token');
 
-        setYetkiliMi(/** @type {any} */(kullanici)?.grup === 'tam' || uretimPin);
+        setYetkiliMi((kullanici)?.grup === 'tam' || uretimPin);
 
-        if (!(/** @type {any} */ (kullanici)?.grup === 'tam' || uretimPin)) return;
+        if (!((kullanici)?.grup === 'tam' || uretimPin)) return;
 
         verileriCek();
 
@@ -264,7 +264,7 @@ export default function ArgeSayfasi() {
         }
 
         setLoading(true);
-        setIslemdeId(/** @type {any} */('kaydet_modal'));
+        setIslemdeId(('kaydet_modal'));
         try {
             const { data: mevcutlar } = await supabase.from('b1_arge_trendler')
                 .select('id').eq('baslik', form.baslik.trim());
@@ -278,12 +278,12 @@ export default function ArgeSayfasi() {
             let nihaiGorselUrl = form.gorsel_url?.trim() || null;
 
             if (form.gorsel_dosyasi && navigator.onLine) {
-                const dosyaUzantisi = /** @type {any} */ (form.gorsel_dosyasi).name?.split('.').pop() || 'jpg';
+                const dosyaUzantisi = (form.gorsel_dosyasi).name?.split('.').pop() || 'jpg';
                 const dosyaAdi = `${Date.now()}_${Math.random().toString(36).substring(7)}.${dosyaUzantisi}`;
 
                 const { data: uploadData, error: uploadError } = await supabase.storage
                     .from('arge_gorselleri')
-                    .upload(`trendler/${dosyaAdi}`, /** @type {any} */(form.gorsel_dosyasi), {
+                    .upload(`trendler/${dosyaAdi}`, (form.gorsel_dosyasi), {
                         cacheControl: '3600',
                         upsert: false
                     });
@@ -352,7 +352,7 @@ export default function ArgeSayfasi() {
 
     const durumGuncelle = async (id, yeniDurum) => {
         if (islemdeId === 'durum_' + id) return;
-        setIslemdeId(/** @type {any} */('durum_' + id));
+        setIslemdeId(('durum_' + id));
 
         const { error } = await supabase
             .from('b1_arge_trendler')
@@ -422,7 +422,7 @@ export default function ArgeSayfasi() {
         }
 
         if (islemdeId === 'sil_' + id) return;
-        setIslemdeId(/** @type {any} */('sil_' + id));
+        setIslemdeId(('sil_' + id));
 
         try {
             // 25. KRİTER ONARIMI: "KARA KUTU / İZCİ" (Soft Delete Simülasyonu)
@@ -433,7 +433,7 @@ export default function ArgeSayfasi() {
                     tablo_adi: 'b1_arge_trendler',
                     islem_tipi: 'SILME',
                     eski_veri: silinecek,
-                    kullanici_adi: /** @type {any} */ (kullanici)?.ad || 'Atölye Lideri (PIN)'
+                    kullanici_adi: (kullanici)?.ad || 'Atölye Lideri (PIN)'
                 }]);
             }
 
@@ -478,7 +478,7 @@ export default function ArgeSayfasi() {
         setYenidenAraniyor(trend.id);
         try {
             const gunFark = trend.arsiv_tarihi
-                ? Math.floor((Date.now() - /** @type {any} */ (new Date(trend.arsiv_tarihi))) / 86400000) : 30;
+                ? Math.floor((Date.now() - (new Date(trend.arsiv_tarihi))) / 86400000) : 30;
             const orijinalKarar = trend.herm_karari || 'Belirtilmemiş';
             const orijinalSkor = trend.talep_skoru || '?';
             const platform = trend.platform || 'genel';
@@ -716,13 +716,13 @@ export default function ArgeSayfasi() {
                 {/* AI SONUÇLARI */}
                 {aiSonuclar && aiPanelAcik && (
                     <div style={{ marginTop: '1rem' }}>
-                        {/** @type {any} */(aiSonuclar).ozet && (
+                        {(aiSonuclar).ozet && (
                             <div style={{ background: '#1e293b', borderRadius: 10, padding: '0.75rem 1rem', marginBottom: '0.75rem', color: '#cbd5e1', fontSize: '0.82rem', lineHeight: 1.6, borderLeft: '3px solid #059669' }}>
-                                💡 {/** @type {any} */(aiSonuclar).ozet}
+                                💡 {(aiSonuclar).ozet}
                             </div>
                         )}
                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(320px,1fr))', gap: '1rem' }}>
-                            {(/** @type {any} */(aiSonuclar).sonuclar || []).map((/** @type {any} */ s, /** @type {any} */ i) => (
+                            {((aiSonuclar).sonuclar || []).map((s, i) => (
                                 <M1_TrendSonucKarti
                                     key={i}
                                     sonuc={s}
@@ -837,7 +837,7 @@ export default function ArgeSayfasi() {
                                     <input
                                         type="range" min="1" max="10"
                                         value={form.talep_skoru}
-                                        onChange={e => setForm({ ...form, talep_skoru: /** @type {any} */ (e.target.value) })}
+                                        onChange={e => setForm({ ...form, talep_skoru: (e.target.value) })}
                                         style={{ width: '100%', cursor: 'pointer', accentColor: skorRenk(form.talep_skoru) }}
                                     />
                                     <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.7rem', color: '#9ca3af', marginTop: 4 }}>
@@ -853,7 +853,7 @@ export default function ArgeSayfasi() {
                                     <input
                                         type="range" min="1" max="10"
                                         value={form.zorluk_derecesi || 5}
-                                        onChange={e => setForm({ ...form, zorluk_derecesi: /** @type {any} */ (e.target.value) })}
+                                        onChange={e => setForm({ ...form, zorluk_derecesi: (e.target.value) })}
                                         style={{ width: '100%', cursor: 'pointer', accentColor: '#4f46e5' }}
                                     />
                                     <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.7rem', color: '#9ca3af', marginTop: 4 }}>
@@ -900,11 +900,11 @@ export default function ArgeSayfasi() {
                                         id="arge-kamera-input"
                                         style={{ display: 'none' }}
                                         onChange={(e) => {
-                                            const file = (/** @type {any} */ (e.target)).files?.[0];
+                                            const file = ((e.target)).files?.[0];
                                             if (file) {
                                                 if (file.size > 500 * 1024) return goster('Dosya çok büyük! Veritabanı sağlığı için maksimum 500 KB resim yükleyebilirsiniz.', 'error');
                                                 const reader = new FileReader();
-                                                reader.onloadend = () => setForm({ ...form, gorsel_url: /** @type {string} */ (reader.result), gorsel_dosyasi: /** @type {any} */ (file) }); // Görsel Storage için yedeği özel değişkende tutulur
+                                                reader.onloadend = () => setForm({ ...form, gorsel_url: (reader.result), gorsel_dosyasi: (file) }); // Görsel Storage için yedeği özel değişkende tutulur
                                                 reader.readAsDataURL(file);
                                             }
                                         }}
@@ -1034,7 +1034,7 @@ export default function ArgeSayfasi() {
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
                             {filtreliTrendler.map(trend => (
                                 <M1_UrunRecetesi
-                                    key={/** @type {any} */ (trend).id}
+                                    key={(trend).id}
                                     trend={trend}
                                     onDurumGuncelle={durumGuncelle}
                                     onSil={sil}
@@ -1075,12 +1075,12 @@ export default function ArgeSayfasi() {
                             <div style={{ display: 'flex', flexDirection: 'column', gap: 10, maxHeight: 480, overflowY: 'auto' }}>
                                 {arsivTrendler.map(trend => {
                                     const gunFark = trend.arsiv_tarihi
-                                        ? Math.floor((Date.now() - /** @type {any} */ (new Date(trend.arsiv_tarihi))) / 86400000) : null;
+                                        ? Math.floor((Date.now() - (new Date(trend.arsiv_tarihi))) / 86400000) : null;
                                     const dogrulamaGeldiMi = trend.dogrulama_zamani
                                         && trend.dogrulama_durumu !== 'yapildi'
                                         && new Date(trend.dogrulama_zamani) <= new Date();
                                     const kalanGun = trend.dogrulama_zamani && trend.dogrulama_durumu === 'bekliyor'
-                                        ? Math.max(0, Math.ceil((/** @type {any} */ (new Date(trend.dogrulama_zamani)) - Date.now()) / 86400000)) : null;
+                                        ? Math.max(0, Math.ceil(((new Date(trend.dogrulama_zamani)) - Date.now()) / 86400000)) : null;
 
                                     return (
                                         <div key={trend.id} style={{

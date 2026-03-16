@@ -37,21 +37,32 @@ export async function OPTIONS() {
 
 export async function POST(request) {
     try {
-        const ip = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'Bilinmeyen-IP';
+        const ipFallback = 'Anonim-' + Math.random().toString(36).substring(2, 9);
+        const ip = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || ipFallback;
 
-        // Spam Zırhı
-        const { data: dbKayit } = await supabaseAdmin.from('b0_api_spam_kalkani').select('*').eq('ip_adresi', ip).single();
+        // Spam Zırhı Kök Çözümü (maybeSingle & Error Handling eklendi)
+        const { data: dbKayit, error: dbError } = await supabaseAdmin.from('b0_api_spam_kalkani').select('*').eq('ip_adresi', ip).maybeSingle();
+
+        // EĞER tablo yoksa, yetki yoksa veya Supabase çöktüyse sessizce devam etmek yerine bunu durdur
+        if (dbError) throw new Error("Spam Kalkanı DB Hatası: " + dbError.message);
+
         let engellendi = false;
         if (dbKayit) {
             const farkSaniye = (new Date().getTime() - new Date(dbKayit.son_vurus_saati).getTime()) / 1000;
             if (farkSaniye < ZAMAN_ARALIGI_SN) {
-                if (dbKayit.spam_sayaci >= MAX_ISTEK) engellendi = true;
-                else await supabaseAdmin.from('b0_api_spam_kalkani').update({ spam_sayaci: dbKayit.spam_sayaci + 1 }).eq('ip_adresi', ip);
+                if (dbKayit.spam_sayaci >= MAX_ISTEK) {
+                    engellendi = true;
+                } else {
+                    const { error: updErr } = await supabaseAdmin.from('b0_api_spam_kalkani').update({ spam_sayaci: dbKayit.spam_sayaci + 1 }).eq('ip_adresi', ip);
+                    if (updErr) console.error("Spam Update Error:", updErr.message);
+                }
             } else {
-                await supabaseAdmin.from('b0_api_spam_kalkani').update({ spam_sayaci: 1, son_vurus_saati: new Date().toISOString() }).eq('ip_adresi', ip);
+                const { error: updErr2 } = await supabaseAdmin.from('b0_api_spam_kalkani').update({ spam_sayaci: 1, son_vurus_saati: new Date().toISOString() }).eq('ip_adresi', ip);
+                if (updErr2) console.error("Spam Reset Error:", updErr2.message);
             }
         } else {
-            await supabaseAdmin.from('b0_api_spam_kalkani').insert([{ ip_adresi: ip, spam_sayaci: 1 }]);
+            const { error: insErr } = await supabaseAdmin.from('b0_api_spam_kalkani').insert([{ ip_adresi: ip, spam_sayaci: 1 }]);
+            if (insErr) console.error("Spam Insert Error:", insErr.message);
         }
         if (engellendi) {
             return NextResponse.json({ success: false, error: 'Telegram zirhi devrede. Cok fazla istek.' }, { status: 429 });

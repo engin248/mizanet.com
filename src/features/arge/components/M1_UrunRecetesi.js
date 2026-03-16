@@ -13,7 +13,7 @@ import NextLink from 'next/link';
 export default function M1_UrunRecetesi({ trend, onDurumGuncelle, onSil, onDuzenle, isAR, yetkiliMi, islemdeId }) {
     const skor = trend.talep_skoru ?? 5;
     const zorluk = trend.zorluk_derecesi ?? 5;
-    const skorRenk = (/** @type {any} */ s) => s >= 8 ? '#10b981' : s >= 5 ? '#f59e0b' : '#ef4444';
+    const skorRenk = (s) => s >= 8 ? '#10b981' : s >= 5 ? '#f59e0b' : '#ef4444';
 
     // Gateway koşulu: Skor 7+ ve zorluk 8 altı ise M2'ye buton açık
     const gatewayAcik = skor >= 7 && zorluk <= 8;
