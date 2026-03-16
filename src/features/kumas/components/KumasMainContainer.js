@@ -55,6 +55,21 @@ export default function KumasArsiviSayfasi() {
     const [seciliKumas, setSeciliKumas] = useState(/** @type {any} */(null));
     const [islemdeId, setIslemdeId] = useState(/** @type {any} */(null));
 
+    // ─── ATİL SERMAYE UYARISI (180+ gün hareketsiz kumaş) ─────
+    // NOT: Bu hook tüm erken return'lerden ÖNCE olmalı (React Rules of Hooks)
+    const [atilSermayeUyari, setAtilSermayeUyari] = useState(/** @type {any} */(null));
+
+    useEffect(() => {
+        fetch('/api/rapor/atil-sermaye?esik_gun=180')
+            .then(r => r.json())
+            .then(d => {
+                if (d.basarili && d.ozet?.tahmini_bagli_sermaye_tl > 0) {
+                    setAtilSermayeUyari(d.ozet);
+                }
+            })
+            .catch(() => { });
+    }, []);
+
     useEffect(() => {
         setMounted(true);
         let uretimPin = !!sessionStorage.getItem('sb47_uretim_token');
@@ -332,19 +347,6 @@ export default function KumasArsiviSayfasi() {
         );
     }
 
-    // ─── ATİL SERMAYE UYARISI (180+ gün hareketsiz kumaş) ─────
-    const [atilSermayeUyari, setAtilSermayeUyari] = useState(/** @type {any} */(null));
-
-    useEffect(() => {
-        fetch('/api/rapor/atil-sermaye?esik_gun=180')
-            .then(r => r.json())
-            .then(d => {
-                if (d.basarili && d.ozet.tahmini_bagli_sermaye_tl > 0) {
-                    setAtilSermayeUyari(d.ozet);
-                }
-            })
-            .catch(() => { });
-    }, []);
 
     // ─────────────────────────────────────────────────────────
 
