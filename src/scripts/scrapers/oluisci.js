@@ -14,7 +14,7 @@ require('dotenv').config({ path: path.resolve(__dirname, '../../../.env.local') 
 // Karantina havuzuna yazacağımız için Service Role (veya bypass key) şart
 const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 if (!process.env.SUPABASE_SERVICE_ROLE_KEY) {
-    console.warn('[ÖLÜ İŞÇİ] ⚠️ UYARI: Servis key bulunamadı, anon key ile yazılıyor.');
+
 }
 const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, supabaseKey);
 
@@ -27,9 +27,8 @@ const bekleInsani = (min, max) => new Promise(r => setTimeout(r, Math.random() *
 // ANA FONKSİYON
 // -----------------------------------------------------
 async function rakipVerisiKazi(kategoriUrl, markaKategoriAdi) {
-    console.log(`\n======================================================`);
-    console.log(`[ÖLÜ İŞÇİ] ZIRH GİYİLDİ. HEDEF: ${markaKategoriAdi}`);
-    console.log(`======================================================`);
+
+
 
     const isVPS = process.env.VPS_MODE === 'true' || process.env.NODE_ENV === 'production';
     const browser = await puppeteer.launch({
@@ -82,7 +81,6 @@ async function rakipVerisiKazi(kategoriUrl, markaKategoriAdi) {
         */
 
         // 1. ADIM: Kategori (Listeleme) sayfasına girip ürün LİNKLERİNİ toplama
-        console.log(`[ÖLÜ İŞÇİ] Safha 1: Liste Tarama - ${kategoriUrl}`);
 
         let urunLinkleri = [];
 
@@ -116,7 +114,7 @@ async function rakipVerisiKazi(kategoriUrl, markaKategoriAdi) {
             }
             urunLinkleri = [...new Set(urunLinkleri)].slice(0, 5); // 5 ürün testi
         } catch (e) {
-            console.warn('[ÖLÜ İŞÇİ] Fetch denemesi başarısız, Puppeteer fallback devrede.');
+
         }
 
         if (urunLinkleri.length === 0) {
@@ -139,7 +137,6 @@ async function rakipVerisiKazi(kategoriUrl, markaKategoriAdi) {
         let islenenler = [];
         for (let i = 0; i < urunLinkleri.length; i++) {
             const link = urunLinkleri[i].split('?')[0]; // URL parametrelerini temizle (Temiz url)
-            console.log(`\n[ÖLÜ İŞÇİ] Sızılıyor (${i + 1}/${urunLinkleri.length}): ${link}`);
 
             // Bot gibi ardışık girmemek için aralarda insani duraksama
             await bekleInsani(4000, 8000);
@@ -162,7 +159,7 @@ async function rakipVerisiKazi(kategoriUrl, markaKategoriAdi) {
 
                 const pdpResponse = await fetch(link, { headers, method: 'GET' });
                 if (!pdpResponse.ok) {
-                    console.log(`    ⚠️ HTTP Hata: ${pdpResponse.status} - WAF Engeli Olabilir.`);
+
                     continue;
                 }
 
@@ -196,7 +193,7 @@ async function rakipVerisiKazi(kategoriUrl, markaKategoriAdi) {
                             };
                         }
                     } catch (parseErr) {
-                        console.log("    ❌ Parse Hatası: INITIAL_STATE doğru formatta değil");
+
                     }
                 }
 
@@ -232,19 +229,17 @@ async function rakipVerisiKazi(kategoriUrl, markaKategoriAdi) {
                         created_at: bugunTarih.toISOString()
                     });
 
-                    console.log(`    ✅ Çalındı (FETCH API): ${pdpData.marka_ismi} - ${pdpData.urun_ismi} | ₺${pdpData.indirimli_fiyat}`);
                 } else {
-                    console.log(`    ❌ Başarısız: Gizli veri damarına inilemedi (INITIAL_STATE tespit edilemedi)`);
+
                 }
 
             } catch (e) {
-                console.log(`    ⚠️ Atlandı (Ağ bağlantısı veya fetch sorunu): ${e.message}`);
+
             }
         } // <- For döngüsü kapanışı
 
         // 3. ADIM: KARANTİNA HAVUZUNA YAZMA (b1_arge_products_karantina)
         if (islenenler.length > 0) {
-            console.log(`\n[ÖLÜ İŞÇİ] ${islenenler.length} adet kusursuz ürün KARANTİNA DEPOSUNA aktarılıyor...`);
 
             // UPSERT komutu, `urun_linki` sütunundaki url'in aynı kaydedilmesini (çifte kaydı) engeller.
             const { error, data } = await supabase.from('b1_arge_products_karantina')
@@ -253,7 +248,6 @@ async function rakipVerisiKazi(kategoriUrl, markaKategoriAdi) {
             if (error) {
                 console.error('[ÖLÜ İŞÇİ] ❌ Veritabanı Yazma Reddi!', error);
             } else {
-                console.log(`[ÖLÜ İŞÇİ] ✅ Karantinaya Başarıyla İndirildi! Yönetici onayı bekliyor.`);
 
                 // Karargah webhook bildirimi (Arayüze mesaj)
                 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
@@ -268,7 +262,7 @@ async function rakipVerisiKazi(kategoriUrl, markaKategoriAdi) {
                 } catch (err) { }
             }
         } else {
-            console.log(`\n[ÖLÜ İŞÇİ] Hiç veri alınamadı. (Firewall engeline takılmış olabiliriz)`);
+
         }
 
     } catch (error) {
@@ -277,7 +271,7 @@ async function rakipVerisiKazi(kategoriUrl, markaKategoriAdi) {
         if (browser) {
             try { await browser.close(); } catch (e) { }
         }
-        console.log(`[ÖLÜ İŞÇİ] Uyku moduna dönüldü.`);
+
     }
 }
 

@@ -28,8 +28,6 @@ export async function POST(request) {
 
         const { ajanTipi, kameraId, kameraAdi, sebep, image } = body;
 
-        console.log(`[AJAN-TETIKLE] Ajan Tipi: ${ajanTipi} | Kamera: ${kameraAdi} | Neden: ${sebep}`);
-
         // 3. OPERASYONEL VERİ KONTROLÜ
         if (ajanTipi === 'KAMERA_GIZLI_EDGE' && sebep === '2_DK_IDLE') {
 
@@ -126,7 +124,7 @@ export async function POST(request) {
             }, { status: 200 });
 
         } else {
-            console.warn(`[AJAN-TETIKLE] Bilinmeyen tetikleyici: Tür=${ajanTipi}, Sebep=${sebep}`);
+
             return NextResponse.json({
                 durum: 'reddedildi',
                 mesaj: 'Tanımsız ajan tipi veya olay tetikleyicisi.',

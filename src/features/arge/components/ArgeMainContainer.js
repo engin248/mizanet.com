@@ -198,7 +198,7 @@ export default function ArgeSayfasi() {
                 ek_bilgi: `Perplexity Trend Araştırması Tetiklendi.`
             }]);
         } catch (logErr) {
-            console.warn('Araştırma loglanamadı:', logErr);
+
         }
 
         setAiOnayModalAcik(false); // Modalı kapat

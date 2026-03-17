@@ -20,7 +20,7 @@ export async function POST(request) {
         }
     } catch (error) {
         // Redis bağlanamazsa işlemi kesme, logla ve devam et (Fallback)
-        console.warn('Upstash Rate Limiter Hatası (Fallback Devrede):', error.message);
+
     }
 
     const { sorgu } = await request.json();

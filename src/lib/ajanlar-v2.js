@@ -176,7 +176,6 @@ export async function sabahSubayi() {
             mesaj: brifing,
         }]);
 
-        console.log(`[${isim}] ✅ ${sonuc.kontrol_sayisi} kontrol, ${sonuc.kritik} kritik`);
         return { basarili: true, brifing, sonuc };
 
     } catch (e) {
@@ -263,7 +262,6 @@ export async function aksamci() {
         const ozetMetin = `🌆 AKŞAM KAPANIŞI — ${bugun}\n${sonuc.ozet.join('\n')}`;
         await logYaz(isim, 'aksam_kapanis', ozetMetin);
 
-        console.log(`[${isim}] ✅ ${sonuc.kontrol_sayisi} kontrol tamamlandı`);
         return { basarili: true, ozet: ozetMetin, sonuc };
 
     } catch (e) {
@@ -366,7 +364,6 @@ export async function nabiz() {
             sonuc.alarmlar.push({ tip: 'yaklaşan_stok_alarm', sayi: yaklasanlar.length });
         }
 
-        console.log(`[${isim}] 💓 ${sonuc.kontrol_sayisi} kontrol | ${sonuc.alarmlar.length} yeni alarm`);
         return { basarili: true, sonuc };
 
     } catch (e) {
@@ -524,7 +521,6 @@ export async function zincirci(tetikleyenModul = null, tetikleyenId = null) {
             );
         }
 
-        console.log(`[${isim}] ⛓️ ${sonuc.islenenler} modül kontrol | ${sonuc.gecisler.length} geçiş`);
         return { basarili: true, sonuc };
 
     } catch (e) {
@@ -646,7 +642,7 @@ export async function finansKalkani() {
 
         await logYaz(isim, 'finans_kontrol',
             `${sonuc.kontrol_sayisi} kontrol | ${sonuc.alarmlar.length} yeni alarm`);
-        console.log(`[${isim}] 🛡️ ${sonuc.kontrol_sayisi} kontrol | ${sonuc.alarmlar.length} alarm`);
+
         return { basarili: true, sonuc };
 
     } catch (e) {
@@ -743,7 +739,6 @@ export async function trendKasifi(gorevEmri = null) {
         const ozet = `${sonuc.eklenen} yeni trend Ar-Ge'ye eklendi. ${sonuc.atlanan} duplicate atlandı.`;
         await logYaz(isim, 'trend_arastirma', ozet);
 
-        console.log(`[${isim}] 🔍 ${sonuc.eklenen} trend eklendi | ${sonuc.atlanan} duplicate atlandı`);
         return { basarili: true, ozet, sonuc };
 
     } catch (e) {
@@ -826,7 +821,6 @@ export async function muhasebeYazici() {
 
         await logYaz(isim, 'aylik_rapor', `${ayAdi} raporu oluşturuldu. Net kâr: ₺${(gelir - gider).toFixed(0)}`);
 
-        console.log(`[${isim}] 📊 ${ayAdi} raporu yazıldı`);
         return { basarili: true, rapor: raporMetni, sonuc };
 
     } catch (e) {

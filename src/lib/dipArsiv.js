@@ -36,7 +36,7 @@ export async function dipArsiveKaldir(tablo, id, kullanici = 'Sistem') {
 
     } catch (e) {
         // Sessiz fail — arşivleme kritik değilse silmeyi engellemez
-        console.warn('[DipArsiv] Arşivleme yapılamadı:', e.message);
+
     }
 }
 

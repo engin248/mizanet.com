@@ -138,7 +138,7 @@ export default function MaliyetMainContainer() {
         if (form.miktar && form.birim_fiyat) {
             const gercekCarpim = parseFloat(form.miktar) * parseFloat(form.birim_fiyat);
             if (Math.abs(gercekTutar - gercekCarpim) > 0.01) {
-                console.warn("ZIRH: Kullanıcının girdiği tutar eşleşmiyor! Doğru matematik basılıyor.");
+
                 gercekTutar = parseFloat(gercekCarpim.toFixed(2));
             }
         }

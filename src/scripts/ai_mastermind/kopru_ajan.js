@@ -13,7 +13,7 @@ require('dotenv').config({ path: require('path').resolve(__dirname, '../../../.e
 // ─── SUPABASE BAĞLANTISI (Service Role Key — DELETE işlemi için RLS bypass gerekli) ───
 const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 if (!process.env.SUPABASE_SERVICE_ROLE_KEY) {
-    console.warn('[KÖPRÜ] ⚠️ UYARI: SUPABASE_SERVICE_ROLE_KEY bulunamadı, anon key ile devam ediliyor.');
+
 }
 const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, supabaseKey);
 
@@ -23,7 +23,7 @@ const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID;
 // ─── TELEGRAM BİLDİRİM ────────────────────────────────────────
 async function telegramBildirimGonder(urunAdi, firsatSkoru, karar, agentNote) {
     if (!TELEGRAM_BOT_TOKEN || !TELEGRAM_CHAT_ID) {
-        console.log('[KÖPRÜ] ⚠️ Telegram token/chat_id yok. Bildirim atlanadı.');
+
         return false;
     }
 
@@ -50,21 +50,20 @@ _Karargah panelinden onaylayın._`;
         });
 
         if (res.ok) {
-            console.log(`[KÖPRÜ] 📱 Telegram bildirimi gönderildi: ${urunAdi.substring(0, 30)}...`);
+
             return true;
         } else {
-            console.log(`[KÖPRÜ] ⚠️ Telegram hata: HTTP ${res.status}`);
+
             return false;
         }
     } catch (err) {
-        console.log(`[KÖPRÜ] ⚠️ Telegram bağlantı hatası: ${err.message}`);
+
         return false;
     }
 }
 
 // ─── YENİ KARARLARI TARA VE BİLDİR ───────────────────────────
 async function yeniKararlariTara() {
-    console.log('[KÖPRÜ] 🔍 Son 1 saatteki yeni kararlar taranıyor...');
 
     const birSaatOnce = new Date(Date.now() - 60 * 60 * 1000).toISOString();
 
@@ -76,16 +75,14 @@ async function yeniKararlariTara() {
         .order('opportunity_score', { ascending: false });
 
     if (error) {
-        console.log(`[KÖPRÜ] ⚠️ Strateji tablosu okunamadı: ${error.message}`);
+
         return;
     }
 
     if (!yeniKararlar || yeniKararlar.length === 0) {
-        console.log('[KÖPRÜ] Bildirilecek yeni karar yok.');
+
         return;
     }
-
-    console.log(`[KÖPRÜ] ${yeniKararlar.length} adet yeni karar bulundu. Telegram bildirimleri gönderiliyor...`);
 
     let gonderilen = 0;
     for (const karar of yeniKararlar) {
@@ -101,7 +98,6 @@ async function yeniKararlariTara() {
         await new Promise(r => setTimeout(r, 1000));
     }
 
-    console.log(`[KÖPRÜ] ✅ ${gonderilen}/${yeniKararlar.length} bildirim gönderildi.`);
 }
 
 // ─── KORUNMASI ZORUNLU TABLOLAR (ASLA SİLİNMEZ) ───────────────
@@ -125,7 +121,7 @@ const KORUNAN_TABLOLAR = [
 // Arşivleme başarısız olursa silme işlemi de iptal edilir (Güvenli mod).
 async function arsivleSonraSil(tablo, kayitlar) {
     if (KORUNAN_TABLOLAR.includes(tablo)) {
-        console.log(`[KÖPRÜ] 🛡️ KORUMA: '${tablo}' tablosu kalıcı korumalı listede. Silme işlemi engellendi.`);
+
         return 0;
     }
 
@@ -148,7 +144,7 @@ async function arsivleSonraSil(tablo, kayitlar) {
 
             if (arsivHata) {
                 // Arşivleme başarısız → silme iptal, güvenli kalma
-                console.warn(`[KÖPRÜ] ⚠️ ARŞİV HATASI (ID: ${kayit.id}): ${arsivHata.message} — Bu kayıt SİLİNMEDİ.`);
+
                 continue; // Bu kaydı atla, sonrakine geç
             }
 
@@ -156,13 +152,13 @@ async function arsivleSonraSil(tablo, kayitlar) {
             const { error: silHata } = await supabase.from(tablo).delete().eq('id', kayit.id);
 
             if (silHata) {
-                console.warn(`[KÖPRÜ] ⚠️ SİLME HATASI (ID: ${kayit.id}): ${silHata.message}`);
+
                 continue;
             }
 
             basariliSilme++;
         } catch (e) {
-            console.warn(`[KÖPRÜ] ⚠️ İşlem hatası (ID: ${kayit.id}): ${e.message}`);
+
         }
     }
 
@@ -171,8 +167,7 @@ async function arsivleSonraSil(tablo, kayitlar) {
 
 // ─── ÇÖP SÜPÜRGESİ (ARŞİVLEYEREK TEMİZLE) ───────────────────
 async function copSupurgesi() {
-    console.log('[KÖPRÜ] 🧹 7 günden eski işlenmiş kayıtlar ARŞİVLENEREK temizleniyor...');
-    console.log('[KÖPRÜ] 🛡️ KORUMA AKTIF: Model/Kumaş/Aksesuar/Maliyet/Üretim verileri hiçbir zaman silinmez.');
+
 
     const yediGunOnce = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
 
@@ -184,33 +179,29 @@ async function copSupurgesi() {
         .lt('created_at', yediGunOnce);
 
     if (error) {
-        console.log(`[KÖPRÜ] ⚠️ Temizlik sorgu hatası: ${error.message}`);
+
         return;
     }
 
     if (!eskiKayitlar || eskiKayitlar.length === 0) {
-        console.log('[KÖPRÜ] 🧹 Temizlenecek eski kayıt bulunamadı.');
+
         return;
     }
 
-    console.log(`[KÖPRÜ] 📦 ${eskiKayitlar.length} kayıt arşivlenip silinecek...`);
-
     const silinen = await arsivleSonraSil('b1_arge_products', eskiKayitlar);
-    console.log(`[KÖPRÜ] ✅ ${silinen}/${eskiKayitlar.length} kayıt güvenle arşivlendi ve temizlendi.`);
+
     if (silinen < eskiKayitlar.length) {
-        console.warn(`[KÖPRÜ] ⚠️ ${eskiKayitlar.length - silinen} kayıt arşivlenemediği için SİLİNMEDİ ve korundu.`);
+
     }
 }
 
 // ─── ANA ÇALIŞTIRICI ──────────────────────────────────────────
 async function kopruAjaniCalistir() {
-    console.log('\n[KÖPRÜ] 🌉 Köprü Ajanı başlatıldı...');
-    console.log(`[KÖPRÜ] Telegram: ${TELEGRAM_BOT_TOKEN ? '✅ Aktif' : '❌ Token yok'}`);
+
 
     await yeniKararlariTara();
     await copSupurgesi();
 
-    console.log('[KÖPRÜ] ✅ Tüm görevler tamamlandı.\n');
 }
 
 // Çalıştırma: node src/scripts/ai_mastermind/kopru_ajan.js

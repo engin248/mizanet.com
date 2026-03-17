@@ -16,7 +16,7 @@ require('dotenv').config({ path: require('path').resolve(__dirname, '../../../.e
 // ─── SUPABASE BAĞLANTISI (Service Role Key — Ölü İşçi ile aynı standart) ───
 const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 if (!process.env.SUPABASE_SERVICE_ROLE_KEY) {
-    console.warn('[YARGIÇ] ⚠️ UYARI: SUPABASE_SERVICE_ROLE_KEY bulunamadı, anon key ile devam ediliyor.');
+
 }
 const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, supabaseKey);
 
@@ -30,7 +30,7 @@ const GEMINI_URL = GEMINI_API_KEY
 async function geminiAnaliz(hamVeriStr, fiyatStr) {
     // API key yoksa → direkt mock
     if (!GEMINI_URL) {
-        console.log('[YARGIÇ] ⚠️ Gemini API Key bulunamadı. Mock mod aktif.');
+
         return mockAnaliz(fiyatStr);
     }
 
@@ -83,8 +83,6 @@ Aşağıdaki JSON formatında skorları dön (SADECE JSON, açıklama yazma):
         const rawText = data.candidates?.[0]?.content?.parts?.[0]?.text || '{}';
         const sonuc = JSON.parse(rawText.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim());
 
-        console.log('[YARGIÇ] 🧠 Gemini AI analizi başarılı.');
-
         // Güvenlik: Tüm değerleri sayı sınırlarına kilitle
         return {
             satis_buyumesi: Math.min(100, Math.max(0, Number(sonuc.satis_buyumesi) || 50)),
@@ -103,7 +101,7 @@ Aşağıdaki JSON formatında skorları dön (SADECE JSON, açıklama yazma):
     } catch (err) {
         clearTimeout(timeout);
         const sebep = err.name === 'AbortError' ? 'TIMEOUT (3sn)' : err.message;
-        console.log(`[YARGIÇ] ⚠️ Gemini hatası: ${sebep}. Mock moda düşülüyor.`);
+
         return mockAnaliz(fiyatStr);
     }
 }
@@ -129,8 +127,7 @@ function mockAnaliz(fiyatStr) {
 
 // ─── ANA YARGILAMA MOTORU ─────────────────────────────────────
 async function yargilamayiBaslat() {
-    console.log(`\n[YARGIÇ] ⚖️ Karar motoru ateşlendi. THE ORDER yasaları yükleniyor...`);
-    console.log(`[YARGIÇ] AI Motor: ${GEMINI_URL ? 'Gemini 1.5 Flash' : 'Mock (API key yok)'}`);
+
 
     try {
         // 1. İşlenmemiş ham verileri çek
@@ -142,11 +139,9 @@ async function yargilamayiBaslat() {
 
         if (fetchErr) throw fetchErr;
         if (!hamUrunler || hamUrunler.length === 0) {
-            console.log(`[YARGIÇ] Yargılanacak yeni ürün bulunamadı. Uykuya dönülüyor.`);
+
             return;
         }
-
-        console.log(`[YARGIÇ] ${hamUrunler.length} adet ham veri yakalandı. Analiz başlıyor...\n`);
 
         let sayac = { uretim: 0, test: 0, izleme: 0, reddet: 0 };
 
@@ -199,8 +194,6 @@ async function yargilamayiBaslat() {
 
             const urunAdi = parsedHamVeri.isim || 'Bilinmeyen Ürün';
             const kaynak = urun.veri_kaynagi || 'Trendyol';
-
-            console.log(`[YARGIÇ] ${ai.kaynak === 'gemini' ? '🧠' : '🎲'} Ürün: ${urunAdi.substring(0, 40)}... | Trend: ${trendSkoru.toFixed(1)} | Fırsat: ${firsatSkoru.toFixed(1)} → ${decision}`);
 
             // ─── VERİTABANI YAZMA İŞLEMLERİ ─────────────────────
 
@@ -281,7 +274,7 @@ async function yargilamayiBaslat() {
                         durum: firsatSkoru >= 85 ? 'onaylandi' : 'inceleniyor',
                         referans_linkler: parsedHamVeri.urunLink ? [parsedHamVeri.urunLink] : null
                     });
-                    console.log(`[YARGIÇ] 🌉 → b1_arge_trendler'e köprülendi (Ana Panel)`);
+
                 }
 
                 // Sayaç
@@ -300,10 +293,8 @@ async function yargilamayiBaslat() {
                 .eq('id', urun.id);
         }
 
-        console.log(`\n[YARGIÇ] ══════════════════════════════════════════`);
-        console.log(`[YARGIÇ] ✅ ${hamUrunler.length} dava görüldü ve karara bağlandı.`);
-        console.log(`[YARGIÇ]    ÜRETİM: ${sayac.uretim} | TEST: ${sayac.test} | İZLEME: ${sayac.izleme} | REDDET: ${sayac.reddet}`);
-        console.log(`[YARGIÇ] ══════════════════════════════════════════\n`);
+
+
 
     } catch (error) {
         console.error(`[YARGIÇ] ❌ Yargılama Hatası: ${error.message}`);

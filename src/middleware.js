@@ -74,7 +74,7 @@ export async function middleware(request) {
 
     // -- HATA İZLEME (500) — Sadece development ortamında loglanır
     if (process.env.NODE_ENV === 'development') {
-        console.log('[MIDDLEWARE TETİKLENDİ]', url);
+
     }
 
     try {
