@@ -685,7 +685,11 @@ export default function ArgeSayfasi() {
                             </div>
                         </div>
                     </div>
-                    <div style={{ display: 'flex', gap: '0.75rem', flexShrink: 0 }}>
+                    <div style={{ display: 'flex', gap: '0.75rem', flexShrink: 0, flexWrap: 'wrap', justifyContent: 'flex-end' }}>
+                        <NextLink href="/arge/karantina" style={{ display: 'flex', alignItems: 'center', gap: '8px', background: 'linear-gradient(135deg, #ef4444, #b91c1c)', color: 'white', border: 'none', padding: '10px 20px', borderRadius: '10px', fontWeight: 700, cursor: 'pointer', fontSize: '0.875rem', boxShadow: '0 4px 14px rgba(239, 68, 68, 0.4)', textDecoration: 'none', transition: 'all 0.2s' }}>
+                            <Lock size={18} />
+                            {isAR ? 'حجر سكرابر' : 'Karantina (Bot)'}
+                        </NextLink>
                         <span style={{ background: '#ecfdf5', color: '#047857', border: '2px solid #a7f3d0', padding: '4px 12px', borderRadius: '20px', fontSize: '0.7rem', fontWeight: 800, display: 'flex', alignItems: 'center', gap: 4 }}>
                             <Bot size={12} /> {isAR ? 'الوكيل: مُنشَّط' : 'Ajan: Trend Kâşifi'}
                         </span>
