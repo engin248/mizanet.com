@@ -11,6 +11,8 @@ import { useAuth } from '@/lib/auth';
 import { useKarargah } from '../hooks/useKarargah';
 import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/lib/supabase';
+import AjanKomutaGostergesi from '@/components/AjanKomutaGostergesi';
+import { ServerCrash, Gauge } from 'lucide-react';
 
 // ═══════════════════════════════════════════════
 // KARARGAH v3 — Final Tasarım
@@ -88,6 +90,25 @@ export function KarargahMainContainer() {
     const [modelArsiv, setModelArsiv] = useState(/** @type {any[]} */([]));
     const [izPanelAcik, setIzPanelAcik] = useState(false);
     const [kameraStreamDurum, setKameraStreamDurum] = useState('kontrol');
+
+    // M5 - Stres Testi State
+    const [stresTest, setStresTest] = useState({ aktif: false, url: '/api/cron-ajanlar', count: 100, concurrency: 10, sonuc: null, durum: 'bekliyor', hata: null });
+
+    const baslatStresTesti = async () => {
+        setStresTest(prv => ({ ...prv, durum: 'yukleniyor', sonuc: null, hata: null }));
+        try {
+            const res = await fetch('/api/stress-test', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ url: stresTest.url, count: Number(stresTest.count), concurrency: Number(stresTest.concurrency) })
+            });
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.error || 'Test başarısız oldu');
+            setStresTest(prv => ({ ...prv, durum: 'tamamlandi', sonuc: data }));
+        } catch (/** @type {any} */ err) {
+            setStresTest(prv => ({ ...prv, durum: 'hata', hata: err.message }));
+        }
+    };
 
     useEffect(() => {
         const kontrol = async () => {
@@ -252,6 +273,11 @@ export function KarargahMainContainer() {
                     </div>
                 </div>
 
+                {/* ── EVRENSEL AJAN KOMUTA AĞI ── */}
+                <div className="mb-6" style={{ animation: 'fadeUp 0.5s ease-out' }}>
+                    <AjanKomutaGostergesi />
+                </div>
+
                 {/* ── ANA İÇERİK: SOL MODÜLLER + SAĞ PANEL ── */}
                 <div className="grid grid-cols-1 lg:grid-cols-4 gap-3">
 
@@ -318,31 +344,6 @@ export function KarargahMainContainer() {
                                 <div className="text-[10px] text-emerald-100/70">{kameraStreamDurum === 'aktif' ? 'AI tarama aktif' : 'go2rtc başlatılmalı'}</div>
                             </div>
                         </Link>
-
-                        {/* Ajan Ağı */}
-                        <div className="bg-[#122b27] border border-[#1e4a43] rounded-xl p-5 shadow-md">
-                            <h3 className="text-[11px] font-medium text-emerald-200 uppercase tracking-wider mb-3 flex items-center justify-between">
-                                <span className="flex items-center gap-2"><Cpu size={12} /> Ajan Ağı</span>
-                                <span className="text-[10px] text-blue-400 font-semibold flex items-center gap-1.5">
-                                    <span className="w-1.5 h-1.5 rounded-full bg-blue-400" style={{ animation: 'subtle-pulse 2s ease-in-out infinite' }}></span> Otonom
-                                </span>
-                            </h3>
-                            {[
-                                { label: 'Veri Madencileri', desc: 'Web tarama aktif', stat: '24/s', icon: Network },
-                                { label: 'Analistler', desc: 'Modeller güncel', stat: '18ms', icon: Zap },
-                            ].map((a, i) => (
-                                <div key={i} className="bg-[#0b1d1a] border border-[#1e4a43] rounded-lg p-3 mb-2 last:mb-0 flex items-center justify-between">
-                                    <div className="flex items-center gap-2.5">
-                                        <a.icon size={13} className="text-emerald-400" />
-                                        <div><div className="text-xs font-medium text-white">{a.label}</div><div className="text-[10px] text-emerald-100/70">{a.desc}</div></div>
-                                    </div>
-                                    <span className="text-[10px] text-emerald-200 font-mono">{a.stat}</span>
-                                </div>
-                            ))}
-                            <Link href="/arge" className="mt-3 block text-center text-[10px] text-blue-400 hover:text-blue-300 font-semibold transition-colors uppercase tracking-wider">
-                                Detay →
-                            </Link>
-                        </div>
 
                         {/* Mesajlar */}
                         <div className="bg-[#122b27] border border-[#1e4a43] rounded-xl p-5 shadow-md">
@@ -415,6 +416,50 @@ export function KarargahMainContainer() {
                                 )}
                             </div>
                         )}
+
+                        {/* M5 - Sunucu Yük (Stres) Testi */}
+                        {isAdmin && (
+                            <div className="bg-[#122b27] border border-red-500/20 rounded-xl p-5 shadow-lg">
+                                <h3 className="text-[11px] font-medium text-red-300 uppercase tracking-wider mb-4 flex items-center justify-between border-b border-red-500/20 pb-2">
+                                    <span className="flex items-center gap-2"><ServerCrash size={12} className="text-red-400" /> STRES TESTİ MERKEZİ</span>
+                                </h3>
+
+                                <div className="space-y-3">
+                                    <div className="flex gap-2">
+                                        <input value={stresTest.url} onChange={e => setStresTest(p => ({ ...p, url: e.target.value }))} className="flex-1 bg-[#0b1d1a] border border-[#1e4a43] rounded-lg px-3 py-1.5 text-xs text-white" placeholder="Hedef URL" />
+                                    </div>
+                                    <div className="flex gap-2">
+                                        <input type="number" value={stresTest.count} onChange={e => setStresTest(p => ({ ...p, count: Number(e.target.value) }))} className="w-1/2 bg-[#0b1d1a] border border-[#1e4a43] rounded-lg px-3 py-1.5 text-xs text-white" placeholder="İstek Sayısı" />
+                                        <input type="number" value={stresTest.concurrency} onChange={e => setStresTest(p => ({ ...p, concurrency: Number(e.target.value) }))} className="w-1/2 bg-[#0b1d1a] border border-[#1e4a43] rounded-lg px-3 py-1.5 text-xs text-white" placeholder="Eşzamanlı (10..)" />
+                                    </div>
+                                    <button onClick={baslatStresTesti} disabled={stresTest.durum === 'yukleniyor'} className="w-full py-2 bg-red-600/80 hover:bg-red-500 text-white text-xs font-bold rounded-lg transition-colors disabled:opacity-50">
+                                        {stresTest.durum === 'yukleniyor' ? 'Test Ediliyor (Zorlanıyor)...' : 'YÜK TESTİNİ BAŞLAT'}
+                                    </button>
+                                </div>
+
+                                {stresTest.durum === 'hata' && (
+                                    <div className="mt-3 p-2 bg-red-500/10 border border-red-500/30 rounded-lg text-[10px] text-red-300">
+                                        Hata: {stresTest.hata}
+                                    </div>
+                                )}
+
+                                {stresTest.durum === 'tamamlandi' && stresTest.sonuc && (
+                                    <div className="mt-4 bg-[#0b1d1a] p-3 rounded-lg border border-emerald-500/30">
+                                        <div className="flex items-center justify-between mb-2 pb-1 border-b border-[#1e4a43]">
+                                            <span className="text-[10px] text-emerald-300 font-bold uppercase">Skor Tablosu</span>
+                                            <Gauge size={12} className="text-emerald-400" />
+                                        </div>
+                                        <div className="grid grid-cols-2 gap-2 text-[10px]">
+                                            <div className="flex flex-col"><span className="text-white/50">Başarılı:</span><span className="font-mono text-emerald-400">{stresTest.sonuc.success}</span></div>
+                                            <div className="flex flex-col"><span className="text-white/50">Çöken:</span><span className="font-mono text-red-400">{stresTest.sonuc.failed}</span></div>
+                                            <div className="flex flex-col"><span className="text-white/50">Süre:</span><span className="font-mono text-amber-200">{(stresTest.sonuc.totalTimeMs / 1000).toFixed(1)} sn</span></div>
+                                            <div className="flex flex-col"><span className="text-white/50">RPS:</span><span className="font-mono text-blue-300">{(stresTest.sonuc.totalRequests / (stresTest.sonuc.totalTimeMs / 1000)).toFixed(1)} req/s</span></div>
+                                            <div className="flex flex-col col-span-2"><span className="text-white/50">OrtGecikme (Latency):</span><span className="font-mono text-white">{stresTest.sonuc.avgLatencyMs} ms</span></div>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>
@@ -425,7 +470,7 @@ export function KarargahMainContainer() {
                 input[type=range]::-webkit-slider-thumb { -webkit-appearance:none; height:14px; width:14px; border-radius:50%; background:#22c55e; cursor:pointer; border:2px solid #173a34; }
                 input[type=range]::-moz-range-thumb { height:14px; width:14px; border-radius:50%; background:#22c55e; cursor:pointer; border:2px solid #173a34; }
             `}} />
-        </div>
+        </div >
     );
 }
 

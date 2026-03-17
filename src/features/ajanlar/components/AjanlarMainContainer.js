@@ -7,6 +7,7 @@ import { createGoster, telegramBildirim, formatTarih, yetkiKontrol } from '@/lib
 import { useAuth } from '@/lib/auth';
 import { useLang } from '@/lib/langContext';
 import { silmeYetkiDogrula } from '@/lib/silmeYetkiDogrula';
+import AjanKomutaGostergesi from '@/components/AjanKomutaGostergesi';
 
 // ─── AJAN GÖREV KONFİGÜRASYONU ──────────────────────────────
 // Koordinatör buradan her ajanın her görevini açıp kapatır
@@ -445,6 +446,11 @@ export default function AjanlarMainContainer() {
                     {mesaj.text}
                 </div>
             )}
+
+            {/* ─── EVRENSEL AI AĞI PANOSU ─── */}
+            <div className="mb-6">
+                <AjanKomutaGostergesi />
+            </div>
 
             {/* ─── İSTATİSTİKLER ─── */}
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 mb-5">
