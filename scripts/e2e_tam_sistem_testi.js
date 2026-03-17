@@ -42,13 +42,12 @@ async function runE2ETest() {
         const { data: musteriData, error: musteriErr } = await supabase
             .from('b2_musteriler')
             .insert([{
+                musteri_kodu: 'E2E-CUST-' + Math.floor(Math.random() * 1000),
                 ad_soyad: 'E2E Test Müşterisi',
-                firma_adi: 'E2E Testing Corp.',
+                musteri_tipi: 'bireysel',
                 telefon: '05550000000',
                 email: 'test@e2e.com',
-                ulke: 'Türkiye',
-                sehir: 'İstanbul',
-                musteri_tipi: 'B2B',
+                adres: 'E2E Test Adresi, Istanbul',
                 aktif: true
             }])
             .select('id')
