@@ -7,7 +7,19 @@ const nextConfig = {
     // YENİ: 'unsafe-eval' sadece dev'de açık (Turbopack büylüe gerçtekiyor), production'da kapalı
     async headers() {
         const isDev = process.env.NODE_ENV === 'development';
+        // CORS Eklendi
+        const corsHeaders = [
+            { key: 'Access-Control-Allow-Credentials', value: 'true' },
+            { key: 'Access-Control-Allow-Origin', value: '*' },
+            { key: 'Access-Control-Allow-Methods', value: 'GET,DELETE,PATCH,POST,PUT,OPTIONS' },
+            { key: 'Access-Control-Allow-Headers', value: 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, Authorization' },
+        ];
+
         return [
+            {
+                source: '/api/:path*',
+                headers: corsHeaders
+            },
             {
                 source: '/(.*)',
                 headers: [
@@ -20,8 +32,6 @@ const nextConfig = {
                         key: 'Content-Security-Policy',
                         value: [
                             "default-src 'self'",
-                            // 'unsafe-eval' sadece dev'de (Turbopack zorunlu kılıyor)
-                            // Production'da kaldırıldı — XSS kalkını güçlendirildi
                             isDev
                                 ? "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://*.sentry.io"
                                 : "script-src 'self' 'unsafe-inline' https://*.sentry.io",

@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 3600; // Karargah Ana Verileri 1 SAAT boyunca statik kalır (Bedava & Çok Hızlı)
 
 export async function GET(request) {
     try {

@@ -8,6 +8,8 @@ import { NextResponse } from 'next/server';
 // ── UPSTASH RATE LIMIT ─────────────────────────────────────────────
 // Upstash env varları yoksa in-memory fallback (geliştirme ortamı)
 let ratelimit = null;
+// Upstash paketleri yüklü olmadığı için geçici olarak devre dışı bırakıldı (Build Hatasını Önlemek İçin)
+/*
 try {
     if (process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN) {
         const { Ratelimit } = await import('@upstash/ratelimit');
@@ -23,7 +25,8 @@ try {
             prefix: 'pin_giris',
         });
     }
-} catch { /* Upstash yoksa devam */ }
+} catch { } // Upstash yoksa devam 
+*/
 
 // In-memory fallback (Upstash olmadığında)
 const BELLEK_KILIT = new Map();
