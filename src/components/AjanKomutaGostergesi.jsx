@@ -1,7 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
-import { Bot, Cpu, Search, Zap, Camera, Shield, Network, Loader2, CheckCircle2, Clock, XCircle, Play, Server } from 'lucide-react';
+import { Bot, Cpu, Search, Zap, Camera, Shield, Network, Loader2, CheckCircle2, Clock, XCircle, Play, Server, Boxes, Wallet, Factory } from 'lucide-react';
 import { formatTarih } from '@/lib/utils';
 
 // Sabit Ajan Mimari Tanımları
@@ -13,6 +13,9 @@ const AJAN_SISTEMLERI = [
     { id: 'kopru', ad: 'Köprü Ajanı', ikon: Zap, renk: '#f97316', bg: '#fff7ed', rol: 'Veri Dönüştürücü', aciklama: 'Düz metni yapılandırır.', konum: 'Supabase Edge', yetenekler: ['JSON Formatlama', 'Veri Temizliği', 'Tablo Senkronizasyonu'] },
     { id: 'vision', ad: 'Kamera Gözcüsü', ikon: Camera, renk: '#06b6d4', bg: '#ecfeff', rol: 'Görüntü İşleme (Vision)', aciklama: 'Kumaş defo ve üretim darboğazı.', konum: 'Lokal Kiosk / go2rtc', yetenekler: ['Defo Görme', 'Barkod Okuma', 'Darboğaz Tespiti'] },
     { id: 'kalkan', ad: 'Zırh Kalkanı', ikon: Shield, renk: '#8b5cf6', bg: '#f5f3ff', rol: 'Güvenlik (Middleware)', aciklama: 'DDoS ve Spam engelleme.', konum: 'Vercel Middleware', yetenekler: ['Rate Limiting', 'IP Engelleme', 'Bot Savunması'] },
+    { id: 'stokotonomu', ad: 'Depo & Stok Otonomu', ikon: Boxes, renk: '#84cc16', bg: '#ecfccb', rol: 'Lojistik & Stok Algoritması', aciklama: 'Üretimden depoya otonom kayıt.', konum: 'Veritabanı Tetikleyicisi (DB)', yetenekler: ['Stok Düşümü', 'Devir İşlemi', 'Kritik Stok Uyarısı'] },
+    { id: 'kasaotonomu', ad: 'Finans & Kasa Algoritması', ikon: Wallet, renk: '#14b8a6', bg: '#ccfbf1', rol: 'Muhasebe Botu', aciklama: 'Sipariş tahsilatlarını denetler.', konum: 'Supabase Cron', yetenekler: ['Ciro Hesaplama', 'Otomatik Tahsilat', 'Maliyet Analizi'] },
+    { id: 'uretimplanlayici', ad: 'Üretim Planlayıcısı', ikon: Factory, renk: '#f43f5e', bg: '#ffe4e6', rol: 'Bant & Makine Optimizasyonu', aciklama: 'Kiosklardan gelen hızı ölçer.', konum: 'Merkezi Sunucu', yetenekler: ['Performans Ölçümü', 'Makine Ataması', 'Fire Tespiti'] },
 ];
 
 export default function AjanKomutaGostergesi() {
@@ -57,8 +60,11 @@ export default function AjanKomutaGostergesi() {
         else if (ajanKimligi === 'kopru') eslesmeler = loglar.filter(l => l.ajan_adi?.toLowerCase().includes('kopru') || l.ajan_adi?.toLowerCase().includes('köprü'));
         else if (ajanKimligi === 'vision') eslesmeler = loglar.filter(l => l.ajan_adi?.toLowerCase().includes('vision') || l.ajan_adi?.toLowerCase().includes('kamera'));
         else if (ajanKimligi === 'kalkan') eslesmeler = loglar.filter(l => l.ajan_adi?.toLowerCase().includes('kalkan') || l.ajan_adi?.toLowerCase().includes('guvenlik'));
+        else if (ajanKimligi === 'stokotonomu') eslesmeler = loglar.filter(l => l.ajan_adi?.toLowerCase().includes('stok') || l.ajan_adi?.toLowerCase().includes('depo'));
+        else if (ajanKimligi === 'kasaotonomu') eslesmeler = loglar.filter(l => l.ajan_adi?.toLowerCase().includes('kasa') || l.ajan_adi?.toLowerCase().includes('finans'));
+        else if (ajanKimligi === 'uretimplanlayici') eslesmeler = loglar.filter(l => l.ajan_adi?.toLowerCase().includes('üretim') || l.ajan_adi?.toLowerCase().includes('uretim') || l.ajan_adi?.toLowerCase().includes('planlayici'));
 
-        if (eslesmeler.length === 0) return { durum: 'bekliyor', mesaj: 'Sistem hazır, görev bekliyor.', sure: null, sonuc: 'bekliyor' };
+        if (eslesmeler.length === 0) return { durum: 'bekliyor', mesaj: 'Sistem altyapısı kuruluyor. Henüz log düşmedi.', sure: null, sonuc: 'bekliyor' };
 
         const sonIslem = eslesmeler[0];
         const gecenSure = Date.now() - new Date(sonIslem.created_at).getTime();
