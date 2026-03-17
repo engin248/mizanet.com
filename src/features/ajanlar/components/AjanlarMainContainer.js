@@ -8,6 +8,7 @@ import { useAuth } from '@/lib/auth';
 import { useLang } from '@/lib/langContext';
 import { silmeYetkiDogrula } from '@/lib/silmeYetkiDogrula';
 import AjanKomutaGostergesi from '@/components/AjanKomutaGostergesi';
+import AjanOrchestrator from './AjanOrchestrator';
 
 // ─── AJAN GÖREV KONFİGÜRASYONU ──────────────────────────────
 // Koordinatör buradan her ajanın her görevini açıp kapatır
@@ -215,7 +216,7 @@ export default function AjanlarMainContainer() {
     const { lang } = useLang();
     const isAR = lang === 'ar';
     const [yetkiliMi, setYetkiliMi] = useState(false);
-    const [sekme, setSekme] = useState('gorevler'); // 'gorevler' | 'konfigur'
+    const [sekme, setSekme] = useState('gorevler'); // 'gorevler' | 'konfigur' | 'orkestrator'
     const [gorevler, setGorevler] = useState(/** @type {any[]} */([]));
     const [loading, setLoading] = useState(true);
     const [formAcik, setFormAcik] = useState(false);
@@ -493,7 +494,8 @@ export default function AjanlarMainContainer() {
             <div className="flex gap-1 mb-5 bg-slate-100 rounded-xl p-1">
                 {[
                     { key: 'gorevler', label: '📋 Görev Tahtası', desc: 'İş emirleri' },
-                    { key: 'konfigur', label: '⚙️ Ajan Yapılandırma', desc: 'Aktif/Pasif' },
+                    { key: 'konfigur', label: '⚙️ Yapılandırma', desc: 'Aktif/Pasif' },
+                    { key: 'orkestrator', label: '🎯 Orkestrator', desc: '3-Worker AI' },
                 ].map(s => (
                     <button key={s.key} onClick={() => setSekme(s.key)} className={`
                         flex-1 px-4 py-2.5 rounded-lg border-none cursor-pointer font-bold text-sm transition-all text-center
@@ -883,6 +885,13 @@ export default function AjanlarMainContainer() {
                             </div>
                         </div>
                     </div>
+                </div>
+            )}
+
+            {/* ─── ORKESTRATOR SEKMESİ ─── */}
+            {sekme === 'orkestrator' && yetkiliMi && (
+                <div style={{ background: '#122b27', borderRadius: 18, padding: '1.5rem', border: '2px solid #7c3aed' }}>
+                    <AjanOrchestrator />
                 </div>
             )}
 
