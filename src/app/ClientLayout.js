@@ -224,23 +224,18 @@ function LayoutInner({ children }) {
 
     useEffect(() => {
         if (!yukleniyor && !kullanici && pathname !== '/giris') {
-            router.push('/giris');
+            window.location.href = '/giris';
         }
     }, [kullanici, yukleniyor, pathname]);
 
-    if (yukleniyor) {
-        return (
-            <div style={{ minHeight: '100vh', background: '#0d1117', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '1rem' }}>
-                <div style={{ width: 40, height: 40, border: '4px solid #1e4a43', borderTopColor: '#34d399', borderRadius: '50%', animation: 'spin 1s linear infinite' }} />
-                <div style={{ color: '#a7f3d0', fontWeight: 800, fontSize: '0.85rem', letterSpacing: '0.1em' }}>SİSTEME BAĞLANILIYOR...</div>
-                <style>{`@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }`}</style>
-            </div>
-        );
-    }
-
-    if (isGiris || !kullanici) {
+    // KÖKLÜ ÇÖZÜM: SSR Hydration çakışmasına sebep olan "SİSTEME BAĞLANILIYOR" tam ekran kilidi KURTARILDI.
+    // Artık sistem client tarafında React'i dondurmayacak, direkt render edilecek.
+    if (isGiris || (!kullanici && yukleniyor === false)) {
         return <>{children}</>;
     }
+
+    // SSR ve mount sırasında UI uyuşmazlığını engellemek için, giriş yapılmamışsa (kullanici == null) arayüzü çizme
+    if (!kullanici) return null;
 
     return (
         <div className="layout-container" style={{ flexDirection: isAR ? 'row-reverse' : 'row' }}>
