@@ -329,15 +329,21 @@ export default function SiparislerSayfasi() {
         try {
             await supabase.from('b2_siparis_kalemleri').delete().eq('siparis_id', id);
 
-            // [AI ZIRHI]: B0 KISMEN SILINMEDEN ONCE KARA KUTUYA YAZILIR (Kriter 25)
+            // [K-14 DÜZELTME - AUDIT LOGU]: Kimin, hangi siparışi sildiği artık kalıcı kaydediliyor
             try {
                 await supabase.from('b0_sistem_loglari').insert([{
-                    tablo_adi: String('b2_siparisler').replace(/['"]/g, ''),
+                    tablo_adi: String('b2_siparisler').replace(/['"]/ / g, ''),
                     islem_tipi: 'SILME',
-                    kullanici_adi: 'Saha Yetkilisi (Otonom Log)',
-                    eski_veri: { durum: 'Veri kalici silinmeden once loglandi.' }
+                    kullanici_adi: kullanici?.ad || kullanici?.email || 'Bilinmeyen Kullanici',
+                    eski_veri: {
+                        siparis_id: id,
+                        siparis_no: anaSiparis?.siparis_no || 'Bilinmiyor',
+                        toplam_tutar_tl: anaSiparis?.toplam_tutar_tl || 0,
+                        durum: anaSiparis?.durum || 'bilinmiyor',
+                        silme_zamani: new Date().toISOString()
+                    }
                 }]);
-            } catch (e) { }
+            } catch (e) { console.warn('[AUDIT LOG HATA]', e); }
 
             const { error } = await supabase.from('b2_siparisler').delete().eq('id', id);
             if (error) throw error;

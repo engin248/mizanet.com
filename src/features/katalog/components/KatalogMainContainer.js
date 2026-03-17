@@ -536,10 +536,12 @@ export default function KatalogSayfasi() {
         try {
             try {
                 await supabase.from('b0_sistem_loglari').insert([{
-                    tablo_adi: 'b2_urun_katalogu', islem_tipi: 'SILME', kullanici_adi: kullanici?.label || 'M9 Yetkilisi',
-                    eski_veri: { durum: 'M9 Urun kalici silindi.', urun_kodu: m_kodu }
+                    tablo_adi: 'b2_urun_katalogu',
+                    islem_tipi: 'SILME',
+                    kullanici_adi: kullanici?.ad || kullanici?.email || 'M9 Yetkilisi',
+                    eski_veri: { urun_kodu: m_kodu, urun_id: id, silme_zamani: new Date().toISOString() }
                 }]);
-            } catch (e) { }
+            } catch (e) { console.warn('[KATALOG AUDIT LOG HATA]', e); }
 
             await supabase.from('b2_urun_katalogu').delete().eq('id', id);
             yukle(); goster('Silindi');

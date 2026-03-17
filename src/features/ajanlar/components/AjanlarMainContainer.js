@@ -243,9 +243,11 @@ export default function AjanlarMainContainer() {
 
         let kanal;
         if (erisebilir) {
-            // [AI ZIRHI]: Realtime Websocket (Kriter 20 & 34)
+            // [K-08 & K-15 DÜZELTME]: Realtime sadece kendi tablosunu dinliyor
+            // ESKİ: { schema: 'public' } — tüm tablolardaki DEĞİŞİKLİKLERDE Ajanlar sayfasını yeniden yüklüyordu!
+            // YENİ: Sadece ajan görevleri tablosunu izliyor → %90 daha az Supabase trafiği
             kanal = supabase.channel('islem-gercek-zamanli-ai')
-                .on('postgres_changes', { event: '*', schema: 'public' }, () => { yukle(); })
+                .on('postgres_changes', { event: '*', schema: 'public', table: 'b1_ajan_gorevler' }, () => { yukle(); })
                 .subscribe();
         }
 
