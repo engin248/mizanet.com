@@ -731,7 +731,7 @@ export default function KatalogSayfasi() {
 
             {/* HIZLI FORM (M9) */}
             {formAcik && erisim === 'full' && (
-                <div style={{ background: '#122b27', border: '2px solid #047857', borderRadius: 18, padding: '2rem', marginBottom: '2rem', boxShadow: '0 10px 40px rgba(4,120,87,0.08)' }}>
+                <div style={{ background: '#122b27', border: '2px solid #047857', borderRadius: 18, padding: '2rem', marginBottom: '2rem', boxShadow: '0 10px 40px rgba(4,120,87,0.08)', direction: isAR ? 'rtl' : 'ltr', textAlign: isAR ? 'right' : 'left' }}>
                     <h3 style={{ fontWeight: 900, color: '#065f46', marginBottom: '1.25rem', fontSize: '1.1rem', display: 'flex', alignItems: 'center', gap: 8 }}>
                         <Tag size={18} /> {duzenleId ? 'Ürün Düzenle' : 'Yeni Ürün Kartı'}
                     </h3>

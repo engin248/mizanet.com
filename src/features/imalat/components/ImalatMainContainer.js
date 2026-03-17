@@ -275,6 +275,11 @@ export default function ImalatMainContainer() {
         if (islemdeId === id) return;
         setIslemdeId(id);
         try {
+            // [K-19 RACE CONDITION KILIDI]: İki kişi aynı anda 'Tamamla' basarsa sadece ilki geçer
+            const { data: mevcutIs } = await supabase.from('production_orders').select('status').eq('id', id).single();
+            if (mevcutIs?.status === 'completed') {
+                return showMessage('⚠️ Bu iş emri zaten tamamlandı! Mükerrer işlem engellendi.', 'error');
+            }
             const { error } = await supabase.from('production_orders').update({ status: 'waiting_for_proof', end_time: new Date().toISOString() }).eq('id', id);
             if (error) throw error;
             showMessage('SAHA: İş Bitti! Analiz ve Onay için 4. Pencereye (Maliye/Karargah) yansıdı.');

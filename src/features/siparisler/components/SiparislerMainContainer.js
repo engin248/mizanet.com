@@ -56,6 +56,10 @@ export default function SiparislerSayfasi() {
     const [kargoNo, setKargoNo] = useState('');
     const [aramaMetni, setAramaMetni] = useState('');
     const [islemdeId, setIslemdeId] = useState(/** @type {any} */(null)); // [SPAM ZIRHI]
+    // [K-13 PAGINATION]: Sayfa tabanlı yükleme — 10K+ kayıtta çöküşü önler
+    const [sayfaNo, setSayfaNo] = useState(0);
+    const [dahaFazlaVar, setDahaFazlaVar] = useState(true);
+    const SAYFA_BOYUTU = 50;
 
     useEffect(() => {
         let satisPin = false;
@@ -103,19 +107,27 @@ export default function SiparislerSayfasi() {
 
     const goster = (text, type = 'success') => { setMesaj({ text, type }); setTimeout(() => setMesaj({ text: '', type: '' }), 5000); };
 
-    const yukle = async () => {
+    const yukle = async (sayfa = 0, sifirla = true) => {
         setLoading(true);
         try {
             const timeout = new Promise((_, r) => setTimeout(() => r(new Error('Bağlantı zaman aşımı (10sn)')), 10000));
+            const from = sayfa * SAYFA_BOYUTU;
+            const to = from + SAYFA_BOYUTU - 1;
             const [sRes, mRes, uRes] = await Promise.race([
                 Promise.allSettled([
-                    supabase.from('b2_siparisler').select('*, b2_musteriler:musteri_id(ad_soyad,musteri_kodu)').order('created_at', { ascending: false }).limit(200),
+                    // [K-13]: range() ile sayfa bazlı veri çekme — LIMIT 200 yerine LIMIT 50 + sayfalama
+                    supabase.from('b2_siparisler').select('*, b2_musteriler:musteri_id(ad_soyad,musteri_kodu)').order('created_at', { ascending: false }).range(from, to),
                     supabase.from('b2_musteriler').select('id,musteri_kodu,ad_soyad').eq('aktif', true).limit(500),
                     supabase.from('b2_urun_katalogu').select('id,urun_kodu,urun_adi,satis_fiyati_tl,stok_adeti').eq('durum', 'aktif').limit(500)
                 ]),
                 timeout
             ]);
-            if (sRes.status === 'fulfilled' && sRes.value.data) setSiparisler(sRes.value.data);
+            if (sRes.status === 'fulfilled' && sRes.value.data) {
+                const gelen = sRes.value.data;
+                setSiparisler(prev => sifirla ? gelen : [...prev, ...gelen]);
+                setDahaFazlaVar(gelen.length === SAYFA_BOYUTU); // Sayfada tam kayıt geldiyse daha var
+                setSayfaNo(sayfa);
+            }
             if (mRes.status === 'fulfilled' && mRes.value.data) setMusteriler(mRes.value.data);
             if (uRes.status === 'fulfilled' && uRes.value.data) setUrunler(uRes.value.data);
         } catch (error) { goster('Sistem verileri alınamadı: ' + error.message, 'error'); }
@@ -801,6 +813,24 @@ export default function SiparislerSayfasi() {
                         );
                     })}
                 </div>
+
+                {/* [K-13 PAGINATION]: Daha Fazla Yükle Butonu */}
+                {dahaFazlaVar && (
+                    <div className="flex justify-center mt-4 mb-2">
+                        <button
+                            onClick={() => yukle(sayfaNo + 1, false)}
+                            disabled={loading}
+                            className="flex items-center gap-2 px-6 py-2.5 bg-emerald-800 text-white border-2 border-emerald-600 rounded-xl font-black text-sm hover:bg-emerald-700 transition-all shadow-md disabled:opacity-50 disabled:cursor-wait"
+                        >
+                            {loading ? '⏳ Yükleniyor...' : `📥 Daha Fazla Yükle (${siparisler.length} / tümü)`}
+                        </button>
+                    </div>
+                )}
+                {!dahaFazlaVar && siparisler.length >= SAYFA_BOYUTU && (
+                    <div className="text-center mt-3 text-xs text-slate-400 font-bold py-2">
+                        ✅ Tüm siparişler yüklendi ({siparisler.length} adet)
+                    </div>
+                )}
 
                 {/* DETAY PANELİ */}
                 {aktifSiparis && (
