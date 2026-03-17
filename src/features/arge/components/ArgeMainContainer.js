@@ -14,6 +14,7 @@ import M1_UrunRecetesi from './M1_UrunRecetesi';
 import M1_AramaMotoru from './M1_AramaMotoru';
 import { ModelMesajGecmisi } from '@/components/mesaj/ModelMesajGecmisi';
 import { debounce } from 'lodash'; // EKLENDİ (Render Thrashing Koruması)
+import ArgeIstihbaratPanel from './ArgeIstihbaratPanel'; // İSTİHBARAT KOMUTA
 
 
 // =========================================================================
@@ -724,7 +725,8 @@ export default function ArgeSayfasi() {
                     </div>
                 )}
 
-                {/* AI TREND ARAMA KUTUSU */}
+                {/* ── İSTİHBARAT KOMUTA PANELİ (D+G+E+H+SerpAPI+DeepSeek) ── */}
+                <ArgeIstihbaratPanel />
 
                 {/* ── 🤖 YENİ: 8 ÇEKİRDEKLİ OTONOM İSTİHBARAT AĞI WİDGET'I ──────────────────────── */}
                 <div style={{ marginBottom: '2rem', background: 'linear-gradient(135deg, #020617 0%, #064e3b 100%)', borderRadius: '24px', overflow: 'hidden', position: 'relative', border: '1px solid rgba(52, 211, 153, 0.15)', boxShadow: '0 20px 50px -15px rgba(2, 44, 34, 0.6)' }}>
