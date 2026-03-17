@@ -60,46 +60,12 @@ export function useKarargah() {
         setStats(prev => ({ ...prev, yukleniyor: true }));
         const t0 = performance.now();
         try {
-            const bugun = new Date();
-            bugun.setHours(0, 0, 0, 0);
-            const bugunISO = bugun.toISOString();
+            // ⚡ EKİP GAMMA - Yüksek Performans Arka Plan İsteği
+            const response = await fetch('/api/kasa-ozet');
+            if (!response.ok) throw new Error('Ozet API Hatasi');
+            const data = await response.json();
 
-            // Bugünkü kasa: ciro = gelir toplamı
-            const { data: kasaData } = await supabase
-                .from('b2_kasa_hareketleri')
-                .select('tutar_tl, hareket_tipi')
-                .gte('created_at', bugunISO);
-
-            const ciro = (kasaData || [])
-                .filter(h => h.hareket_tipi === 'gelir')
-                .reduce((t, h) => t + parseFloat(h.tutar_tl || 0), 0);
-
-            // Bugünkü maliyetler
-            const { data: maliyetData, error: maliyetHata } = await supabase
-                .from('b1_maliyet_kayitlari')
-                .select('tutar_tl, maliyet_tipi')
-                .gte('created_at', bugunISO);
-
-            if (maliyetHata) console.error("Maliyet Çekme Hatası:", maliyetHata);
-
-            const maliyet = (maliyetData || [])
-                .reduce((t, m) => t + parseFloat(m.tutar_tl || 0), 0);
-
-            const personel = (maliyetData || [])
-                .filter(m => m.maliyet_tipi === 'personel_iscilik')
-                .reduce((t, m) => t + parseFloat(m.tutar_tl || 0), 0);
-
-            // Aktif sistem uyarıları
-            const { data: alarmData, error: alarmHata } = await supabase
-                .from('b1_sistem_uyarilari')
-                .select('id, uyari_tipi, seviye, baslik, mesaj, olusturma')
-                .eq('durum', 'aktif')
-                .order('olusturma', { ascending: false })
-                .limit(10);
-
-            if (alarmHata) console.error("Alarm Çekme Hatası:", alarmHata);
-
-            const alarmlar = (alarmData || []).map(a => ({
+            const alarmlar = data.alarmlar.map(a => ({
                 id: a.id,
                 text: a.baslik || a.uyari_tipi || 'Sistem Uyarısı',
                 tip: a.seviye === 'krt' ? 'kirmizi' : 'sari',
@@ -108,7 +74,13 @@ export function useKarargah() {
             }));
 
             setPing(Math.round(performance.now() - t0));
-            setStats({ ciro, maliyet, personel, fire: 0, yukleniyor: false });
+            setStats({
+                ciro: data.ciro || 0,
+                maliyet: data.maliyet || 0,
+                personel: data.personel || 0,
+                fire: 0,
+                yukleniyor: false
+            });
             setAlarms(alarmlar);
         } catch (err) {
             console.error('Karargah veri hatası:', err);
