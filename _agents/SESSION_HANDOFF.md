@@ -1,6 +1,37 @@
-# 🧠 SESSION HANDOFF — 17 Mart 2026 (Gece)
+# 🧠 SESSION HANDOFF — 17 Mart 2026 (Gece Sonu)
 > Bir sonraki sohbette bu dosyayı `/baslat` ile aç veya AI'a göster.
-> **Son güncelleme: 17 Mart 2026 22:09**
+> **Son güncelleme: 17 Mart 2026 23:00**
+
+---
+
+## 🔴 NEREDE KALDIK — HIZLI ÖZET
+
+### Bu oturumda alınan en önemli karar:
+> **"Önce yolu belirleyeceğiz, sonra yola çıkacağız."**
+
+### Mimari karar (kesin):
+- ❌ HTTP scraper yok (eski `oluisci.js` kalkıyor)
+- ✅ **Browser Agent** → Playwright + AI Vision
+- Ajan gerçek tarayıcı açar, sayfayı insan gibi okur, kaydeder, kapatar
+- Trendyol'da **18 kriter** okunacak (eksik bırakmadan)
+- Hafıza gerekirse var: kısa (in-process) + uzun (Supabase)
+
+### Dosyalar hazır (kod yazılmadı, plan tamam):
+| Dosya | Ne |
+|-------|-----|
+| `_agents/ANALIZ_01_ARGE_TREND.md` | AR-GE sayfası A-H blok analizi |
+| `_agents/ANALIZ_02_KARARGAH.md` | Karargah komuta merkezi analizi |
+| `_agents/ANALIZ_03_KUMAS_ARSIV.md` | Dijital malzeme kütüphanesi analizi |
+| `_agents/ANALIZ_04_KALIP_MODELHANE.md` | Kalıp sistemi analizi |
+| `_agents/VERI_MIMARISI_TASLAK.md` | Platform bazlı veri toplama planı (taslak) |
+| `_agents/SESSION_HANDOFF.md` | Bu dosya |
+
+### Bir sonraki sohbet açılınca ilk yapılacak:
+1. Bu dosyayı oku
+2. Kullanıcıya sor: **"Browser Agent'tan mı başlıyoruz yoksa sayfaların içini mi dolduracağız?"**
+3. Ona göre harekete geç — kod yazmadan önce onay al
+
+---
 
 ---
 
