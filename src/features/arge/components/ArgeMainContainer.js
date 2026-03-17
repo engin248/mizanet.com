@@ -1241,6 +1241,22 @@ export default function ArgeSayfasi() {
                                 />
                             ))}
                         </div>
+
+                        {/* ── DAHA FAZLA YÜKLE (K-13 PAGINATION) ── */}
+                        {dahaFazlaVar && !loading && (
+                            <div style={{ textAlign: 'center', marginTop: '1rem' }}>
+                                <button
+                                    onClick={() => verileriCek(sayfaNo + 1, false)}
+                                    style={{
+                                        padding: '10px 28px', background: 'linear-gradient(135deg,#047857,#065f46)',
+                                        color: 'white', border: 'none', borderRadius: 10, fontWeight: 800,
+                                        fontSize: '0.85rem', cursor: 'pointer', boxShadow: '0 4px 12px rgba(4,120,87,0.3)'
+                                    }}
+                                >
+                                    {isAR ? 'تحميل المزيد' : '⬇ Daha Fazla Yükle'}
+                                </button>
+                            </div>
+                        )}
                     </div>
 
                     {/* ARŞİV & ZAMANSAL DOĞRULAMA PANELİ */}
