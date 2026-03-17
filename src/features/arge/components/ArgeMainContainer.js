@@ -51,25 +51,29 @@ export default function ArgeSayfasi() {
 
 
 
-    const [trendler, setTrendler] = useState(([]));
+    const [trendler, setTrendler] = useState(/** @type {any[]} */([]));
     const [form, setForm] = useState(BOSH_FORM);
     const [formAcik, setFormAcik] = useState(false);
     const [hafizaUyariGecebilir, setHafizaUyariGecebilir] = useState(false);
     const [loading, setLoading] = useState(false);
     const [mesaj, setMesaj] = useState({ text: '', type: '' });
     const [filtre, setFiltre] = useState('tumu');
-    const [secilenTrend, setSecilenTrend] = useState(null);
+    const [secilenTrend, setSecilenTrend] = useState(/** @type {any} */(null));
     const [agentLoglari, setAgentLoglari] = useState(/** @type {any[]} */([]));
     const [hermaiKararlari, setHermaiKararlari] = useState(/** @type {any[]} */([])); // EKLENDİ (HermAI)
-    const [duzenleId, setDuzenleId] = useState(null);
+    const [duzenleId, setDuzenleId] = useState(/** @type {any} */(null));
     // Zamansal Doğrulama
-    const [yenidenAraniyor, setYenidenAraniyor] = useState(null);
+    const [yenidenAraniyor, setYenidenAraniyor] = useState(/** @type {any} */(null));
     // AI ARAMA
     const [aiSorgu, setAiSorgu] = useState('');
     const [aiAraniyor, setAiAraniyor] = useState(false);
-    const [aiSonuclar, setAiSonuclar] = useState(null);
+    const [aiSonuclar, setAiSonuclar] = useState(/** @type {any} */(null));
     const [aiPanelAcik, setAiPanelAcik] = useState(false);
-    const [islemdeId, setIslemdeId] = useState(null); // [SPAM ZIRHI]
+    const [islemdeId, setIslemdeId] = useState(/** @type {any} */(null)); // [SPAM ZIRHI]
+    // ── PAGINATION (K-13) ────────────────────────────────────────
+    const SAYFA_BOYUTU = 50;
+    const [sayfaNo, setSayfaNo] = useState(0);
+    const [dahaFazlaVar, setDahaFazlaVar] = useState(false);
 
     // 🟢 DÜZELTİLDİ: Native window.confirm yerine profesyonel Modal States'leri
     const [aiOnayModalAcik, setAiOnayModalAcik] = useState(false);
@@ -131,21 +135,30 @@ export default function ArgeSayfasi() {
         setTimeout(() => setMesaj({ text: '', type: '' }), 6000);
     };
 
-    const verileriCek = async () => {
+    const verileriCek = async (sayfa = 0, sifirla = true) => {
         setLoading(true);
         try {
-            // K Kriteri Onarımı: Promise.allSettled kullanılarak n+1 ağ darboğazı ve çökme engeli getirildi.
-            // 🔴 YENİ KÖR NOKTA (Query Boyutu): LIMIT değeri, İstatistik Grafikleri ve Geçmiş Trend analizi için yeterli veri havuzuna ihtiyaç duyar.
-            // Bu nedenle LIMIT 200 optimumdur. Ancak "SELECT" daraltıldığı için (base64 resimler ve uzun yazılar hariç tutuldu) 200 adet verinin inmesi 50 adet veriyle aynı hıza ve %90 daha düşük milisaniyeye indirgenmiştir.
+            const baslangic = sayfa * SAYFA_BOYUTU;
+            const bitis = baslangic + SAYFA_BOYUTU - 1;
+
             const [trendlerRes, loglarRes, hermKararRes] = await Promise.allSettled([
-                supabase.from('b1_arge_trendler').select('id, baslik, baslik_ar, platform, kategori, hedef_kitle, talep_skoru, zorluk_derecesi, durum, created_at, referans_linkler').order('created_at', { ascending: false }).limit(200),
+                supabase
+                    .from('b1_arge_trendler')
+                    .select('id, baslik, baslik_ar, platform, kategori, hedef_kitle, talep_skoru, zorluk_derecesi, durum, created_at, referans_linkler')
+                    .order('created_at', { ascending: false })
+                    .range(baslangic, bitis),
                 supabase.from('b1_agent_loglari').select('id, ajan_adi, islem_tipi, mesaj, created_at, sonuc').eq('ajan_adi', 'Trend Kâşifi').order('created_at', { ascending: false }).limit(5),
-                supabase.from('b0_herm_ai_kararlar').select('id, model_referans_id, karar, guven_skoru, ajan_tavsiyesi, created_at').order('created_at', { ascending: false }).limit(20) // EKLENDİ
+                supabase.from('b0_herm_ai_kararlar').select('id, model_referans_id, karar, guven_skoru, ajan_tavsiyesi, created_at').order('created_at', { ascending: false }).limit(20)
             ]);
 
-            if (trendlerRes.status === 'fulfilled' && trendlerRes.value.data) setTrendler(trendlerRes.value.data);
+            if (trendlerRes.status === 'fulfilled' && trendlerRes.value.data) {
+                const gelen = trendlerRes.value.data;
+                setDahaFazlaVar(gelen.length === SAYFA_BOYUTU);
+                setSayfaNo(sayfa);
+                setTrendler(prev => sifirla ? gelen : [...prev, ...gelen]);
+            }
             if (loglarRes.status === 'fulfilled' && loglarRes.value.data) setAgentLoglari(loglarRes.value.data);
-            if (hermKararRes.status === 'fulfilled' && hermKararRes.value.data) setHermaiKararlari(hermKararRes.value.data); // EKLENDİ
+            if (hermKararRes.status === 'fulfilled' && hermKararRes.value.data) setHermaiKararlari(hermKararRes.value.data);
 
             if (trendlerRes.status === 'rejected') throw trendlerRes.reason;
         } catch (error) {
@@ -345,7 +358,7 @@ export default function ArgeSayfasi() {
             let nihaiGorselUrl = form.gorsel_url?.trim() || null;
 
             if (form.gorsel_dosyasi && navigator.onLine) {
-                const dosyaUzantisi = (form.gorsel_dosyasi).name?.split('.').pop() || 'jpg';
+                const dosyaUzantisi = /** @type {any} */(form.gorsel_dosyasi).name?.split('.').pop() || 'jpg';
                 const dosyaAdi = `${Date.now()}_${Math.random().toString(36).substring(7)}.${dosyaUzantisi}`;
 
                 const { data: uploadData, error: uploadError } = await supabase.storage
@@ -545,7 +558,7 @@ export default function ArgeSayfasi() {
         setYenidenAraniyor(trend.id);
         try {
             const gunFark = trend.arsiv_tarihi
-                ? Math.floor((Date.now() - (new Date(trend.arsiv_tarihi))) / 86400000) : 30;
+                ? Math.floor((Date.now() - Number(new Date(trend.arsiv_tarihi))) / 86400000) : 30;
             const orijinalKarar = trend.herm_karari || 'Belirtilmemiş';
             const orijinalSkor = trend.talep_skoru || '?';
             const platform = trend.platform || 'genel';
@@ -1059,9 +1072,11 @@ export default function ArgeSayfasi() {
                                                                 const canvas = document.createElement('canvas');
                                                                 canvas.width = width; canvas.height = height;
                                                                 const ctx = canvas.getContext('2d');
+                                                                if (!ctx) return;
                                                                 ctx.drawImage(img, 0, 0, width, height);
                                                                 canvas.toBlob((blob) => {
-                                                                    resolve(new File([blob], fileItem.name, { type: 'image/jpeg', lastModified: Date.now() }));
+                                                                    if (!blob) return;
+                                                                    resolve(new File([blob], /** @type {any} */(fileItem).name, { type: 'image/jpeg', lastModified: Date.now() }));
                                                                     URL.revokeObjectURL(url);
                                                                 }, 'image/jpeg', 0.7);
                                                             };
@@ -1246,12 +1261,12 @@ export default function ArgeSayfasi() {
                             <div style={{ display: 'flex', flexDirection: 'column', gap: 10, maxHeight: 480, overflowY: 'auto' }}>
                                 {arsivTrendler.map(trend => {
                                     const gunFark = trend.arsiv_tarihi
-                                        ? Math.floor((Date.now() - (new Date(trend.arsiv_tarihi))) / 86400000) : null;
+                                        ? Math.floor((Date.now() - Number(new Date(trend.arsiv_tarihi))) / 86400000) : null;
                                     const dogrulamaGeldiMi = trend.dogrulama_zamani
                                         && trend.dogrulama_durumu !== 'yapildi'
-                                        && new Date(trend.dogrulama_zamani) <= new Date();
+                                        && Number(new Date(trend.dogrulama_zamani)) <= Date.now();
                                     const kalanGun = trend.dogrulama_zamani && trend.dogrulama_durumu === 'bekliyor'
-                                        ? Math.max(0, Math.ceil(((new Date(trend.dogrulama_zamani)) - Date.now()) / 86400000)) : null;
+                                        ? Math.max(0, Math.ceil((Number(new Date(trend.dogrulama_zamani)) - Date.now()) / 86400000)) : null;
 
                                     return (
                                         <div key={trend.id} style={{

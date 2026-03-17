@@ -224,7 +224,7 @@ export default function AjanlarMainContainer() {
     const [calistiriliyor, setCalistiriliyor] = useState({});
     const [mesaj, setMesaj] = useState({ text: '', type: '' });
     const [filtre, setFiltre] = useState('hepsi');
-    const [secilenGorev, setSecilenGorev] = useState(null);
+    const [secilenGorev, setSecilenGorev] = useState(/** @type {any} */(null));
     const [istatistik, setIstatistik] = useState({ toplam: 0, tamamlandi: 0, calisıyor: 0, hata: 0, bekliyor: 0 });
     const [islemdeId, setIslemdeId] = useState(/** @type {any} */(null)); // [SPAM ZIRHI]
     const [konfig, setKonfig] = useState(() => {
@@ -234,7 +234,7 @@ export default function AjanlarMainContainer() {
         }
         return VARSAYILAN_KONFIGUR;
     });
-    const pollingRef = useRef(null);
+    const pollingRef = useRef(/** @type {ReturnType<typeof setInterval> | undefined} */(undefined));
 
     useEffect(() => {
         let ajanPin = false;
