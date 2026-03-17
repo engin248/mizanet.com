@@ -61,9 +61,11 @@ export const ERISIM_MATRISI = {
 };
 
 // ─── AUTH CONTEXT ─────────────────────────────────────────────
+/** @type {any} */
 const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
+    /** @type {[any, any]} */
     const [kullanici, setKullanici] = useState(null);
     const [yukleniyor, setYukleniyor] = useState(true);
 
@@ -72,9 +74,6 @@ export function AuthProvider({ children }) {
             const kayit = localStorage.getItem('sb47_auth');
             if (kayit) {
                 const parsed = JSON.parse(kayit);
-                // MIMARI DÜZELTME: 4 saat → 8 saat — JWT ile senkronize edildi
-                // ESKİ: 4 * 60 * 60 * 1000 (4 saat) — JWT 8 saatti, çelişkiydi
-                // Artık: Client session = JWT süresi = 8 saat
                 if (parsed.zaman && Date.now() - parsed.zaman < 8 * 60 * 60 * 1000) {
                     setKullanici(parsed);
                     if (typeof window !== 'undefined') {
@@ -91,8 +90,12 @@ export function AuthProvider({ children }) {
                     localStorage.removeItem('sb47_auth');
                 }
             }
-        } catch { localStorage.removeItem('sb47_auth'); }
-        setYukleniyor(false);
+        } catch (err) {
+            console.error('Auth yükleme hatası:', err);
+            try { localStorage.removeItem('sb47_auth'); } catch (e) { }
+        } finally {
+            setYukleniyor(false);
+        }
     }, []);
 
     const girisYap = async (pin) => {

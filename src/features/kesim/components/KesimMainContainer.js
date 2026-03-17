@@ -286,7 +286,7 @@ export default function KesimMainContainer() {
     };
 
     const inp = /** @type {any} */ ({ width: '100%', padding: '10px 14px', border: '2px solid #e2e8f0', borderRadius: '10px', fontSize: '0.875rem', fontFamily: 'inherit', boxSizing: 'border-box', outline: 'none' });
-    const lbl = { display: 'block', fontSize: '0.75rem', fontWeight: 800, color: '#334155', marginBottom: 6, textTransform: 'uppercase', letterSpacing: '0.05em' };
+    const lbl = { display: 'block', fontSize: '0.75rem', fontWeight: 800, color: '#e2e8f0', marginBottom: 6, textTransform: 'uppercase', letterSpacing: '0.05em' };
 
     if (!mounted) return null;
 
@@ -310,10 +310,10 @@ export default function KesimMainContainer() {
                         <Scissors size={24} color="white" />
                     </div>
                     <div>
-                        <h1 style={{ fontSize: '1.5rem', fontWeight: 900, color: '#0f172a', margin: 0 }}>
+                        <h1 style={{ fontSize: '1.5rem', fontWeight: 900, color: 'white', margin: 0 }}>
                             {isAR ? 'غرفة القص والعمليات الوسيطة' : 'Kesim & Ara İşçilik'}
                         </h1>
-                        <p style={{ fontSize: '0.8rem', color: '#64748b', margin: '2px 0 0', fontWeight: 600 }}>
+                        <p style={{ fontSize: '0.8rem', color: '#a7f3d0', margin: '2px 0 0', fontWeight: 600 }}>
                             {isAR ? 'وحدة العمليات M3' : 'Hassas kesim, pastal işlemleri ve üretim bandı hazırlığı (M3)'}
                         </p>
                     </div>
@@ -337,10 +337,10 @@ export default function KesimMainContainer() {
                     { label: 'Toplam Kayıt', val: istatistik.toplam, color: '#047857', bg: '#ecfdf5' },
                     { label: '✂️ Kesimde', val: istatistik.kesimde, color: '#d97706', bg: '#fffbeb' },
                     { label: '✅ Tamamlandı', val: istatistik.tamamlandi, color: '#059669', bg: '#f0fdf4' },
-                    { label: 'Toplam Adet', val: istatistik.toplamAdet, color: '#374151', bg: '#f8fafc' },
+                    { label: 'Toplam Adet', val: istatistik.toplamAdet, color: '#e2e8f0', bg: '#f8fafc' },
                 ].map((s, i) => (
                     <div key={i} style={{ background: s.bg, border: `1px solid ${s.color}25`, borderRadius: 12, padding: '0.875rem' }}>
-                        <div style={{ fontSize: '0.65rem', color: '#64748b', fontWeight: 700, textTransform: 'uppercase', marginBottom: 4 }}>{s.label}</div>
+                        <div style={{ fontSize: '0.65rem', color: '#a7f3d0', fontWeight: 700, textTransform: 'uppercase', marginBottom: 4 }}>{s.label}</div>
                         <div style={{ fontWeight: 900, fontSize: '1.3rem', color: s.color }}>{s.val}</div>
                     </div>
                 ))}
@@ -372,7 +372,7 @@ export default function KesimMainContainer() {
 
             {/* FORM */}
             {formAcik && (
-                <div style={{ background: 'white', border: '2px solid #047857', borderRadius: 18, padding: '2rem', marginBottom: '2rem', boxShadow: '0 10px 40px rgba(4,120,87,0.08)' }}>
+                <div style={{ background: '#122b27', border: '2px solid #047857', borderRadius: 18, padding: '2rem', marginBottom: '2rem', boxShadow: '0 10px 40px rgba(4,120,87,0.08)' }}>
                     <h3 style={{ fontWeight: 900, color: '#065f46', marginBottom: '1.25rem', fontSize: '1.1rem', display: 'flex', alignItems: 'center', gap: 8 }}>
                         <Scissors size={18} /> {duzenleId ? 'Kesim Düzenle' : (isAR ? 'تسجيل عملية قص جديدة' : 'Yeni Kesim Kaydı')}
                     </h3>
@@ -381,7 +381,7 @@ export default function KesimMainContainer() {
                         {/* ZORUNLU ALANLAR */}
                         <div style={{ gridColumn: '1 / -1' }}>
                             <label style={lbl}>{isAR ? 'النموذج المراد قصه *' : 'Kesilecek Model *'}</label>
-                            <select value={form.model_taslak_id} onChange={e => setForm({ ...form, model_taslak_id: e.target.value })} style={{ ...inp, cursor: 'pointer', background: 'white' }}>
+                            <select value={form.model_taslak_id} onChange={e => setForm({ ...form, model_taslak_id: e.target.value })} style={{ ...inp, cursor: 'pointer', background: '#122b27' }}>
                                 <option value="">— {isAR ? 'اختر النموذج' : 'Model Seçiniz'} —</option>
                                 {modeller.map(m => <option key={m.id} value={m.id}>{m.model_kodu} | {m.model_adi}</option>)}
                             </select>
@@ -418,7 +418,7 @@ export default function KesimMainContainer() {
 
                         <div>
                             <label style={lbl}>{isAR ? 'الحالة' : 'Durum'}</label>
-                            <select value={form.durum} onChange={e => setForm({ ...form, durum: e.target.value })} style={{ ...inp, cursor: 'pointer', background: 'white' }}>
+                            <select value={form.durum} onChange={e => setForm({ ...form, durum: e.target.value })} style={{ ...inp, cursor: 'pointer', background: '#122b27' }}>
                                 {DURUMLAR.map(d => <option key={d} value={d}>{d.toUpperCase()}</option>)}
                             </select>
                         </div>
@@ -448,7 +448,7 @@ export default function KesimMainContainer() {
                                     let bData = {};
                                     try { bData = JSON.parse(form.beden_dagilimi || '{}'); } catch (e) { }
                                     return (
-                                        <div key={b} style={{ display: 'flex', flexDirection: 'column', gap: 4, background: '#f8fafc', padding: '6px', borderRadius: 8, border: '1px solid #e2e8f0' }}>
+                                        <div key={b} style={{ display: 'flex', flexDirection: 'column', gap: 4, background: '#0b1d1a', padding: '6px', borderRadius: 8, border: '1px solid #1e4a43' }}>
                                             <span style={{ fontWeight: 800, fontSize: '0.75rem', color: '#047857', textAlign: 'center' }}>{b}</span>
                                             <input type="number" placeholder="0" min="0" value={bData[b] || ''}
                                                 onChange={e => {
@@ -472,7 +472,7 @@ export default function KesimMainContainer() {
 
                     </div>
                     <div style={{ display: 'flex', gap: '1rem', marginTop: '1.5rem', justifyContent: 'flex-end' }}>
-                        <button onClick={() => { setForm(BOSH_KESIM); setFormAcik(false); setDuzenleId(null); }} style={{ padding: '10px 20px', border: '2px solid #e2e8f0', borderRadius: 10, background: 'white', fontWeight: 800, cursor: 'pointer', color: '#475569' }}>{isAR ? 'إلغاء' : 'İptal'}</button>
+                        <button onClick={() => { setForm(BOSH_KESIM); setFormAcik(false); setDuzenleId(null); }} style={{ padding: '10px 20px', border: '2px solid #e2e8f0', borderRadius: 10, background: '#122b27', fontWeight: 800, cursor: 'pointer', color: '#a7f3d0' }}>{isAR ? 'إلغاء' : 'İptal'}</button>
                         <button onClick={kaydetKesim} disabled={loading}
                             style={{ padding: '10px 28px', background: loading ? '#cbd5e1' : '#047857', color: 'white', border: 'none', borderRadius: 10, fontWeight: 900, cursor: loading ? 'not-allowed' : 'pointer', boxShadow: '0 4px 14px rgba(4,120,87,0.3)' }}>
                             {loading ? '...' : (duzenleId ? 'Güncelle' : (isAR ? 'بدء القص' : 'Kesimi Başlat'))}
@@ -484,7 +484,7 @@ export default function KesimMainContainer() {
             {/* KESİM LİSTESİ */}
             {loading && <p style={{ color: '#94a3b8', textAlign: 'center', padding: '2rem', fontWeight: 800 }}>Yükleniyor...</p>}
             {!loading && filtrelenmis.length === 0 && (
-                <div style={{ textAlign: 'center', padding: '4rem', background: '#f8fafc', borderRadius: 16, border: '2px dashed #e5e7eb' }}>
+                <div style={{ textAlign: 'center', padding: '4rem', background: '#0b1d1a', borderRadius: 16, border: '2px dashed #e5e7eb' }}>
                     <Scissors size={48} style={{ color: '#e5e7eb', marginBottom: '1rem' }} />
                     <p style={{ color: '#94a3b8', fontWeight: 700 }}>Kayıt bulunamadı. "Yeni Kesim" ile başlayın.</p>
                 </div>
@@ -494,33 +494,33 @@ export default function KesimMainContainer() {
                 {filtrelenmis.map(k => {
                     const tmm = k.durum === 'tamamlandi';
                     return (
-                        <div key={k.id} style={{ background: 'white', border: '2px solid', borderColor: tmm ? '#bbf7d0' : k.durum === 'iptal' ? '#fecaca' : '#f1f5f9', borderRadius: 16, overflow: 'hidden', boxShadow: '0 4px 12px rgba(0,0,0,0.03)', transition: 'all 0.2s' }}>
+                        <div key={k.id} style={{ background: '#122b27', border: '2px solid', borderColor: tmm ? '#bbf7d0' : k.durum === 'iptal' ? '#fecaca' : '#f1f5f9', borderRadius: 16, overflow: 'hidden', boxShadow: '0 4px 12px rgba(0,0,0,0.03)', transition: 'all 0.2s' }}>
                             <div style={{ padding: '1.25rem' }}>
                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.75rem' }}>
                                     <div>
                                         <span style={{ fontSize: '0.65rem', fontWeight: 900, background: '#ecfdf5', color: '#047857', padding: '3px 10px', borderRadius: 6 }}>{k.b1_model_taslaklari?.model_kodu || 'Model Bilinmiyor'}</span>
-                                        <h3 style={{ fontWeight: 900, fontSize: '1.05rem', color: '#0f172a', margin: '6px 0 3px' }}>{k.b1_model_taslaklari?.model_adi || '---'}</h3>
+                                        <h3 style={{ fontWeight: 900, fontSize: '1.05rem', color: 'white', margin: '6px 0 3px' }}>{k.b1_model_taslaklari?.model_adi || '---'}</h3>
                                         {/* Kesimci + Tarih + Kumaş */}
                                         <div style={{ display: 'flex', gap: 5, flexWrap: 'wrap', marginTop: 3 }}>
-                                            {k.kesimci_adi && <span style={{ fontSize: '0.62rem', background: '#f1f5f9', color: '#475569', padding: '2px 7px', borderRadius: 4, fontWeight: 700 }}>✂️ {k.kesimci_adi}</span>}
+                                            {k.kesimci_adi && <span style={{ fontSize: '0.62rem', background: '#173a34', color: '#a7f3d0', padding: '2px 7px', borderRadius: 4, fontWeight: 700 }}>✂️ {k.kesimci_adi}</span>}
                                             {k.kesim_tarihi && <span style={{ fontSize: '0.62rem', background: '#fffbeb', color: '#92400e', padding: '2px 7px', borderRadius: 4, fontWeight: 700 }}>📅 {new Date(k.kesim_tarihi).toLocaleDateString('tr-TR')}</span>}
                                             {k.kumas_topu_no && <span style={{ fontSize: '0.62rem', background: '#f0fdf4', color: '#065f46', padding: '2px 7px', borderRadius: 4, fontWeight: 700 }}>🧵 {k.kumas_topu_no}</span>}
                                         </div>
                                     </div>
                                     <div style={{ display: 'flex', gap: 6 }}>
-                                        <button onClick={() => { setSeciliKesim(k); setBarkodAcik(true); }} style={{ background: '#f8fafc', border: '1px solid #e2e8f0', color: '#0f172a', padding: '6px 8px', borderRadius: 8, cursor: 'pointer', display: 'flex' }}><QrCode size={16} /></button>
+                                        <button onClick={() => { setSeciliKesim(k); setBarkodAcik(true); }} style={{ background: '#0b1d1a', border: '1px solid #1e4a43', color: 'white', padding: '6px 8px', borderRadius: 8, cursor: 'pointer', display: 'flex' }}><QrCode size={16} /></button>
                                         <button onClick={() => duzenleKesim(k)} style={{ background: '#ecfdf5', border: 'none', color: '#047857', padding: '6px 8px', borderRadius: 8, cursor: 'pointer', fontWeight: 700, fontSize: '0.72rem' }}>✏️</button>
                                         <button onClick={() => sil(k.id, k.b1_model_taslaklari?.model_kodu)} disabled={islemdeId === 'sil_' + k.id} style={{ background: '#fef2f2', border: 'none', color: '#dc2626', padding: '6px 8px', borderRadius: 8, cursor: islemdeId === 'sil_' + k.id ? 'not-allowed' : 'pointer', opacity: islemdeId === 'sil_' + k.id ? 0.5 : 1 }}><Trash2 size={15} /></button>
                                     </div>
                                 </div>
 
                                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem', marginBottom: '0.75rem' }}>
-                                    <div style={{ background: '#f8fafc', borderRadius: 8, padding: '8px 12px' }}>
-                                        <div style={{ fontSize: '0.6rem', color: '#64748b', fontWeight: 800, letterSpacing: '0.05em' }}>PASTAL KATI</div>
-                                        <div style={{ fontWeight: 900, color: '#0f172a', fontSize: '1rem' }}>{k.pastal_kat_sayisi || 0}</div>
+                                    <div style={{ background: '#0b1d1a', borderRadius: 8, padding: '8px 12px' }}>
+                                        <div style={{ fontSize: '0.6rem', color: '#a7f3d0', fontWeight: 800, letterSpacing: '0.05em' }}>PASTAL KATI</div>
+                                        <div style={{ fontWeight: 900, color: 'white', fontSize: '1rem' }}>{k.pastal_kat_sayisi || 0}</div>
                                     </div>
-                                    <div style={{ background: '#f8fafc', borderRadius: 8, padding: '8px 12px' }}>
-                                        <div style={{ fontSize: '0.6rem', color: '#64748b', fontWeight: 800, letterSpacing: '0.05em' }}>NET ADET</div>
+                                    <div style={{ background: '#0b1d1a', borderRadius: 8, padding: '8px 12px' }}>
+                                        <div style={{ fontSize: '0.6rem', color: '#a7f3d0', fontWeight: 800, letterSpacing: '0.05em' }}>NET ADET</div>
                                         <div style={{ fontWeight: 900, color: '#059669', fontSize: '1rem' }}>{k.kesilen_net_adet || '?'}</div>
                                     </div>
                                 </div>
@@ -530,12 +530,12 @@ export default function KesimMainContainer() {
                                 </div>
 
                                 {k.beden_dagilimi && (
-                                    <div style={{ fontSize: '0.72rem', color: '#374151', fontWeight: 600, background: '#f8fafc', borderRadius: 6, padding: '4px 8px', marginBottom: '0.375rem' }}>
+                                    <div style={{ fontSize: '0.72rem', color: '#e2e8f0', fontWeight: 600, background: '#0b1d1a', borderRadius: 6, padding: '4px 8px', marginBottom: '0.375rem' }}>
                                         📐 {k.beden_dagilimi}
                                     </div>
                                 )}
                                 {k.notlar && (
-                                    <div style={{ fontSize: '0.72rem', color: '#64748b', fontStyle: 'italic', marginBottom: '0.5rem', borderLeft: '3px solid #e5e7eb', paddingLeft: 8 }}>
+                                    <div style={{ fontSize: '0.72rem', color: '#a7f3d0', fontStyle: 'italic', marginBottom: '0.5rem', borderLeft: '3px solid #e5e7eb', paddingLeft: 8 }}>
                                         {k.notlar}
                                     </div>
                                 )}
@@ -567,13 +567,13 @@ export default function KesimMainContainer() {
             {/* BARKOD MODALI */}
             <SilBastanModal acik={barkodAcik} onClose={() => setBarkodAcik(false)} title="🖨️ Kesim (M3) Barkodu Çıkart">
                 {seciliKesim && (
-                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem', background: 'white', padding: '2rem', borderRadius: '12px' }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem', background: '#122b27', padding: '2rem', borderRadius: '12px' }}>
                         <FizikselQRBarkod
                             veriKodu={`KSM-${seciliKesim.id}`}
                             baslik={`Kesim: ${seciliKesim.b1_model_taslaklari?.model_kodu}`}
                             aciklama={`${seciliKesim.kesilen_net_adet} Adet • Pastal: ${seciliKesim.pastal_kat_sayisi}${seciliKesim.kesimci_adi ? ' • ' + seciliKesim.kesimci_adi : ''}`}
                         />
-                        <p style={{ margin: 0, fontSize: '0.75rem', color: '#64748b', textAlign: 'center', fontWeight: 600 }}>
+                        <p style={{ margin: 0, fontSize: '0.75rem', color: '#a7f3d0', textAlign: 'center', fontWeight: 600 }}>
                             Bu barkod, kesim paketlerinin (meto) üzerine yapıştırılıp Üretim Bandına (M4) yollanır.<br />
                             Bant şefi kameraya okuttuğunda otomatik olarak üretime başlar.
                         </p>

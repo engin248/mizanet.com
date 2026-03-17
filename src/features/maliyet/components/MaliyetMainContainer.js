@@ -270,8 +270,8 @@ export default function MaliyetMainContainer() {
         return tipOk && orderOk && aramaOk;
     });
 
-    const inp = /** @type {any} */ ({ width: '100%', padding: '9px 12px', border: '2px solid #e5e7eb', borderRadius: '8px', fontSize: '0.875rem', fontFamily: 'inherit', boxSizing: 'border-box', outline: 'none' });
-    const lbl = { display: 'block', fontSize: '0.7rem', fontWeight: 700, color: '#374151', marginBottom: 5, textTransform: 'uppercase' };
+    const inp = /** @type {any} */ ({ width: '100%', padding: '9px 12px', border: '2px solid #1e4a43', borderRadius: '8px', fontSize: '0.875rem', fontFamily: 'inherit', boxSizing: 'border-box', outline: 'none' });
+    const lbl = { display: 'block', fontSize: '0.7rem', fontWeight: 700, color: '#e2e8f0', marginBottom: 5, textTransform: 'uppercase' };
 
     if (!yetkiliMi) {
         return (
@@ -292,8 +292,8 @@ export default function MaliyetMainContainer() {
                         <DollarSign size={24} className="text-emerald-50" />
                     </div>
                     <div>
-                        <h1 className="text-2xl font-black text-slate-800 tracking-tight m-0">{isAR ? 'مركز التكلفة' : 'M5 Maliyet Karargahı'}</h1>
-                        <p className="text-xs font-bold text-slate-500 mt-1 uppercase tracking-wider">{isAR ? 'تكلفة الوحدة · سعر البيع · تحليل الربح' : 'Birim maliyet · Satış fiyatı · Kar analizi'}</p>
+                        <h1 className="text-2xl font-black text-white tracking-tight m-0">{isAR ? 'مركز التكلفة' : 'M5 Maliyet Karargahı'}</h1>
+                        <p className="text-xs font-bold text-emerald-200 mt-1 uppercase tracking-wider">{isAR ? 'تكلفة الوحدة · سعر البيع · تحليل الربح' : 'Birim maliyet · Satış fiyatı · Kar analizi'}</p>
                     </div>
                 </div>
                 {/* SPLIT BUTTON */}
@@ -307,17 +307,17 @@ export default function MaliyetMainContainer() {
                         <ChevronDown size={18} />
                     </button>
                     {menuAcik && (
-                        <div className="absolute top-[110%] right-0 bg-white border-2 border-slate-200 rounded-xl shadow-2xl min-w-[220px] z-50 overflow-hidden">
+                        <div className="absolute top-[110%] right-0 bg-[#122b27] border-2 border-[#1e4a43] rounded-xl shadow-2xl min-w-[220px] z-50 overflow-hidden">
                             <button onClick={() => { setForm(BOSH_FORM); setDuzenleId(null); setFormAcik(true); setSekme('giris'); setMenuAcik(false); }}
-                                className="flex items-center gap-3 w-full px-4 py-3 bg-white hover:bg-slate-50 text-slate-800 font-bold text-sm text-left transition-colors">
+                                className="flex items-center gap-3 w-full px-4 py-3 bg-[#122b27] hover:bg-[#0d1117] text-white text-white font-bold text-sm text-left transition-colors">
                                 <Plus size={16} className="text-cyan-500" /> Tek Maliyet Ekle
                             </button>
                             <button onClick={() => { setCsvModal(true); setMenuAcik(false); }}
-                                className="flex items-center gap-3 w-full px-4 py-3 bg-white hover:bg-slate-50 text-slate-800 font-bold text-sm text-left border-t border-slate-100 transition-colors">
+                                className="flex items-center gap-3 w-full px-4 py-3 bg-[#122b27] hover:bg-[#0d1117] text-white text-white font-bold text-sm text-left border-t border-slate-100 transition-colors">
                                 <Upload size={16} className="text-violet-500" /> Gider Toplu Yükle (CSV)
                             </button>
                             <Link href="/muhasebe" className="no-underline block border-t border-slate-100">
-                                <button className="flex items-center gap-3 w-full px-4 py-3 bg-white hover:bg-slate-50 text-emerald-600 font-bold text-sm text-left transition-colors">
+                                <button className="flex items-center gap-3 w-full px-4 py-3 bg-[#122b27] hover:bg-[#0d1117] text-white text-emerald-600 font-bold text-sm text-left transition-colors">
                                     <BarChart2 size={16} className="text-emerald-500" /> Muhasebe (M8)
                                 </button>
                             </Link>
@@ -333,7 +333,7 @@ export default function MaliyetMainContainer() {
             {/* ÖZET KARTLAR */}
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(150px,1fr))', gap: '0.75rem', marginBottom: '1.25rem' }}>
                 {[
-                    { label: '💰 Genel Toplam', val: `₺${genelToplam.toLocaleString('tr-TR', { minimumFractionDigits: 2 })}`, color: '#0f172a', bg: '#f8fafc', border: '#e2e8f0' },
+                    { label: '💰 Genel Toplam', val: `₺${genelToplam.toLocaleString('tr-TR', { minimumFractionDigits: 2 })}`, color: 'white', bg: '#f8fafc', border: '#e2e8f0' },
                     { label: '🧵 Hammadde', val: `₺${toplamlar.hammadde_kumas.toFixed(2)}`, color: '#7c3aed', bg: '#f5f3ff', border: '#ddd6fe' },
                     { label: '👷 İşçilik', val: `₺${toplamlar.personel_iscilik.toFixed(2)}`, color: '#2563eb', bg: '#eff6ff', border: '#bfdbfe' },
                     { label: '🔥 Fire', val: `₺${toplamlar.fire_kaybi.toFixed(2)}`, color: '#dc2626', bg: '#fef2f2', border: '#fecaca' },
@@ -341,7 +341,7 @@ export default function MaliyetMainContainer() {
                     { label: '⏳ Onay Bk.', val: onaysiz, color: onaysiz > 0 ? '#d97706' : '#059669', bg: onaysiz > 0 ? '#fffbeb' : '#ecfdf5', border: onaysiz > 0 ? '#fed7aa' : '#a7f3d0' },
                 ].map((s, i) => (
                     <div key={i} style={{ background: s.bg, border: `1.5px solid ${s.border}`, borderRadius: 12, padding: '0.875rem 1rem' }}>
-                        <div style={{ fontSize: '0.68rem', color: '#64748b', fontWeight: 700, textTransform: 'uppercase', marginBottom: 4 }}>{s.label}</div>
+                        <div style={{ fontSize: '0.68rem', color: '#a7f3d0', fontWeight: 700, textTransform: 'uppercase', marginBottom: 4 }}>{s.label}</div>
                         <div style={{ fontWeight: 900, fontSize: '1.1rem', color: s.color }}>{s.val}</div>
                     </div>
                 ))}
@@ -356,7 +356,7 @@ export default function MaliyetMainContainer() {
 
             {/* FORM */}
             {formAcik && (
-                <div style={{ background: 'white', border: `2px solid ${duzenleId ? '#f59e0b' : '#06b6d4'}`, borderRadius: 16, padding: '1.5rem', marginBottom: '1.5rem' }}>
+                <div style={{ background: '#122b27', border: `2px solid ${duzenleId ? '#f59e0b' : '#06b6d4'}`, borderRadius: 16, padding: '1.5rem', marginBottom: '1.5rem' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
                         <h3 style={{ fontWeight: 800, color: duzenleId ? '#92400e' : '#0e7490', margin: 0, fontSize: '1rem' }}>
                             {duzenleId ? '✏️ Maliyet Düzenle' : '💰 Yeni Maliyet Kalemi'}
@@ -366,7 +366,7 @@ export default function MaliyetMainContainer() {
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '0.875rem' }}>
                         <div>
                             <label style={lbl}>Sipariş / Parti *</label>
-                            <select value={form.order_id} onChange={e => setForm({ ...form, order_id: e.target.value })} style={{ ...inp, cursor: 'pointer', background: 'white' }}>
+                            <select value={form.order_id} onChange={e => setForm({ ...form, order_id: e.target.value })} style={{ ...inp, cursor: 'pointer', background: '#122b27' }}>
                                 <option value="">— Sipariş Seçiniz —</option>
                                 {orderler.map(o => <option key={o.id} value={o.id}>{o.b1_model_taslaklari?.model_kodu || 'Sipariş'} | {o.quantity} adet</option>)}
                                 {orderler.length === 0 && <option disabled>⚠ Sipariş bulunamadı</option>}
@@ -374,7 +374,7 @@ export default function MaliyetMainContainer() {
                         </div>
                         <div>
                             <label style={lbl}>Maliyet Tipi *</label>
-                            <select value={form.maliyet_tipi} onChange={e => setForm({ ...form, maliyet_tipi: e.target.value })} style={{ ...inp, cursor: 'pointer', background: 'white' }}>
+                            <select value={form.maliyet_tipi} onChange={e => setForm({ ...form, maliyet_tipi: e.target.value })} style={{ ...inp, cursor: 'pointer', background: '#122b27' }}>
                                 {MALIYET_TIPLERI.map(t => <option key={t} value={t}>{MALIYET_LABEL[t]}</option>)}
                             </select>
                         </div>
@@ -386,7 +386,7 @@ export default function MaliyetMainContainer() {
                             <label style={lbl}>Miktar (isteğe bağlı)</label>
                             <div style={{ display: 'flex', gap: 6 }}>
                                 <input type="number" step="0.01" min="0" value={form.miktar} onChange={e => handleMiktarFiyatDegisim('miktar', e.target.value)} placeholder="45" style={{ ...inp, width: '60%' }} />
-                                <select value={form.birim} onChange={e => setForm({ ...form, birim: e.target.value })} style={{ ...inp, width: '40%', cursor: 'pointer', background: 'white' }}>
+                                <select value={form.birim} onChange={e => setForm({ ...form, birim: e.target.value })} style={{ ...inp, width: '40%', cursor: 'pointer', background: '#122b27' }}>
                                     {['adet', 'metre', 'kg', 'saat', 'gün', 'paket'].map(b => <option key={b}>{b}</option>)}
                                 </select>
                             </div>
@@ -401,7 +401,7 @@ export default function MaliyetMainContainer() {
                         </div>
                     </div>
                     <div style={{ display: 'flex', gap: '0.75rem', marginTop: '1rem', justifyContent: 'flex-end' }}>
-                        <button onClick={() => { setForm(BOSH_FORM); setFormAcik(false); setDuzenleId(null); }} style={{ padding: '9px 18px', border: '2px solid #e5e7eb', borderRadius: 8, background: 'white', fontWeight: 700, cursor: 'pointer' }}>İptal</button>
+                        <button onClick={() => { setForm(BOSH_FORM); setFormAcik(false); setDuzenleId(null); }} style={{ padding: '9px 18px', border: '2px solid #1e4a43', borderRadius: 8, background: '#122b27', fontWeight: 700, cursor: 'pointer' }}>İptal</button>
                         <button onClick={kaydet} disabled={loading} style={{ padding: '9px 24px', background: loading ? '#94a3b8' : duzenleId ? '#d97706' : '#047857', color: 'white', border: 'none', borderRadius: 8, fontWeight: 800, cursor: 'pointer' }}>
                             {loading ? '...' : duzenleId ? 'Güncelle' : 'Kaydet'}
                         </button>
@@ -423,11 +423,11 @@ export default function MaliyetMainContainer() {
             {sekme === 'giris' && (
                 <div>
                     <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1rem', flexWrap: 'wrap', alignItems: 'center' }}>
-                        <select value={filtreTip} onChange={e => setFiltreTip(e.target.value)} style={{ padding: '7px 14px', border: '2px solid #e5e7eb', borderRadius: 8, fontWeight: 700, cursor: 'pointer', fontSize: '0.82rem' }}>
+                        <select value={filtreTip} onChange={e => setFiltreTip(e.target.value)} style={{ padding: '7px 14px', border: '2px solid #1e4a43', borderRadius: 8, fontWeight: 700, cursor: 'pointer', fontSize: '0.82rem' }}>
                             <option value="hepsi">Tüm Tipler</option>
                             {MALIYET_TIPLERI.map(t => <option key={t} value={t}>{MALIYET_LABEL[t]}</option>)}
                         </select>
-                        <select value={filtreOrder} onChange={e => setFiltreOrder(e.target.value)} style={{ padding: '7px 14px', border: '2px solid #e5e7eb', borderRadius: 8, fontWeight: 700, cursor: 'pointer', fontSize: '0.82rem' }}>
+                        <select value={filtreOrder} onChange={e => setFiltreOrder(e.target.value)} style={{ padding: '7px 14px', border: '2px solid #1e4a43', borderRadius: 8, fontWeight: 700, cursor: 'pointer', fontSize: '0.82rem' }}>
                             <option value="hepsi">Tüm Siparişler</option>
                             {orderler.map(o => <option key={o.id} value={o.id}>{o.b1_model_taslaklari?.model_kodu || o.id.slice(0, 8)}</option>)}
                         </select>
@@ -435,15 +435,15 @@ export default function MaliyetMainContainer() {
                             <span style={{ position: 'absolute', left: 10, top: '50%', transform: 'translateY(-50%)', color: '#94a3b8', fontSize: '0.9rem' }}>🔍</span>
                             <input value={aramaMetni} onChange={e => setAramaMetni(e.target.value)}
                                 placeholder="Açıklama ara..."
-                                style={{ padding: '7px 10px 7px 30px', border: '2px solid #e5e7eb', borderRadius: 8, fontWeight: 600, fontSize: '0.82rem', outline: 'none', width: 160 }} />
+                                style={{ padding: '7px 10px 7px 30px', border: '2px solid #1e4a43', borderRadius: 8, fontWeight: 600, fontSize: '0.82rem', outline: 'none', width: 160 }} />
                         </div>
-                        <div style={{ marginLeft: 'auto', fontSize: '0.82rem', fontWeight: 700, color: '#64748b', display: 'flex', alignItems: 'center', gap: 6 }}>
-                            <BarChart2 size={14} /> {filtreli.length} kayıt | <strong style={{ color: '#0f172a' }}>₺{filtreli.reduce((s, m) => s + parseFloat(m.tutar_tl || 0), 0).toFixed(2)}</strong>
+                        <div style={{ marginLeft: 'auto', fontSize: '0.82rem', fontWeight: 700, color: '#a7f3d0', display: 'flex', alignItems: 'center', gap: 6 }}>
+                            <BarChart2 size={14} /> {filtreli.length} kayıt | <strong style={{ color: 'white' }}>₺{filtreli.reduce((s, m) => s + parseFloat(m.tutar_tl || 0), 0).toFixed(2)}</strong>
                         </div>
                     </div>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
                         {filtreli.length === 0 && (
-                            <div style={{ textAlign: 'center', padding: '3rem', background: '#f8fafc', borderRadius: 16, border: '2px dashed #e5e7eb' }}>
+                            <div style={{ textAlign: 'center', padding: '3rem', background: '#0b1d1a', borderRadius: 16, border: '2px dashed #e5e7eb' }}>
                                 <DollarSign size={40} style={{ color: '#e5e7eb', marginBottom: '0.5rem' }} />
                                 <p style={{ color: '#94a3b8', fontWeight: 700 }}>Maliyet kaydı yok.</p>
                                 <p style={{ color: '#cbd5e1', fontSize: '0.8rem' }}>Sağ üstteki "Maliyet Ekle" butonuna tıklayın.</p>
@@ -453,17 +453,17 @@ export default function MaliyetMainContainer() {
                             const onaylandi = m.onay_durumu === 'onaylandi';
                             const siparis = orderler.find(o => o.id === m.order_id);
                             return (
-                                <div key={m.id} style={{ background: 'white', border: `1.5px solid ${onaylandi ? '#d1fae5' : '#f1f5f9'}`, borderRadius: 10, padding: '0.875rem 1rem', display: 'grid', gridTemplateColumns: 'auto 1fr auto auto', gap: '1rem', alignItems: 'center' }}>
+                                <div key={m.id} style={{ background: '#122b27', border: `1.5px solid ${onaylandi ? '#d1fae5' : '#f1f5f9'}`, borderRadius: 10, padding: '0.875rem 1rem', display: 'grid', gridTemplateColumns: 'auto 1fr auto auto', gap: '1rem', alignItems: 'center' }}>
                                     <div style={{ width: 8, height: 44, borderRadius: 4, background: MALIYET_RENK[m.maliyet_tipi] || '#94a3b8' }} />
                                     <div>
                                         <div style={{ display: 'flex', gap: 8, alignItems: 'center', marginBottom: 2 }}>
                                             <span style={{ fontSize: '0.65rem', fontWeight: 800, color: MALIYET_RENK[m.maliyet_tipi], textTransform: 'uppercase', background: MALIYET_RENK[m.maliyet_tipi] + '15', padding: '2px 7px', borderRadius: 4 }}>{MALIYET_LABEL[m.maliyet_tipi]}</span>
                                             {siparis && <span style={{ fontSize: '0.65rem', color: '#94a3b8', fontWeight: 600 }}>{siparis.b1_model_taslaklari?.model_kodu}</span>}
                                         </div>
-                                        <div style={{ fontWeight: 700, color: '#0f172a', fontSize: '0.88rem' }}>{m.kalem_aciklama}</div>
+                                        <div style={{ fontWeight: 700, color: 'white', fontSize: '0.88rem' }}>{m.kalem_aciklama}</div>
                                         <div style={{ fontSize: '0.68rem', color: '#94a3b8', marginTop: 2 }}>{onaylandi ? '✅ Onaylandı' : '⏳ Onay Bekliyor'} · {new Date(m.created_at).toLocaleDateString('tr-TR')}</div>
                                     </div>
-                                    <div style={{ fontWeight: 900, color: '#0f172a', fontSize: '1.1rem', textAlign: 'right' }}>₺{parseFloat(m.tutar_tl).toLocaleString('tr-TR', { minimumFractionDigits: 2 })}</div>
+                                    <div style={{ fontWeight: 900, color: 'white', fontSize: '1.1rem', textAlign: 'right' }}>₺{parseFloat(m.tutar_tl).toLocaleString('tr-TR', { minimumFractionDigits: 2 })}</div>
                                     <div style={{ display: 'flex', gap: 4, flexDirection: 'column' }}>
                                         <button onClick={() => duzenle(m)} style={{ background: '#eff6ff', border: '1px solid #bfdbfe', color: '#1d4ed8', padding: '4px 10px', borderRadius: 6, fontWeight: 700, cursor: 'pointer', fontSize: '0.72rem', display: 'flex', alignItems: 'center', gap: 4 }}><Edit2 size={11} /> Düzenle</button>
                                         {!onaylandi && <button disabled={islemdeId === m.id} onClick={() => onayla(m.id)} style={{ background: '#ecfdf5', border: '1px solid #10b981', color: '#065f46', padding: '4px 10px', borderRadius: 6, fontWeight: 700, cursor: islemdeId === m.id ? 'wait' : 'pointer', fontSize: '0.72rem', opacity: islemdeId === m.id ? 0.5 : 1 }}>✅ {islemdeId === m.id ? '...' : 'Onayla'}</button>}
@@ -484,14 +484,14 @@ export default function MaliyetMainContainer() {
                         <strong>Birim Maliyet = Toplam Maliyet ÷ Üretim Adedi.</strong> Satış fiyatı için önce bu hesabı tamamlayın.
                     </div>
                     {siparisFistiklari.length === 0 ? (
-                        <div style={{ textAlign: 'center', padding: '3rem', background: '#f8fafc', borderRadius: 16, border: '2px dashed #e5e7eb' }}>
+                        <div style={{ textAlign: 'center', padding: '3rem', background: '#0b1d1a', borderRadius: 16, border: '2px dashed #e5e7eb' }}>
                             <Package size={40} style={{ color: '#e5e7eb', display: 'block', margin: '0 auto 0.5rem' }} />
                             <p style={{ color: '#94a3b8', fontWeight: 700 }}>Henüz maliyet girilmiş sipariş yok.</p>
                         </div>
                     ) : (
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.875rem' }}>
                             {siparisFistiklari.map(o => (
-                                <div key={o.id} style={{ background: 'white', border: '2px solid #e2e8f0', borderRadius: 14, overflow: 'hidden' }}>
+                                <div key={o.id} style={{ background: '#122b27', border: '2px solid #e2e8f0', borderRadius: 14, overflow: 'hidden' }}>
                                     <div style={{ background: 'linear-gradient(135deg,#0f172a,#1e293b)', padding: '0.875rem 1.25rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                                         <div>
                                             <div style={{ fontWeight: 800, color: 'white', fontSize: '0.95rem' }}>{o.b1_model_taslaklari?.model_kodu} — {o.b1_model_taslaklari?.model_adi}</div>
@@ -511,16 +511,16 @@ export default function MaliyetMainContainer() {
                                                 return (
                                                     <div key={tip} style={{ background: MALIYET_RENK[tip] + '12', border: `1px solid ${MALIYET_RENK[tip]}30`, borderRadius: 8, padding: '0.5rem 0.75rem' }}>
                                                         <div style={{ fontSize: '0.65rem', fontWeight: 700, color: MALIYET_RENK[tip] }}>{MALIYET_LABEL[tip]}</div>
-                                                        <div style={{ fontWeight: 800, color: '#0f172a', fontSize: '0.88rem' }}>₺{tutarBu.toFixed(2)}</div>
+                                                        <div style={{ fontWeight: 800, color: 'white', fontSize: '0.88rem' }}>₺{tutarBu.toFixed(2)}</div>
                                                         <div style={{ fontSize: '0.65rem', color: '#94a3b8' }}>%{pct}</div>
                                                     </div>
                                                 );
                                             })}
                                         </div>
                                         <div style={{ display: 'flex', justifyContent: 'space-between', borderTop: '1.5px solid #f1f5f9', paddingTop: '0.75rem', flexWrap: 'wrap', gap: '0.5rem' }}>
-                                            <div><span style={{ fontSize: '0.7rem', color: '#64748b', fontWeight: 700 }}>TOPLAM MALİYET</span><br /><strong style={{ color: '#0f172a' }}>₺{o.sipToplam.toFixed(2)}</strong></div>
-                                            <div><span style={{ fontSize: '0.7rem', color: '#64748b', fontWeight: 700 }}>ÜRETİM ADEDİ</span><br /><strong style={{ color: '#0f172a' }}>{o.adet} adet</strong></div>
-                                            <div><span style={{ fontSize: '0.7rem', color: '#64748b', fontWeight: 700 }}>BİRİM MALİYET</span><br /><strong style={{ color: '#06b6d4', fontSize: '1.1rem' }}>₺{o.birimMaliyet.toFixed(2)}</strong></div>
+                                            <div><span style={{ fontSize: '0.7rem', color: '#a7f3d0', fontWeight: 700 }}>TOPLAM MALİYET</span><br /><strong style={{ color: 'white' }}>₺{o.sipToplam.toFixed(2)}</strong></div>
+                                            <div><span style={{ fontSize: '0.7rem', color: '#a7f3d0', fontWeight: 700 }}>ÜRETİM ADEDİ</span><br /><strong style={{ color: 'white' }}>{o.adet} adet</strong></div>
+                                            <div><span style={{ fontSize: '0.7rem', color: '#a7f3d0', fontWeight: 700 }}>BİRİM MALİYET</span><br /><strong style={{ color: '#06b6d4', fontSize: '1.1rem' }}>₺{o.birimMaliyet.toFixed(2)}</strong></div>
                                         </div>
                                     </div>
                                 </div>
@@ -533,10 +533,10 @@ export default function MaliyetMainContainer() {
             {/* SEKME 3: SATIŞ FİYATI */}
             {sekme === 'satis' && (
                 <div>
-                    <div style={{ background: 'white', border: '2px solid #e2e8f0', borderRadius: 14, padding: '1.25rem', marginBottom: '1.25rem' }}>
+                    <div style={{ background: '#122b27', border: '2px solid #e2e8f0', borderRadius: 14, padding: '1.25rem', marginBottom: '1.25rem' }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: '0.875rem' }}>
                             <TrendingUp size={20} color="#10b981" />
-                            <h3 style={{ margin: 0, fontWeight: 800, fontSize: '1rem', color: '#0f172a' }}>Hedef Kar Marjı</h3>
+                            <h3 style={{ margin: 0, fontWeight: 800, fontSize: '1rem', color: 'white' }}>Hedef Kar Marjı</h3>
                         </div>
                         <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 8 }}>
                             <input type="range" min="5" max="99" step="1" value={karMarji} onChange={e => setKarMarji(parseInt(e.target.value))} style={{ flex: 1, accentColor: karMarji >= 50 ? '#10b981' : karMarji >= 25 ? '#f59e0b' : '#ef4444' }} />
@@ -552,7 +552,7 @@ export default function MaliyetMainContainer() {
                         </div>
                     </div>
                     {siparisFistiklari.length === 0 ? (
-                        <div style={{ textAlign: 'center', padding: '3rem', background: '#f8fafc', borderRadius: 16, border: '2px dashed #e5e7eb' }}>
+                        <div style={{ textAlign: 'center', padding: '3rem', background: '#0b1d1a', borderRadius: 16, border: '2px dashed #e5e7eb' }}>
                             <p style={{ color: '#94a3b8', fontWeight: 700 }}>Önce maliyet kalemi giriniz.</p>
                         </div>
                     ) : (
@@ -562,11 +562,11 @@ export default function MaliyetMainContainer() {
                                 const brutKar = satisFiyati - o.birimMaliyet;
                                 const toplamKar = brutKar * o.adet;
                                 return (
-                                    <div key={o.id} style={{ background: 'white', border: '2px solid #d1fae5', borderRadius: 14, padding: '1.25rem' }}>
+                                    <div key={o.id} style={{ background: '#122b27', border: '2px solid #d1fae5', borderRadius: 14, padding: '1.25rem' }}>
                                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem', flexWrap: 'wrap', gap: 8 }}>
                                             <div>
-                                                <div style={{ fontWeight: 800, color: '#0f172a', fontSize: '0.95rem' }}>{o.b1_model_taslaklari?.model_kodu} — {o.b1_model_taslaklari?.model_adi}</div>
-                                                <div style={{ fontSize: '0.72rem', color: '#64748b' }}>{o.adet} adet · Birim Maliyet: ₺{o.birimMaliyet.toFixed(2)}</div>
+                                                <div style={{ fontWeight: 800, color: 'white', fontSize: '0.95rem' }}>{o.b1_model_taslaklari?.model_kodu} — {o.b1_model_taslaklari?.model_adi}</div>
+                                                <div style={{ fontSize: '0.72rem', color: '#a7f3d0' }}>{o.adet} adet · Birim Maliyet: ₺{o.birimMaliyet.toFixed(2)}</div>
                                             </div>
                                             <div style={{ background: '#ecfdf5', border: '2px solid #10b981', borderRadius: 10, padding: '6px 14px', textAlign: 'center' }}>
                                                 <div style={{ fontSize: '0.62rem', color: '#059669', fontWeight: 700 }}>ÖNERİLEN SATIŞ</div>
@@ -575,7 +575,7 @@ export default function MaliyetMainContainer() {
                                         </div>
                                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))', gap: '0.5rem' }}>
                                             {[
-                                                { label: 'Birim Maliyet', val: `₺${o.birimMaliyet.toFixed(2)}`, color: '#0f172a', bg: '#f8fafc' },
+                                                { label: 'Birim Maliyet', val: `₺${o.birimMaliyet.toFixed(2)}`, color: 'white', bg: '#f8fafc' },
                                                 { label: `Kar (%${karMarji})`, val: `₺${brutKar.toFixed(2)}`, color: '#059669', bg: '#ecfdf5' },
                                                 { label: 'Satış Fiyatı', val: `₺${satisFiyati.toFixed(2)}`, color: '#0284c7', bg: '#f0f9ff' },
                                                 { label: `Toplam Kar (${o.adet} ad.)`, val: `₺${toplamKar.toFixed(2)}`, color: '#7c3aed', bg: '#f5f3ff' },
@@ -597,9 +597,9 @@ export default function MaliyetMainContainer() {
             {/* CSV MODAL */}
             {csvModal && (
                 <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 999, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' }}>
-                    <div style={{ background: 'white', borderRadius: 18, padding: '1.75rem', width: '100%', maxWidth: 540, boxShadow: '0 20px 60px rgba(0,0,0,0.25)' }}>
+                    <div style={{ background: '#122b27', borderRadius: 18, padding: '1.75rem', width: '100%', maxWidth: 540, boxShadow: '0 20px 60px rgba(0,0,0,0.25)' }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-                            <h3 style={{ fontWeight: 900, color: '#0f172a', margin: 0, fontSize: '1rem' }}>
+                            <h3 style={{ fontWeight: 900, color: 'white', margin: 0, fontSize: '1rem' }}>
                                 <Upload size={18} style={{ verticalAlign: 'middle', marginRight: 8, color: '#8b5cf6' }} />Gider Toplu Yükleme (CSV)
                             </h3>
                             <button onClick={() => { setCsvModal(false); setCsvText(''); }} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#94a3b8' }}><X size={20} /></button>
@@ -608,10 +608,10 @@ export default function MaliyetMainContainer() {
                             <strong>Format:</strong> MODEL_KODU, maliyet_tipi, açıklama, tutar<br />
                             <code style={{ fontSize: '0.7rem' }}>personel_iscilik · hammadde_kumas · isletme_gideri · sarf_malzeme · fire_kaybi · sabit_gider · nakliye_lojistik</code>
                         </div>
-                        <label style={{ display: 'block', fontSize: '0.7rem', fontWeight: 700, color: '#374151', marginBottom: 6, textTransform: 'uppercase' }}>CSV Verisi</label>
-                        <textarea value={csvText} onChange={e => setCsvText(e.target.value)} placeholder={'MDL-001, hammadde_kumas, Kumas alimi, 4500\nMDL-001, personel_iscilik, Usta Ali, 850'} rows={8} style={{ width: '100%', padding: '10px 12px', border: '2px solid #e5e7eb', borderRadius: 10, fontSize: '0.82rem', fontFamily: 'monospace', boxSizing: 'border-box', outline: 'none', resize: 'vertical' }} />
+                        <label style={{ display: 'block', fontSize: '0.7rem', fontWeight: 700, color: '#e2e8f0', marginBottom: 6, textTransform: 'uppercase' }}>CSV Verisi</label>
+                        <textarea value={csvText} onChange={e => setCsvText(e.target.value)} placeholder={'MDL-001, hammadde_kumas, Kumas alimi, 4500\nMDL-001, personel_iscilik, Usta Ali, 850'} rows={8} style={{ width: '100%', padding: '10px 12px', border: '2px solid #1e4a43', borderRadius: 10, fontSize: '0.82rem', fontFamily: 'monospace', boxSizing: 'border-box', outline: 'none', resize: 'vertical' }} />
                         <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end', marginTop: '1rem' }}>
-                            <button onClick={() => { setCsvModal(false); setCsvText(''); }} style={{ padding: '9px 18px', border: '2px solid #e5e7eb', borderRadius: 8, background: 'white', fontWeight: 700, cursor: 'pointer' }}>İptal</button>
+                            <button onClick={() => { setCsvModal(false); setCsvText(''); }} style={{ padding: '9px 18px', border: '2px solid #1e4a43', borderRadius: 8, background: '#122b27', fontWeight: 700, cursor: 'pointer' }}>İptal</button>
                             <button onClick={csvYukle} disabled={loading || !csvText.trim()} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '9px 22px', background: csvText.trim() ? '#8b5cf6' : '#94a3b8', color: 'white', border: 'none', borderRadius: 8, fontWeight: 800, cursor: 'pointer' }}>
                                 <Upload size={16} /> Yükle
                             </button>

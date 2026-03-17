@@ -356,7 +356,7 @@ export default function ImalatMainContainer() {
         <div dir={isAR ? 'rtl' : 'ltr'} className="pb-20 font-sans">
             <div className="flex justify-between items-center mb-6">
                 <div>
-                    <h1 className="text-3xl font-black uppercase text-slate-800 tracking-tight">{isAR ? 'الوحدة الأولى: ممر الإنتاج والتصنيع بصفر مبادرة' : '1. BİRİM: İMALAT VE SIFIR İNİSİYATİF ÜRETİM KORİDORU'}</h1>
+                    <h1 className="text-3xl font-black uppercase text-white tracking-tight">{isAR ? 'الوحدة الأولى: ممر الإنتاج والتصنيع بصفر مبادرة' : '1. BİRİM: İMALAT VE SIFIR İNİSİYATİF ÜRETİM KORİDORU'}</h1>
                     <p className="text-sm text-gray-600 font-bold mt-1">{isAR ? 'لوحة تحكم وتدقيق كاملة من 4 خطوات تنهي الفوضى وسوء التخطيط في الإنتاج' : 'Sektördeki Fason / Taşeron insiyatifine, bilgi kirliliğine ve plansızlığa son veren 4 Adımlı Tam Denetim Paneli.'}</p>
                 </div>
                 {/* CC Kriteri (M6 / Depo / Finans rotasına geçiş) - SPA KORUMASI */}
@@ -396,23 +396,23 @@ export default function ImalatMainContainer() {
             {mainTab === 'teknik_gorus' && (
                 <div className="animate-fade-in grid grid-cols-1 md:grid-cols-2 gap-8">
                     {/* Form Alanı */}
-                    <div className="card shadow-xl border-t-8 border-blue-500 bg-white">
+                    <div className="card shadow-xl border-t-8 border-blue-500 bg-[#122b27]">
                         <div className="flex items-center gap-3 border-b pb-4 mb-6">
                             <div className="p-3 bg-blue-100 text-blue-700 rounded-lg"><UploadCloud size={24} /></div>
                             <div>
-                                <h2 className="text-2xl font-black text-slate-800">TEKNİK GÖRÜŞ (Ürün Dosyası Açma)</h2>
-                                <p className="text-sm text-gray-500 font-bold mt-1">Dışarıdan (Firma/ArGe) gelen modelin anayasası burada yazılır. Alt limitler burada kilitlenir.</p>
+                                <h2 className="text-2xl font-black text-white">TEKNİK GÖRÜŞ (Ürün Dosyası Açma)</h2>
+                                <p className="text-sm text-emerald-200 font-bold mt-1">Dışarıdan (Firma/ArGe) gelen modelin anayasası burada yazılır. Alt limitler burada kilitlenir.</p>
                             </div>
                         </div>
 
                         <div className="space-y-5">
                             <div>
                                 <label className="block text-sm font-bold text-gray-700 mb-1 uppercase tracking-wide">Ürün / Model Resmi Adı</label>
-                                <input maxLength={200} type="text" className="form-input text-lg font-bold w-full border-2 border-slate-200 focus:border-blue-500" placeholder="Örn: X Marka Kaşe Kaban (Erkek)" value={yeniFoy.model_name} onChange={e => setYeniFoy({ ...yeniFoy, model_name: e.target.value })} />
+                                <input maxLength={200} type="text" className="form-input text-lg font-bold w-full border-2 border-[#1e4a43] focus:border-blue-500" placeholder="Örn: X Marka Kaşe Kaban (Erkek)" value={yeniFoy.model_name} onChange={e => setYeniFoy({ ...yeniFoy, model_name: e.target.value })} />
                             </div>
                             <div>
                                 <label className="block text-sm font-bold text-gray-700 mb-1 uppercase tracking-wide">Orijinal Model Görseli (Dosya/URL) <span>(Zorunlu)</span></label>
-                                <input maxLength={1000} type="text" className="form-input w-full bg-slate-50" placeholder="https://ornek.com/model_resmi.jpg" value={yeniFoy.orjinal_gorsel_url} onChange={e => setYeniFoy({ ...yeniFoy, orjinal_gorsel_url: e.target.value })} />
+                                <input maxLength={1000} type="text" className="form-input w-full bg-[#0d1117] text-white" placeholder="https://ornek.com/model_resmi.jpg" value={yeniFoy.orjinal_gorsel_url} onChange={e => setYeniFoy({ ...yeniFoy, orjinal_gorsel_url: e.target.value })} />
                             </div>
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -432,7 +432,7 @@ export default function ImalatMainContainer() {
 
                             <div>
                                 <label className="block text-sm font-bold text-gray-700 mb-1 uppercase tracking-wide">Kumaş Esneme Payı Toleransı (%)</label>
-                                <input type="number" className="form-input w-full bg-slate-50" placeholder="%5" value={yeniFoy.esneme_payi_yuzde} onChange={e => setYeniFoy({ ...yeniFoy, esneme_payi_yuzde: e.target.value })} />
+                                <input type="number" className="form-input w-full bg-[#0d1117] text-white" placeholder="%5" value={yeniFoy.esneme_payi_yuzde} onChange={e => setYeniFoy({ ...yeniFoy, esneme_payi_yuzde: e.target.value })} />
                             </div>
 
                             <button onClick={teknikFoyKaydet} disabled={loading} className="w-full bg-blue-600 text-white font-black text-lg py-4 rounded-xl hover:bg-blue-700 transition-all shadow-lg flex items-center justify-center gap-2 mt-4">
@@ -442,14 +442,14 @@ export default function ImalatMainContainer() {
                     </div>
 
                     {/* Veritabanı Görüntüleme */}
-                    <div className="card shadow-xl border border-slate-200 bg-slate-50">
+                    <div className="card shadow-xl border border-[#1e4a43] bg-[#0d1117] text-white">
                         <h2 className="text-xl font-black text-slate-700 mb-4 border-b pb-2 flex items-center gap-2"><Database size={20} /> {isAR ? 'الملفات الفنية المعتمدة' : 'Onaylanmış Teknik Föyler (Kasa)'}</h2>
                         <div className="space-y-3 overflow-y-auto max-h-[600px] pr-2">
                             {teknikFoyler.length === 0 && <p className="text-center text-gray-400 font-bold p-8">{isAR ? 'لا يوجد موديلات معتمدة حتى الآن' : 'Sistemde teknik görüşü onaylanmış model yok.'}</p>}
                             {teknikFoyler.map((model) => (
-                                <div key={model.id} className="bg-white p-4 rounded-lg shadow-sm border border-slate-200 flex flex-col gap-2">
+                                <div key={model.id} className="bg-[#122b27] p-4 rounded-lg shadow-sm border border-[#1e4a43] flex flex-col gap-2">
                                     <div className="flex justify-between items-start">
-                                        <h3 className="font-black text-slate-800 text-lg">{model.model_name}</h3>
+                                        <h3 className="font-black text-white text-lg">{model.model_name}</h3>
                                         <span className="bg-red-100 text-red-700 font-black px-3 py-1 rounded text-sm shrink-0">MAX: {model.material_cost || 0}₺</span>
                                     </div>
                                     <p className="text-sm text-gray-600 font-medium">{model.description}</p>
@@ -465,12 +465,12 @@ export default function ImalatMainContainer() {
             {/* 2. PENCERE: MODELHANE VE İLK ÜRÜN ŞABLONU (FASONA İŞ GÖNDERME)                              */}
             {/* ========================================================================================= */}
             {mainTab === 'modelhane' && (
-                <div className="animate-fade-in card shadow-xl border-t-8 border-emerald-500 bg-white">
+                <div className="animate-fade-in card shadow-xl border-t-8 border-emerald-500 bg-[#122b27]">
                     <div className="flex items-center gap-3 border-b pb-4 mb-6">
                         <div className="p-3 bg-emerald-100 text-emerald-700 rounded-lg"><CheckSquare size={24} /></div>
                         <div>
-                            <h2 className="text-2xl font-black text-slate-800">{isAR ? 'تجهيز المنتج الأول (قالب المقاول)' : 'İLK ÜRÜN HAZIRLAMA (FASONA ŞABLON ÇIKARMA)'}</h2>
-                            <p className="text-sm text-gray-500 font-bold mt-1">{isAR ? 'تحديد خطوات الإنتاج بالثانية. لا يمكن للعمال الخروج عن هذا الترتيب.' : 'Teknik Görüşü alınan modelin işlemleri burada saniye saniye belirlenir. İşçi/Fason bu sıranın dışına çıkamaz.'}</p>
+                            <h2 className="text-2xl font-black text-white">{isAR ? 'تجهيز المنتج الأول (قالب المقاول)' : 'İLK ÜRÜN HAZIRLAMA (FASONA ŞABLON ÇIKARMA)'}</h2>
+                            <p className="text-sm text-emerald-200 font-bold mt-1">{isAR ? 'تحديد خطوات الإنتاج بالثانية. لا يمكن للعمال الخروج عن هذا الترتيب.' : 'Teknik Görüşü alınan modelin işlemleri burada saniye saniye belirlenir. İşçi/Fason bu sıranın dışına çıkamaz.'}</p>
                         </div>
                     </div>
 
@@ -495,12 +495,12 @@ export default function ImalatMainContainer() {
                             <label className="block text-sm font-bold text-gray-700 mb-2 uppercase text-orange-600">Üretim Adedi (V2 Bant Adedi)</label>
                             <input type="number" className="form-input w-full font-bold text-orange-600 mb-6 border-2 border-orange-200 h-12" placeholder="Üretime Başlanacak Adet" value={uretimAdeti} onChange={e => setUretimAdeti(e.target.value)} />
 
-                            <div className="bg-slate-50 border-2 border-slate-200 rounded-xl p-6 relative">
+                            <div className="bg-[#0d1117] text-white border-2 border-[#1e4a43] rounded-xl p-6 relative">
                                 <span className="absolute -top-3 left-4 bg-red-600 text-white text-[10px] px-2 py-1 font-black rounded uppercase tracking-wider">Mecburi İşlem</span>
-                                <h3 className="font-black text-slate-800 mb-2 flex items-center gap-2"><Video className="text-red-500" /> KENDİ MODELHANEMİZDE İLK DİKİM VİDEOSU</h3>
+                                <h3 className="font-black text-white mb-2 flex items-center gap-2"><Video className="text-red-500" /> KENDİ MODELHANEMİZDE İLK DİKİM VİDEOSU</h3>
                                 <p className="text-xs text-gray-600 font-medium mb-4">"Böyle anladım" yalanını bitirmek için, ilk numune atölyemizde VİDEO eşliğinde dikilir ve fasona izlemesi şart koşulur.</p>
 
-                                <div className={`h-32 border-4 border-dashed rounded-lg flex flex-col items-center justify-center transition-all cursor-pointer ${videoKayitAktif ? 'border-red-500 bg-red-50 shadow-inner' : 'border-slate-300 hover:border-slate-400 bg-white'}`}
+                                <div className={`h-32 border-4 border-dashed rounded-lg flex flex-col items-center justify-center transition-all cursor-pointer ${videoKayitAktif ? 'border-red-500 bg-red-50 shadow-inner' : 'border-slate-300 hover:border-slate-400 bg-[#122b27]'}`}
                                     onClick={() => setVideoKayitAktif(!videoKayitAktif)}>
                                     {videoKayitAktif ? (
                                         <div className="flex flex-col items-center">
@@ -510,7 +510,7 @@ export default function ImalatMainContainer() {
                                             </div>
                                         </div>
                                     ) : (
-                                        <span className="font-black text-slate-500 flex items-center gap-2"><Camera /> KAMERAYI BAŞLATMAK İÇİN TIKLA</span>
+                                        <span className="font-black text-emerald-200 flex items-center gap-2"><Camera /> KAMERAYI BAŞLATMAK İÇİN TIKLA</span>
                                     )}
                                 </div>
                             </div>
@@ -519,7 +519,7 @@ export default function ImalatMainContainer() {
                         {/* Sağ Taraf: Fasona gidecek iş sırası */}
                         <div className={`border-${isAR ? 'r' : 'l'}-2 p${isAR ? 'r' : 'l'}-8`}>
                             <label className="block text-sm font-bold text-gray-700 mb-2 uppercase">{isAR ? '2. تحديد العمليات التفاعلية (المهام الفرعية)' : '2. Dinamik İşlemleri (Alt Görevleri) Belirle'}</label>
-                            <p className="text-xs text-gray-500 font-medium mb-4">{isAR ? 'هذا هو القالب المقرر. لا يُسمح بإجراء أعمال خارج القائمة.' : 'Seri üretime/fasona gidecek şablon budur. Bu liste dışı hiçbir iş yapılamaz veya iddia edilemez.'}</p>
+                            <p className="text-xs text-emerald-200 font-medium mb-4">{isAR ? 'هذا هو القالب المقرر. لا يُسمح بإجراء أعمال خارج القائمة.' : 'Seri üretime/fasona gidecek şablon budur. Bu liste dışı hiçbir iş yapılamaz veya iddia edilemez.'}</p>
 
                             <div className="flex gap-2 mb-4 bg-slate-100 p-2 rounded-lg">
                                 <input maxLength={150} type="text" className="form-input flex-1 font-bold" placeholder={isAR ? 'مثال: الطباعة أو التطريز' : 'Örn: Yaka İlikleme veya Baskı'} value={yeniAdim.islem_adi} onChange={e => setYeniAdim({ ...yeniAdim, islem_adi: e.target.value })} />
@@ -527,10 +527,10 @@ export default function ImalatMainContainer() {
                                 <button onClick={adimEkle} className="bg-emerald-600 hover:bg-emerald-700 text-white px-4 rounded font-black uppercase text-sm">{isAR ? 'أضف' : 'Listeye Yaz'}</button>
                             </div>
 
-                            <div className="h-48 overflow-y-auto bg-slate-50 border border-slate-200 rounded-lg p-2 mb-6">
+                            <div className="h-48 overflow-y-auto bg-[#0d1117] text-white border border-[#1e4a43] rounded-lg p-2 mb-6">
                                 {islemAdimlari.length === 0 && <p className="text-center text-gray-400 text-sm font-bold mt-10">{isAR ? 'لم تتم إضافة خطوات للإنتاج بعد' : 'Henüz fasona verilecek bir işlem sırası eklenmedi.'}</p>}
                                 {islemAdimlari.map((a, i) => (
-                                    <div key={a.id} className="flex justify-between items-center border border-slate-200 p-2 text-sm bg-white shadow-sm mb-2 rounded">
+                                    <div key={a.id} className="flex justify-between items-center border border-[#1e4a43] p-2 text-sm bg-[#122b27] shadow-sm mb-2 rounded">
                                         <span className="font-bold text-slate-700"><span className={`bg-slate-800 text-white px-2 py-1 rounded m${isAR ? 'l' : 'r'}-2 text-[10px]`}>{isAR ? `خطوة` : `ADIM`} {i + 1}</span>{a.islem_adi}</span>
                                         <div className="flex items-center gap-3">
                                             <span className="text-orange-600 font-black">{a.ideal_sure_dk} {isAR ? 'دقيقة' : 'dk limit'}</span>
@@ -566,10 +566,10 @@ export default function ImalatMainContainer() {
                     {imalatGorunum === 'kanban' && (
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
                             {[
-                                { key: 'assigned', label: isAR ? '📋 تم التعيين' : '📋 Atandı', renk: 'blue', border: 'border-blue-500/30', bg: 'bg-slate-50' },
-                                { key: 'in_progress', label: isAR ? '⚙️ قيد الإنتاج' : '⚙️ Üretimde', renk: 'amber', border: 'border-amber-500/30', bg: 'bg-slate-50' },
-                                { key: 'waiting_for_proof', label: isAR ? '🔍 قيد المراجعة' : '🔍 Onay Bekl.', renk: 'violet', border: 'border-violet-500/30', bg: 'bg-slate-50' },
-                                { key: 'blocked_machine', label: isAR ? '🔴 عطل' : '🔴 Arıza', renk: 'rose', border: 'border-rose-500/30', bg: 'bg-slate-50' },
+                                { key: 'assigned', label: isAR ? '📋 تم التعيين' : '📋 Atandı', renk: 'blue', border: 'border-blue-500/30', bg: 'bg-[#0d1117] text-white' },
+                                { key: 'in_progress', label: isAR ? '⚙️ قيد الإنتاج' : '⚙️ Üretimde', renk: 'amber', border: 'border-amber-500/30', bg: 'bg-[#0d1117] text-white' },
+                                { key: 'waiting_for_proof', label: isAR ? '🔍 قيد المراجعة' : '🔍 Onay Bekl.', renk: 'violet', border: 'border-violet-500/30', bg: 'bg-[#0d1117] text-white' },
+                                { key: 'blocked_machine', label: isAR ? '🔴 عطل' : '🔴 Arıza', renk: 'rose', border: 'border-rose-500/30', bg: 'bg-[#0d1117] text-white' },
                             ].map(kolon => (
                                 <div key={kolon.key} className={`${kolon.bg} border-2 ${kolon.border} rounded-2xl p-4 min-h-[220px]`}>
                                     <div className="flex justify-between items-center mb-3">
@@ -579,9 +579,9 @@ export default function ImalatMainContainer() {
                                         </span>
                                     </div>
                                     {sahadakiIsler.filter(i => i.status === kolon.key).map(is => (
-                                        <div key={is.id} className={`bg-white rounded-xl p-3 mb-2 shadow-sm border border-${kolon.renk}-100`}>
-                                            <div className="font-black text-xs text-slate-800">{is.order_code || (isAR ? 'الطلب' : 'Sipariş')}</div>
-                                            <div className="text-[10px] font-bold text-slate-500 mb-2">{is.b1_model_taslaklari?.model_name || '—'}</div>
+                                        <div key={is.id} className={`bg-[#122b27] rounded-xl p-3 mb-2 shadow-sm border border-${kolon.renk}-100`}>
+                                            <div className="font-black text-xs text-white">{is.order_code || (isAR ? 'الطلب' : 'Sipariş')}</div>
+                                            <div className="text-[10px] font-bold text-emerald-200 mb-2">{is.b1_model_taslaklari?.model_name || '—'}</div>
 
                                             {kolon.key === 'assigned' && (
                                                 <button disabled={islemdeId === is.id} onClick={() => sahadakiIsiBaslat(is.id)} className={`mt-1 font-black text-[10px] bg-blue-50 hover:bg-blue-100 border border-blue-200 text-blue-700 px-3 py-1.5 rounded-lg transition-colors w-full ${islemdeId === is.id ? 'opacity-50 cursor-wait' : ''}`}>
@@ -612,24 +612,24 @@ export default function ImalatMainContainer() {
                     {imalatGorunum === 'liste' && (
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                             {/* SAHA KRONOMETRE PANELI */}
-                            <div className="card shadow-xl border-t-8 border-orange-500 bg-white">
+                            <div className="card shadow-xl border-t-8 border-orange-500 bg-[#122b27]">
                                 <div className="border-b pb-4 mb-4">
-                                    <h2 className="text-xl font-black text-slate-800 flex items-center gap-2"><Activity className="text-orange-500" /> {isAR ? 'شاشة العامل في الموقع / الخط' : 'FASON / BANT İŞÇİSİ SAHA EKRANI'}</h2>
-                                    <p className="text-xs text-gray-500 font-bold mt-1">{isAR ? 'تظهر المهام هنا. يبدأ المعلم الميقاتية وينهي العمل...' : 'İşler buraya düşer. Usta saati başlatır, bitirince kanıtla kapatır. İp koptuğunda "Arıza" diyerek faturayı dükkana yıkar.'}</p>
+                                    <h2 className="text-xl font-black text-white flex items-center gap-2"><Activity className="text-orange-500" /> {isAR ? 'شاشة العامل في الموقع / الخط' : 'FASON / BANT İŞÇİSİ SAHA EKRANI'}</h2>
+                                    <p className="text-xs text-emerald-200 font-bold mt-1">{isAR ? 'تظهر المهام هنا. يبدأ المعلم الميقاتية وينهي العمل...' : 'İşler buraya düşer. Usta saati başlatır, bitirince kanıtla kapatır. İp koptuğunda "Arıza" diyerek faturayı dükkana yıkar.'}</p>
                                 </div>
 
                                 <div className="space-y-4 max-h-[600px] overflow-y-auto pr-2">
                                     {sahadakiIsler.length === 0 && <div className="p-8 text-center text-gray-400 font-bold border-2 border-dashed rounded-xl">{isAR ? 'لا يوجد ترتيب إنتاج مخصص' : 'Ustaya/Fasona atanmış bir üretim sırası yok.'}</div>}
                                     {sahadakiIsler.map(is => (
-                                        <div key={is.id} className={`border-2 rounded-xl p-5 flex flex-col shadow-sm transition-all ${is.status === 'in_progress' ? 'border-orange-400 bg-orange-50/50' : 'border-slate-200 bg-white'}`}>
+                                        <div key={is.id} className={`border-2 rounded-xl p-5 flex flex-col shadow-sm transition-all ${is.status === 'in_progress' ? 'border-orange-400 bg-orange-50/50' : 'border-[#1e4a43] bg-[#122b27]'}`}>
                                             <div className="flex justify-between items-start mb-4">
                                                 <div>
-                                                    <h3 className="font-black text-lg text-slate-800 uppercase">[{isAR ? 'الرمز' : 'KOD'}: {is.order_code}]</h3>
-                                                    <p className="text-sm text-slate-600 font-bold mt-1">{isAR ? 'الطلب' : 'Sipariş'}: {is.b1_model_taslaklari?.model_name || (isAR ? 'نموذج مخفي' : 'Gizli Model')}</p>
+                                                    <h3 className="font-black text-lg text-white uppercase">[{isAR ? 'الرمز' : 'KOD'}: {is.order_code}]</h3>
+                                                    <p className="text-sm text-emerald-300 font-bold mt-1">{isAR ? 'الطلب' : 'Sipariş'}: {is.b1_model_taslaklari?.model_name || (isAR ? 'نموذج مخفي' : 'Gizli Model')}</p>
                                                 </div>
                                                 <div className="flex flex-col items-end gap-1">
-                                                    <span className="bg-slate-100 text-slate-800 text-xs px-2 py-1 rounded font-black border uppercase">{is.status}</span>
-                                                    <span className="text-xs font-bold text-gray-500">{isAR ? 'الكمية' : 'Miktar'}: {is.quantity} {isAR ? 'قطعة' : 'Adet'}</span>
+                                                    <span className="bg-slate-100 text-white text-xs px-2 py-1 rounded font-black border uppercase">{is.status}</span>
+                                                    <span className="text-xs font-bold text-emerald-200">{isAR ? 'الكمية' : 'Miktar'}: {is.quantity} {isAR ? 'قطعة' : 'Adet'}</span>
                                                 </div>
                                             </div>
 
@@ -658,26 +658,26 @@ export default function ImalatMainContainer() {
                             </div>
 
                             {/* PERSONEL GİRDİSİ (LİYAKAT VE VİCDAN) PANELI */}
-                            <div className="card shadow-xl border-t-8 border-indigo-500 bg-white">
+                            <div className="card shadow-xl border-t-8 border-indigo-500 bg-[#122b27]">
                                 <div className="border-b pb-4 mb-4">
-                                    <h2 className="text-xl font-black text-slate-800 flex items-center gap-2"><Users className="text-indigo-500" /> PERSONEL GİRDİLERİ (VİCDAN & HATA ORANI)</h2>
-                                    <p className="text-xs text-gray-500 font-bold mt-1">İşçinin ürettiği hatasız mal (FPY) skoru ve insan kaynakları müdahalesi buradadır.</p>
+                                    <h2 className="text-xl font-black text-white flex items-center gap-2"><Users className="text-indigo-500" /> PERSONEL GİRDİLERİ (VİCDAN & HATA ORANI)</h2>
+                                    <p className="text-xs text-emerald-200 font-bold mt-1">İşçinin ürettiği hatasız mal (FPY) skoru ve insan kaynakları müdahalesi buradadır.</p>
                                 </div>
 
                                 <div className="overflow-x-auto border rounded-lg shadow-inner">
                                     <table className="w-full text-left">
                                         <thead className="bg-slate-100 border-b">
                                             <tr>
-                                                <th className="p-3 font-bold text-xs uppercase text-slate-600">Sicil / Kullanıcı</th>
-                                                <th className="p-3 font-bold text-xs uppercase text-slate-600 text-center">FPY (Kusursuzluk %'si)</th>
-                                                <th className="p-3 font-bold text-xs uppercase text-slate-600 text-center">Sosyal Liyakat</th>
+                                                <th className="p-3 font-bold text-xs uppercase text-emerald-300">Sicil / Kullanıcı</th>
+                                                <th className="p-3 font-bold text-xs uppercase text-emerald-300 text-center">FPY (Kusursuzluk %'si)</th>
+                                                <th className="p-3 font-bold text-xs uppercase text-emerald-300 text-center">Sosyal Liyakat</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             {personeller.filter(p => !p.email.includes('admin')).map(p => (
-                                                <tr key={p.id} className="border-b bg-white hover:bg-slate-50">
+                                                <tr key={p.id} className="border-b bg-[#122b27] hover:bg-[#0d1117] text-white">
                                                     <td className="p-3">
-                                                        <div className="font-black text-sm text-slate-800 truncate max-w-[150px]">{p.full_name || 'Usta'}</div>
+                                                        <div className="font-black text-sm text-white truncate max-w-[150px]">{p.full_name || 'Usta'}</div>
                                                         <div className="text-[10px] font-bold text-gray-400 mt-1">{p.role}</div>
                                                     </td>
                                                     <td className="p-3 text-center">
@@ -702,7 +702,7 @@ export default function ImalatMainContainer() {
             {/* 4. PENCERE: MALİYET ANALİZ VE MUHASEBE (FİNAL ONAYI VE GİŞESİ)                            */}
             {/* ========================================================================================= */}
             {mainTab === 'maliyet_muhasebe' && (
-                <div className="animate-fade-in card shadow-xl border-t-8 border-purple-700 bg-slate-50">
+                <div className="animate-fade-in card shadow-xl border-t-8 border-purple-700 bg-[#0d1117] text-white">
                     <div className="flex items-center gap-4 border-b border-purple-200 pb-5 mb-6">
                         <div className="p-4 bg-purple-700 text-white rounded-xl shadow-lg"><Receipt size={32} /></div>
                         <div>
@@ -712,38 +712,38 @@ export default function ImalatMainContainer() {
                     </div>
 
                     <div className="space-y-6">
-                        {onayBekleyenIsler.length === 0 && <div className="p-12 text-center text-purple-400 bg-white rounded-xl border-2 border-dashed border-purple-200 font-black text-lg shadow-sm">{isAR ? 'لا يوجد إنتاج متسلسل ينتظر الموافقة والمحاسبة.' : 'Gişede onay ve maliyet hesabı bekleyen seri üretim işi yok.'}</div>}
+                        {onayBekleyenIsler.length === 0 && <div className="p-12 text-center text-purple-400 bg-[#122b27] rounded-xl border-2 border-dashed border-purple-200 font-black text-lg shadow-sm">{isAR ? 'لا يوجد إنتاج متسلسل ينتظر الموافقة والمحاسبة.' : 'Gişede onay ve maliyet hesabı bekleyen seri üretim işi yok.'}</div>}
 
                         {onayBekleyenIsler.map(is => (
-                            <div key={is.id} className="bg-white border-2 border-purple-300 rounded-2xl p-6 shadow-md relative overflow-hidden">
-                                <div className={`absolute top-0 right-0 bg-yellow-400 text-slate-800 px-5 py-1 text-[10px] font-black rounded-b${isAR ? 'r' : 'l'}-xl uppercase tracking-widest shadow-sm`}>{isAR ? 'بانتظار موافقة المفتش' : 'Müfettiş Onayı Bekliyor'}</div>
+                            <div key={is.id} className="bg-[#122b27] border-2 border-purple-300 rounded-2xl p-6 shadow-md relative overflow-hidden">
+                                <div className={`absolute top-0 right-0 bg-yellow-400 text-white px-5 py-1 text-[10px] font-black rounded-b${isAR ? 'r' : 'l'}-xl uppercase tracking-widest shadow-sm`}>{isAR ? 'بانتظار موافقة المفتش' : 'Müfettiş Onayı Bekliyor'}</div>
 
                                 <div className="flex justify-between items-start mb-6 border-b pb-4">
                                     <div>
-                                        <h3 className="text-2xl font-black text-slate-800 uppercase mb-1">{is.b1_model_taslaklari?.model_name || 'Gizli Model'}</h3>
-                                        <p className="text-sm font-bold text-gray-500 uppercase">SİPARİŞ KODU: {is.order_code} | MİKTAR: {is.quantity} ADET</p>
+                                        <h3 className="text-2xl font-black text-white uppercase mb-1">{is.b1_model_taslaklari?.model_name || 'Gizli Model'}</h3>
+                                        <p className="text-sm font-bold text-emerald-200 uppercase">SİPARİŞ KODU: {is.order_code} | MİKTAR: {is.quantity} ADET</p>
                                     </div>
                                 </div>
 
                                 {/* Maliyet ve Analiz Raporu Tablosu */}
                                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                                    <div className="bg-slate-50 border border-slate-200 p-4 rounded-xl text-center">
-                                        <span className="text-xs font-bold text-gray-500 uppercase block mb-1">{isAR ? 'المدة المحسوبة' : 'Hesaplanan Kronometre'}</span>
-                                        <div className="font-black text-2xl text-slate-800">42 <span className="text-sm text-gray-400">{isAR ? 'دقيقة/قطعة' : 'Dk / Adet'}</span></div>
+                                    <div className="bg-[#0d1117] text-white border border-[#1e4a43] p-4 rounded-xl text-center">
+                                        <span className="text-xs font-bold text-emerald-200 uppercase block mb-1">{isAR ? 'المدة المحسوبة' : 'Hesaplanan Kronometre'}</span>
+                                        <div className="font-black text-2xl text-white">42 <span className="text-sm text-gray-400">{isAR ? 'دقيقة/قطعة' : 'Dk / Adet'}</span></div>
                                     </div>
-                                    <div className="bg-slate-50 border border-slate-200 p-4 rounded-xl text-center">
-                                        <span className="text-xs font-bold text-gray-500 uppercase block mb-1">{isAR ? 'تجاوز حد التكلفة؟' : 'Maliyet Sınırı Delindi mi?'}</span>
+                                    <div className="bg-[#0d1117] text-white border border-[#1e4a43] p-4 rounded-xl text-center">
+                                        <span className="text-xs font-bold text-emerald-200 uppercase block mb-1">{isAR ? 'تجاوز حد التكلفة؟' : 'Maliyet Sınırı Delindi mi?'}</span>
                                         <div className="font-black text-2xl text-emerald-600">{isAR ? 'آمن' : 'GÜVENLİ'}</div>
                                         <span className="text-[10px] font-bold text-emerald-500">{isAR ? 'الهدف' : 'Hedef'}: {is.b1_model_taslaklari?.material_cost || 0}₺</span>
                                     </div>
-                                    <div className="bg-slate-50 border border-slate-200 p-4 rounded-xl text-center">
-                                        <span className="text-xs font-bold text-gray-500 uppercase block mb-1">{isAR ? 'نقاط الجودة (الأخطاء)' : 'Kalite Skoru (Hata)'}</span>
-                                        <div className="font-black text-2xl text-slate-800">{is.rework_count === 0 ? (isAR ? 'ممتاز' : 'KUSURSUZ') : `${is.rework_count} ${isAR ? 'خطأ' : 'HATA'}`}</div>
+                                    <div className="bg-[#0d1117] text-white border border-[#1e4a43] p-4 rounded-xl text-center">
+                                        <span className="text-xs font-bold text-emerald-200 uppercase block mb-1">{isAR ? 'نقاط الجودة (الأخطاء)' : 'Kalite Skoru (Hata)'}</span>
+                                        <div className="font-black text-2xl text-white">{is.rework_count === 0 ? (isAR ? 'ممتاز' : 'KUSURSUZ') : `${is.rework_count} ${isAR ? 'خطأ' : 'HATA'}`}</div>
                                     </div>
                                 </div>
 
                                 <div className="flex gap-4">
-                                    <button disabled={islemdeId === is.id} onClick={() => hataliMalReddet(is)} className="flex-1 bg-white text-red-600 border-2 border-red-300 hover:border-red-600 hover:bg-red-50 py-5 font-black text-lg rounded-xl shadow-sm transition-all flex justify-center items-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-wait">
+                                    <button disabled={islemdeId === is.id} onClick={() => hataliMalReddet(is)} className="flex-1 bg-[#122b27] text-red-600 border-2 border-red-300 hover:border-red-600 hover:bg-red-50 py-5 font-black text-lg rounded-xl shadow-sm transition-all flex justify-center items-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-wait">
                                         {islemdeId === is.id ? '...' : (isAR ? 'رفض وإعادة للعامل' : 'REDDET & İŞÇİYE GERİ YOLLA')}
                                     </button>
                                     <button disabled={islemdeId === is.id} onClick={() => finaleOnayVerMuhasebeyeYaz(is)} className="flex-1 bg-purple-700 text-white hover:bg-purple-800 border-b-4 border-purple-900 py-5 font-black text-lg rounded-xl shadow-lg hover:shadow-xl transition-all flex justify-center items-center gap-2 uppercase cursor-pointer disabled:opacity-50 disabled:cursor-wait">

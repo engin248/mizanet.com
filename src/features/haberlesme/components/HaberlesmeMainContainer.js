@@ -485,13 +485,13 @@ export default function HaberlesmeMainContainer() {
 
     // ── STYLES ───────────────────────────────────────────────────────────────
     const inp = {
-        width: '100%', padding: '10px 12px', border: '2px solid #e5e7eb',
+        width: '100%', padding: '10px 12px', border: '2px solid #1e4a43',
         borderRadius: 8, fontSize: '0.875rem', fontFamily: 'inherit',
         boxSizing: 'border-box', outline: 'none',
     };
     const lbl = {
         display: 'block', fontSize: '0.68rem', fontWeight: 800,
-        color: '#374151', marginBottom: 5, textTransform: 'uppercase', letterSpacing: '0.05em',
+        color: '#e2e8f0', marginBottom: 5, textTransform: 'uppercase', letterSpacing: '0.05em',
     };
 
     // ── RENDER ───────────────────────────────────────────────────────────────
@@ -537,7 +537,7 @@ export default function HaberlesmeMainContainer() {
                         <div key={i} style={{ background: s.bg, border: `1px solid ${s.color}30`, borderRadius: 12, padding: '0.5rem 1rem', display: 'flex', flexDirection: 'column', justifyContent: 'center', minWidth: '110px' }}>
                             <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 2 }}>
                                 <span style={{ fontSize: '0.9rem' }}>{s.ikon}</span>
-                                <span style={{ fontSize: '0.62rem', color: '#64748b', fontWeight: 700, textTransform: 'uppercase' }}>{s.label}</span>
+                                <span style={{ fontSize: '0.62rem', color: '#a7f3d0', fontWeight: 700, textTransform: 'uppercase' }}>{s.label}</span>
                             </div>
                             <div style={{ fontWeight: 900, fontSize: '1.3rem', color: s.color }}>{s.val}</div>
                         </div>
@@ -557,7 +557,7 @@ export default function HaberlesmeMainContainer() {
             )}
 
             {/* SEKMELER */}
-            <div style={{ display: 'flex', gap: 3, background: '#f1f5f9', borderRadius: 12, padding: 4, marginBottom: '1.25rem', flexWrap: 'wrap' }}>
+            <div style={{ display: 'flex', gap: 3, background: '#173a34', borderRadius: 12, padding: 4, marginBottom: '1.25rem', flexWrap: 'wrap' }}>
                 {[
                     { key: 'gelen', label: `📥 Gelen${okunmamisSayi > 0 ? ` (${okunmamisSayi})` : ''}` },
                     { key: 'gonderilen', label: '📤 Gönderilenler' },
@@ -574,12 +574,12 @@ export default function HaberlesmeMainContainer() {
 
             {/* ═══════════════ YENİ MESAJ FORMU ═══════════════ */}
             {sekme === 'yeni' && (
-                <div style={{ background: 'white', border: '2px solid #1e1b4b', borderRadius: 16, padding: '1.5rem', boxShadow: '0 8px 32px rgba(30,27,75,0.1)' }}>
+                <div style={{ background: '#122b27', border: '2px solid #1e1b4b', borderRadius: 16, padding: '1.5rem', boxShadow: '0 8px 32px rgba(30,27,75,0.1)' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: '1.25rem', paddingBottom: '1rem', borderBottom: '2px solid #f1f5f9' }}>
                         <Shield size={20} color="#1e1b4b" />
                         <div>
                             <div style={{ fontWeight: 900, color: '#1e1b4b', fontSize: '1rem' }}>Yeni Mesaj — SHA-256 Korumalı</div>
-                            <div style={{ fontSize: '0.68rem', color: '#64748b', fontWeight: 600 }}>
+                            <div style={{ fontSize: '0.68rem', color: '#a7f3d0', fontWeight: 600 }}>
                                 Gönderildikten sonra içerik değiştirilemez. Zaman damgalı, hash imzalı, silinmez arşivlenir.
                             </div>
                         </div>
@@ -680,14 +680,14 @@ export default function HaberlesmeMainContainer() {
                     )}
 
                     <div style={{ display: 'flex', gap: 10, justifyContent: 'flex-end' }}>
-                        <button onClick={() => setForm(BOŞ_FORM)} style={{ padding: '10px 20px', border: '2px solid #e5e7eb', borderRadius: 8, background: 'white', fontWeight: 700, cursor: 'pointer' }}>Temizle</button>
+                        <button onClick={() => setForm(BOŞ_FORM)} style={{ padding: '10px 20px', border: '2px solid #1e4a43', borderRadius: 8, background: '#122b27', fontWeight: 700, cursor: 'pointer' }}>Temizle</button>
                         <button onClick={gonder} disabled={gonderiliyor}
                             style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '10px 28px', background: gonderiliyor ? '#94a3b8' : '#1e1b4b', color: 'white', border: 'none', borderRadius: 8, fontWeight: 800, cursor: gonderiliyor ? 'not-allowed' : 'pointer' }}>
                             <Send size={16} /> {gonderiliyor ? 'Gönderiliyor...' : 'Gönder & SHA-256 Damgala'}
                         </button>
                     </div>
 
-                    <div style={{ marginTop: '1rem', padding: '8px 12px', background: '#f8fafc', borderRadius: 8, fontSize: '0.68rem', color: '#7c3aed', fontWeight: 700, display: 'flex', alignItems: 'center', gap: 6 }}>
+                    <div style={{ marginTop: '1rem', padding: '8px 12px', background: '#0b1d1a', borderRadius: 8, fontSize: '0.68rem', color: '#7c3aed', fontWeight: 700, display: 'flex', alignItems: 'center', gap: 6 }}>
                         <Hash size={12} /> SHA-256 bütünlük damgası otomatik hesaplanır. İçerik sonradan değiştirilirse hash uyuşmaz — manipülasyon kanıtlanır.
                     </div>
                 </div>
@@ -742,7 +742,7 @@ export default function HaberlesmeMainContainer() {
                     {loading && <div style={{ textAlign: 'center', padding: '3rem', color: '#94a3b8', fontWeight: 700 }}>Yükleniyor...</div>}
 
                     {!loading && filtreli.length === 0 && (
-                        <div style={{ textAlign: 'center', padding: '4rem', background: '#f8fafc', borderRadius: 16, border: '2px dashed #e5e7eb' }}>
+                        <div style={{ textAlign: 'center', padding: '4rem', background: '#0b1d1a', borderRadius: 16, border: '2px dashed #e5e7eb' }}>
                             <Inbox size={48} style={{ color: '#e5e7eb', margin: '0 auto 1rem', display: 'block' }} />
                             <p style={{ color: '#94a3b8', fontWeight: 700, margin: 0 }}>
                                 {isAR ? 'لا توجد رسائل.' : 'Mesaj bulunamadı.'}
@@ -785,7 +785,7 @@ export default function HaberlesmeMainContainer() {
                                                 </span>
                                             )}
                                             <span style={{ fontSize: '0.6rem', fontWeight: 800, padding: '2px 7px', borderRadius: 4, background: renk.badge, color: 'white' }}>{renk.label}</span>
-                                            <span style={{ fontSize: '0.6rem', fontWeight: 800, padding: '2px 7px', borderRadius: 4, background: '#f1f5f9', color: '#475569' }}>{TIP_LABEL[m.tip]}</span>
+                                            <span style={{ fontSize: '0.6rem', fontWeight: 800, padding: '2px 7px', borderRadius: 4, background: '#173a34', color: '#a7f3d0' }}>{TIP_LABEL[m.tip]}</span>
                                             {m.onay_durumu && <span style={{ fontSize: '0.6rem', fontWeight: 800, padding: '2px 7px', borderRadius: 4, background: ONAY_RENK[m.onay_durumu].bg, color: ONAY_RENK[m.onay_durumu].text }}>{ONAY_RENK[m.onay_durumu].label}</span>}
                                             {!okundu && <span style={{ fontSize: '0.6rem', fontWeight: 900, padding: '2px 7px', borderRadius: 4, background: '#ef4444', color: 'white' }}>🔴 OKUNMADI</span>}
                                             {/* Çöpteki mesajlar için etiket */}
@@ -798,16 +798,16 @@ export default function HaberlesmeMainContainer() {
                                                 </span>
                                             )}
                                         </div>
-                                        <div style={{ fontWeight: okundu ? 700 : 900, fontSize: '0.95rem', color: '#0f172a', marginBottom: 3 }}>{m.konu}</div>
-                                        <div style={{ fontSize: '0.72rem', color: '#475569', display: 'flex', gap: 12, flexWrap: 'wrap', alignItems: 'center' }}>
+                                        <div style={{ fontWeight: okundu ? 700 : 900, fontSize: '0.95rem', color: 'white', marginBottom: 3 }}>{m.konu}</div>
+                                        <div style={{ fontSize: '0.72rem', color: '#a7f3d0', display: 'flex', gap: 12, flexWrap: 'wrap', alignItems: 'center' }}>
                                             <span style={{ display: 'flex', alignItems: 'center', gap: 3 }}><User size={11} /> {m.gonderen_adi} ({m.gonderen_modul})</span>
                                             {m.alici_grup && <span>→ {m.alici_grup === 'hepsi' ? '📢 Herkes' : MODULLER.find(x => x.key === m.alici_grup)?.label || m.alici_grup}</span>}
                                             {/* TARİH + SAAT — her zaman belirgin */}
                                             <span style={{
                                                 display: 'flex', alignItems: 'center', gap: 4,
-                                                background: '#f1f5f9', borderRadius: 5,
+                                                background: '#173a34', borderRadius: 5,
                                                 padding: '2px 8px', fontWeight: 800,
-                                                color: '#334155', fontSize: '0.7rem',
+                                                color: '#e2e8f0', fontSize: '0.7rem',
                                             }}>
                                                 <Clock size={11} />
                                                 {formatTarih(m.created_at)}
@@ -870,7 +870,7 @@ export default function HaberlesmeMainContainer() {
                                         )}
 
                                         {/* İçerik */}
-                                        <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 10, padding: '1rem', fontSize: '0.875rem', lineHeight: 1.7, color: '#1e293b', whiteSpace: 'pre-wrap', fontWeight: 500 }}>
+                                        <div style={{ background: '#0b1d1a', border: '1px solid #1e4a43', borderRadius: 10, padding: '1rem', fontSize: '0.875rem', lineHeight: 1.7, color: 'white', whiteSpace: 'pre-wrap', fontWeight: 500 }}>
                                             {m.icerik}
                                         </div>
 
@@ -926,7 +926,7 @@ export default function HaberlesmeMainContainer() {
                                                 <div style={{ fontSize: '0.75rem', fontWeight: 800, color: '#1e1b4b', marginBottom: 8 }}>✏️ Yanıtınız — SHA-256 damgalanır, değiştirilemez</div>
                                                 <textarea rows={3} value={yanitIcerik} onChange={e => setYanitIcerik(e.target.value)} placeholder="Yanıtınızı yazın..." style={{ ...inp, resize: 'vertical' }} />
                                                 <div style={{ display: 'flex', gap: 8, marginTop: 8, justifyContent: 'flex-end' }}>
-                                                    <button onClick={() => setYanitMod(false)} style={{ padding: '7px 14px', border: '1px solid #e5e7eb', borderRadius: 7, background: 'white', cursor: 'pointer', fontWeight: 700, fontSize: '0.78rem' }}>İptal</button>
+                                                    <button onClick={() => setYanitMod(false)} style={{ padding: '7px 14px', border: '1px solid #1e4a43', borderRadius: 7, background: '#122b27', cursor: 'pointer', fontWeight: 700, fontSize: '0.78rem' }}>İptal</button>
                                                     <button onClick={e => { e.stopPropagation(); yanitGonder(); }} style={{ display: 'flex', alignItems: 'center', gap: 5, padding: '7px 16px', background: '#1e1b4b', color: 'white', border: 'none', borderRadius: 7, cursor: 'pointer', fontWeight: 800, fontSize: '0.78rem' }}>
                                                         <Send size={13} /> Yanıtı Gönder
                                                     </button>

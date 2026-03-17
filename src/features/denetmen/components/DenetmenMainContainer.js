@@ -239,8 +239,8 @@ export default function DenetmenMainContainer() {
                         <ShieldAlert size={24} color="white" />
                     </div>
                     <div>
-                        <h1 style={{ fontSize: '1.4rem', fontWeight: 900, color: '#0f172a', margin: 0 }}>Sistem Denetmeni</h1>
-                        <p style={{ fontSize: '0.78rem', color: '#64748b', margin: '2px 0 0', fontWeight: 600 }}>Otomatik alarm merkezi — gerçek veri</p>
+                        <h1 style={{ fontSize: '1.4rem', fontWeight: 900, color: 'white', margin: 0 }}>Sistem Denetmeni</h1>
+                        <p style={{ fontSize: '0.78rem', color: '#a7f3d0', margin: '2px 0 0', fontWeight: 600 }}>Otomatik alarm merkezi — gerçek veri</p>
                     </div>
                 </div>
                 <div style={{ display: 'flex', gap: 8 }}>
@@ -283,7 +283,7 @@ export default function DenetmenMainContainer() {
             </div>
 
             {/* SEKMELER */}
-            <div style={{ display: 'flex', gap: 4, marginBottom: '1.25rem', background: '#f1f5f9', borderRadius: 12, padding: 4 }}>
+            <div style={{ display: 'flex', gap: 4, marginBottom: '1.25rem', background: '#173a34', borderRadius: 12, padding: 4 }}>
                 <button onClick={() => setAnaSekme('uyarilar')} style={{ flex: 1, padding: '10px 16px', borderRadius: 9, border: 'none', cursor: 'pointer', fontWeight: 800, fontSize: '0.85rem', transition: 'all 0.2s', background: anaSekme === 'uyarilar' ? 'white' : 'transparent', color: anaSekme === 'uyarilar' ? '#7c3aed' : '#64748b', boxShadow: anaSekme === 'uyarilar' ? '0 2px 8px rgba(0,0,0,0.08)' : 'none' }}>
                     🚨 Sistem Uyarıları
                 </button>
@@ -302,7 +302,7 @@ export default function DenetmenMainContainer() {
                             { label: 'Uyarı', val: uyariSayisi, color: '#f59e0b', bg: '#fffbeb' },
                         ].map((k, i) => (
                             <div key={i} style={{ background: k.bg, border: `1px solid ${k.color}25`, borderRadius: 12, padding: '0.875rem' }}>
-                                <div style={{ fontSize: '0.68rem', color: '#64748b', fontWeight: 700, textTransform: 'uppercase', marginBottom: 4 }}>{k.label}</div>
+                                <div style={{ fontSize: '0.68rem', color: '#a7f3d0', fontWeight: 700, textTransform: 'uppercase', marginBottom: 4 }}>{k.label}</div>
                                 <div style={{ fontWeight: 900, fontSize: '1.6rem', color: k.color }}>{k.val}</div>
                             </div>
                         ))}
@@ -322,7 +322,7 @@ export default function DenetmenMainContainer() {
                             <div>
                                 <div style={{ fontSize: '0.65rem', fontWeight: 800, color: '#a78bfa', textTransform: 'uppercase', marginBottom: 6 }}>Gemini Otonom Karargâh Zekası</div>
                                 <div style={{ fontSize: '0.85rem', color: '#e2e8f0', lineHeight: 1.7 }}>{aiAnaliz}</div>
-                                <button onClick={() => setAiAnaliz(null)} style={{ marginTop: 8, fontSize: '0.68rem', color: '#64748b', background: 'none', border: 'none', cursor: 'pointer' }}>Kapat</button>
+                                <button onClick={() => setAiAnaliz(null)} style={{ marginTop: 8, fontSize: '0.68rem', color: '#a7f3d0', background: 'none', border: 'none', cursor: 'pointer' }}>Kapat</button>
                             </div>
                         </div>
                     )}
@@ -346,7 +346,7 @@ export default function DenetmenMainContainer() {
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginBottom: '1.5rem' }}>
                         {loading && <div style={{ textAlign: 'center', padding: '3rem', color: '#94a3b8' }}>Yükleniyor...</div>}
                         {!loading && filtrelendi.length === 0 && (
-                            <div style={{ textAlign: 'center', padding: '3rem', background: '#f8fafc', borderRadius: 12, border: '2px dashed #e5e7eb' }}>
+                            <div style={{ textAlign: 'center', padding: '3rem', background: '#0b1d1a', borderRadius: 12, border: '2px dashed #e5e7eb' }}>
                                 <CheckCircle size={40} style={{ color: '#10b981', marginBottom: '0.5rem' }} />
                                 <p style={{ color: '#10b981', fontWeight: 800 }}>Aktif uyarı yok</p>
                             </div>
@@ -361,8 +361,8 @@ export default function DenetmenMainContainer() {
                                             <span style={{ fontSize: '0.6rem', fontWeight: 800, background: r.badge, color: 'white', padding: '2px 7px', borderRadius: 4 }}>{u.seviye?.toUpperCase()}</span>
                                             <span style={{ fontSize: '0.6rem', fontWeight: 700, color: r.text, display: 'flex', alignItems: 'center', gap: 3 }}>{tip.ikon} {tip.etiket}</span>
                                         </div>
-                                        <div style={{ fontWeight: 800, color: '#0f172a', fontSize: '0.9rem' }}>{u.baslik}</div>
-                                        {u.mesaj && <div style={{ fontSize: '0.78rem', color: '#475569', marginTop: 3, fontWeight: 600 }}>{u.mesaj}</div>}
+                                        <div style={{ fontWeight: 800, color: 'white', fontSize: '0.9rem' }}>{u.baslik}</div>
+                                        {u.mesaj && <div style={{ fontSize: '0.78rem', color: '#a7f3d0', marginTop: 3, fontWeight: 600 }}>{u.mesaj}</div>}
                                         <div style={{ fontSize: '0.65rem', color: '#94a3b8', marginTop: 4 }}>{formatTarih(u.olusturma)}</div>
                                     </div>
                                     <div style={{ display: 'flex', gap: 6, flexShrink: 0 }}>
@@ -391,7 +391,7 @@ export default function DenetmenMainContainer() {
                                     <div key={l.id} style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.72rem', padding: '3px 0', borderBottom: '1px solid #1e293b' }}>
                                         <span style={{ color: l.sonuc === 'hata' ? '#f87171' : '#34d399', fontWeight: 700 }}>{l.ajan_adi}</span>
                                         <span style={{ color: '#94a3b8' }}>{l.mesaj}</span>
-                                        <span style={{ color: '#475569' }}>{formatTarih(l.created_at)}</span>
+                                        <span style={{ color: '#a7f3d0' }}>{formatTarih(l.created_at)}</span>
                                     </div>
                                 ))}
                             </div>
@@ -455,15 +455,15 @@ export default function DenetmenMainContainer() {
                             </div>
                             <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
                                 <div style={{ flex: 1, background: '#0f172a', padding: '10px', borderRadius: '8px', border: '1px solid #1e293b' }}>
-                                    <div style={{ fontSize: '0.7rem', color: '#64748b', fontWeight: 800 }}>Mevcut Ağırlık Dosyası</div>
+                                    <div style={{ fontSize: '0.7rem', color: '#a7f3d0', fontWeight: 800 }}>Mevcut Ağırlık Dosyası</div>
                                     <div style={{ fontSize: '0.85rem', color: '#e2e8f0', fontWeight: 600, marginTop: 4 }}>v4_47sb_local_weights.safetensors</div>
                                 </div>
                                 <div style={{ flex: 1, background: '#0f172a', padding: '10px', borderRadius: '8px', border: '1px solid #1e293b' }}>
-                                    <div style={{ fontSize: '0.7rem', color: '#64748b', fontWeight: 800 }}>Eğitim Veriseti</div>
+                                    <div style={{ fontSize: '0.7rem', color: '#a7f3d0', fontWeight: 800 }}>Eğitim Veriseti</div>
                                     <div style={{ fontSize: '0.85rem', color: '#e2e8f0', fontWeight: 600, marginTop: 4 }}>18,450 Üretim Logu (Sadece Fabrika)</div>
                                 </div>
                                 <div style={{ flex: 1, background: '#0f172a', padding: '10px', borderRadius: '8px', border: '1px solid #1e293b' }}>
-                                    <div style={{ fontSize: '0.7rem', color: '#64748b', fontWeight: 800 }}>Durum</div>
+                                    <div style={{ fontSize: '0.7rem', color: '#a7f3d0', fontWeight: 800 }}>Durum</div>
                                     <div style={{ fontSize: '0.85rem', color: '#10b981', fontWeight: 600, marginTop: 4 }}>Özel Model (Fine-Tuned) Hazır</div>
                                 </div>
                             </div>
@@ -477,7 +477,7 @@ export default function DenetmenMainContainer() {
                 <div style={{ padding: '0.5rem', textAlign: 'center' }}>
 
                     {!visionFotoSecili ? (
-                        <div style={{ border: '3px dashed #cbd5e1', borderRadius: '16px', padding: '3rem 1rem', cursor: 'pointer', background: '#f8fafc', transition: 'all 0.2s', position: 'relative' }}>
+                        <div style={{ border: '3px dashed #cbd5e1', borderRadius: '16px', padding: '3rem 1rem', cursor: 'pointer', background: '#0b1d1a', transition: 'all 0.2s', position: 'relative' }}>
                             <input
                                 type="file"
                                 accept="image/*,video/*"
@@ -493,7 +493,7 @@ export default function DenetmenMainContainer() {
                                 style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', opacity: 0, cursor: 'pointer' }}
                             />
                             <Camera size={48} color="#94a3b8" style={{ margin: '0 auto 1rem' }} />
-                            <h3 style={{ margin: '0 0 0.5rem', color: '#334155', fontWeight: 800 }}>Kamerayı Aç veya Fotoğraf Yükle</h3>
+                            <h3 style={{ margin: '0 0 0.5rem', color: '#e2e8f0', fontWeight: 800 }}>Kamerayı Aç veya Fotoğraf Yükle</h3>
                             <p style={{ margin: 0, color: '#94a3b8', fontSize: '0.85rem', fontWeight: 600 }}>Dikim hatasını veya kumaş abrajını buraya taratın.</p>
                         </div>
                     ) : (
@@ -529,16 +529,16 @@ export default function DenetmenMainContainer() {
                                             {visionSonuc.onay ? '✅ ONAYLANDI (TEMİZ)' : '❌ REDDEDİLDİ (DEFOLU)'}
                                         </div>
                                         <div style={{ fontSize: '1.8rem', fontWeight: 900, color: visionSonuc.onay ? '#22c55e' : '#ef4444' }}>
-                                            % {visionSonuc.kumasHataOrani.toFixed(1)} <span style={{ fontSize: '0.8rem', display: 'block', color: '#64748b' }}>HATA.</span>
+                                            % {visionSonuc.kumasHataOrani.toFixed(1)} <span style={{ fontSize: '0.8rem', display: 'block', color: '#a7f3d0' }}>HATA.</span>
                                         </div>
                                     </div>
 
-                                    <div style={{ fontSize: '0.9rem', color: '#334155', fontWeight: 700, lineHeight: 1.6 }}>
-                                        <strong style={{ color: '#0f172a' }}>Müfettiş Yorumu:</strong><br />
+                                    <div style={{ fontSize: '0.9rem', color: '#e2e8f0', fontWeight: 700, lineHeight: 1.6 }}>
+                                        <strong style={{ color: 'white' }}>Müfettiş Yorumu:</strong><br />
                                         {visionSonuc.yorum}
                                     </div>
 
-                                    <button onClick={() => { setVisionFotoSecili(null); setVisionSonuc(null); }} style={{ width: '100%', marginTop: '1.5rem', padding: '10px', background: 'white', border: '2px solid #cbd5e1', borderRadius: '8px', cursor: 'pointer', fontWeight: 800, color: '#475569' }}>
+                                    <button onClick={() => { setVisionFotoSecili(null); setVisionSonuc(null); }} style={{ width: '100%', marginTop: '1.5rem', padding: '10px', background: '#122b27', border: '2px solid #cbd5e1', borderRadius: '8px', cursor: 'pointer', fontWeight: 800, color: '#a7f3d0' }}>
                                         YENİ ANALİZ
                                     </button>
                                 </div>

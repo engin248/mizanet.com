@@ -425,8 +425,8 @@ export default function ModelhaneSayfasi() {
     const isAR = lang === 'ar';
 
 
-    const inp = { width: '100%', padding: '9px 12px', border: '2px solid #e5e7eb', borderRadius: '8px', fontSize: '0.875rem', fontFamily: 'inherit', boxSizing: 'border-box', outline: 'none' };
-    const lbl = { display: 'block', fontSize: '0.7rem', fontWeight: 700, color: '#374151', marginBottom: 5, textTransform: 'uppercase' };
+    const inp = { width: '100%', padding: '9px 12px', border: '2px solid #1e4a43', borderRadius: '8px', fontSize: '0.875rem', fontFamily: 'inherit', boxSizing: 'border-box', outline: 'none' };
+    const lbl = { display: 'block', fontSize: '0.7rem', fontWeight: 700, color: '#e2e8f0', marginBottom: 5, textTransform: 'uppercase' };
     const ONAY_RENK = { bekliyor: '#f59e0b', onaylandi: '#10b981', revizyon_gerekli: '#ef4444' };
     const ONAY_ETIKET = { bekliyor: 'Onay Bekliyor', onaylandi: 'Onaylandı', revizyon_gerekli: 'Revizyon' };
 
@@ -450,8 +450,8 @@ export default function ModelhaneSayfasi() {
                         <Camera size={24} className="text-emerald-50" />
                     </div>
                     <div>
-                        <h1 className="text-2xl font-black text-slate-800 tracking-tight m-0">M4 Modelhane & Video Kilidi</h1>
-                        <p className="text-xs font-bold text-slate-500 mt-1 uppercase tracking-wider">Numune → Fotoğraf → Talimat → Fason kilidi</p>
+                        <h1 className="text-2xl font-black text-white tracking-tight m-0">M4 Modelhane & Video Kilidi</h1>
+                        <p className="text-xs font-bold text-emerald-200 mt-1 uppercase tracking-wider">Numune → Fotoğraf → Talimat → Fason kilidi</p>
                     </div>
                 </div>
                 <button onClick={() => setFormAcik(!formAcik)}
@@ -501,19 +501,19 @@ export default function ModelhaneSayfasi() {
                             {loading && argeKuyruk.length === 0 && <div style={{ textAlign: 'center', padding: '2rem', fontWeight: 700, color: '#94a3b8' }}>{isAR ? '...جاري البحث عن مخرجات M1' : 'M1 Çıktıları Aranıyor...'}</div>}
 
                             {!loading && argeKuyruk.length === 0 && (
-                                <div style={{ textAlign: 'center', padding: '4rem', background: '#f8fafc', borderRadius: 16, border: '2px dashed #cbd5e1' }}>
+                                <div style={{ textAlign: 'center', padding: '4rem', background: '#0b1d1a', borderRadius: 16, border: '2px dashed #cbd5e1' }}>
                                     <Clock size={48} color="#94a3b8" style={{ marginBottom: 12 }} />
-                                    <h3 style={{ color: '#475569', fontWeight: 900, marginBottom: 8 }}>{isAR ? 'طابور M1 فارغ' : 'M1 Kuyruğu Boş'}</h3>
-                                    <p style={{ color: '#64748b', fontSize: '0.85rem', fontWeight: 600 }}>{isAR ? 'لا يوجد منتج جديد ينتظر الموافقة من قسم البحث والتطوير حاليا.' : 'Şu an Ar-Ge tarafından Modelhane onayı bekleyen yeni bir ürün bulunmamaktadır.'}</p>
+                                    <h3 style={{ color: '#a7f3d0', fontWeight: 900, marginBottom: 8 }}>{isAR ? 'طابور M1 فارغ' : 'M1 Kuyruğu Boş'}</h3>
+                                    <p style={{ color: '#a7f3d0', fontSize: '0.85rem', fontWeight: 600 }}>{isAR ? 'لا يوجد منتج جديد ينتظر الموافقة من قسم البحث والتطوير حاليا.' : 'Şu an Ar-Ge tarafından Modelhane onayı bekleyen yeni bir ürün bulunmamaktadır.'}</p>
                                 </div>
                             )}
 
                             {argeKuyruk.map(trend => (
-                                <div key={trend.id} onClick={() => setSecilenIlham(trend)} style={{ background: 'white', border: '2px solid #e2e8f0', borderRadius: 14, padding: '1.25rem', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center', transition: 'all 0.2s', boxShadow: '0 2px 5px rgba(0,0,0,0.02)' }} onMouseOver={e => e.currentTarget.style.borderColor = '#3b82f6'} onMouseOut={e => e.currentTarget.style.borderColor = '#e2e8f0'}>
+                                <div key={trend.id} onClick={() => setSecilenIlham(trend)} style={{ background: '#122b27', border: '2px solid #e2e8f0', borderRadius: 14, padding: '1.25rem', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center', transition: 'all 0.2s', boxShadow: '0 2px 5px rgba(0,0,0,0.02)' }} onMouseOver={e => e.currentTarget.style.borderColor = '#3b82f6'} onMouseOut={e => e.currentTarget.style.borderColor = '#e2e8f0'}>
                                     <div>
                                         <div style={{ fontSize: '0.65rem', fontWeight: 900, color: '#3b82f6', background: '#eff6ff', padding: '2px 8px', borderRadius: 6, display: 'inline-block', marginBottom: 6 }}>{isAR ? 'في انتظار الموافقة (الجدار 2)' : 'ONAY BEKLİYOR (DUVAR 2)'}</div>
-                                        <h3 style={{ fontSize: '1rem', fontWeight: 900, color: '#0f172a', margin: '0 0 4px 0' }}>{trend.baslik}</h3>
-                                        <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#64748b' }}>{isAR ? 'النقاط:' : 'Skor:'} {trend.talep_skoru} | {isAR ? 'المصدر: وحدة M1 للبحث والتطوير' : 'Geldiği Yer: M1 Ar-Ge Modülü'}</div>
+                                        <h3 style={{ fontSize: '1rem', fontWeight: 900, color: 'white', margin: '0 0 4px 0' }}>{trend.baslik}</h3>
+                                        <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#a7f3d0' }}>{isAR ? 'النقاط:' : 'Skor:'} {trend.talep_skoru} | {isAR ? 'المصدر: وحدة M1 للبحث والتطوير' : 'Geldiği Yer: M1 Ar-Ge Modülü'}</div>
                                     </div>
                                     <ChevronRight color="#94a3b8" style={{ transform: isAR ? 'scaleX(-1)' : 'none' }} />
                                 </div>
@@ -521,7 +521,7 @@ export default function ModelhaneSayfasi() {
                         </div>
                     ) : (
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-                            <button onClick={() => { setSecilenIlham(null); if (typeof window !== 'undefined') window.history.replaceState({}, document.title, '/modelhane'); }} style={{ alignSelf: 'flex-start', background: 'none', border: 'none', color: '#64748b', fontWeight: 800, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6, fontSize: '0.8rem' }}>
+                            <button onClick={() => { setSecilenIlham(null); if (typeof window !== 'undefined') window.history.replaceState({}, document.title, '/modelhane'); }} style={{ alignSelf: 'flex-start', background: 'none', border: 'none', color: '#a7f3d0', fontWeight: 800, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6, fontSize: '0.8rem' }}>
                                 {isAR ? 'العودة إلى الطابور →' : '← Kuyruğa Dön'}
                             </button>
 
@@ -539,14 +539,14 @@ export default function ModelhaneSayfasi() {
             )}
 
             {sekme === 'teknik' && (
-                <div style={{ background: 'white', border: '2px solid #e2e8f0', borderRadius: 16, padding: '1.5rem', marginBottom: '1.5rem' }}>
-                    <h3 style={{ fontWeight: 900, fontSize: '1.1rem', color: '#0f172a', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: 8 }}>
+                <div style={{ background: '#122b27', border: '2px solid #e2e8f0', borderRadius: 16, padding: '1.5rem', marginBottom: '1.5rem' }}>
+                    <h3 style={{ fontWeight: 900, fontSize: '1.1rem', color: 'white', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: 8 }}>
                         📋 Teknik Föyler & Üretim Detayları
                     </h3>
-                    <div style={{ textAlign: 'center', padding: '3rem', background: '#f8fafc', borderRadius: 12, border: '2px dashed #cbd5e1' }}>
+                    <div style={{ textAlign: 'center', padding: '3rem', background: '#0b1d1a', borderRadius: 12, border: '2px dashed #cbd5e1' }}>
                         <div style={{ fontSize: '2rem', marginBottom: '1rem' }}></div>
-                        <h4 style={{ fontWeight: 800, color: '#334155', marginBottom: '0.5rem' }}>Modeller İçin Teknik Föy Veritabanı</h4>
-                        <p style={{ color: '#64748b', fontSize: '0.85rem', fontWeight: 600, maxWidth: 500, margin: '0 auto' }}>
+                        <h4 style={{ fontWeight: 800, color: '#e2e8f0', marginBottom: '0.5rem' }}>Modeller İçin Teknik Föy Veritabanı</h4>
+                        <p style={{ color: '#a7f3d0', fontSize: '0.85rem', fontWeight: 600, maxWidth: 500, margin: '0 auto' }}>
                             Kumaş sarfiyatları, çekme payları, yıkama talimatları ve kalite kontrol yönergeleri yakında bu panele entegre edilecektir. (Kritik geliştirmeler tamamlandığında açılacak).
                         </p>
                     </div>
@@ -555,26 +555,26 @@ export default function ModelhaneSayfasi() {
 
             {/* NUMUNE FORMU */}
             {formAcik && sekme === 'numuneler' && (
-                <div style={{ background: 'white', border: '2px solid #047857', borderRadius: 16, padding: '1.5rem', marginBottom: '1.5rem', boxShadow: '0 8px 32px rgba(4,120,87,0.10)' }}>
+                <div style={{ background: '#122b27', border: '2px solid #047857', borderRadius: 16, padding: '1.5rem', marginBottom: '1.5rem', boxShadow: '0 8px 32px rgba(4,120,87,0.10)' }}>
                     <h3 style={{ fontWeight: 800, color: '#065f46', marginBottom: '1rem', fontSize: '1rem' }}>Yeni Numune Kaydı</h3>
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '0.875rem' }}>
                         <div>
                             <label style={lbl}>Model *</label>
-                            <select value={formN.model_id} onChange={e => { setFormN({ ...formN, model_id: e.target.value }); kaliplariYukle(e.target.value); }} style={{ ...inp, cursor: 'pointer', background: 'white' }}>
+                            <select value={formN.model_id} onChange={e => { setFormN({ ...formN, model_id: e.target.value }); kaliplariYukle(e.target.value); }} style={{ ...inp, cursor: 'pointer', background: '#122b27' }}>
                                 <option value="">— Model Seçiniz —</option>
                                 {modeller.map(m => <option key={m.id} value={m.id}>{m.model_kodu} — {m.model_adi}</option>)}
                             </select>
                         </div>
                         <div>
                             <label style={lbl}>Kalıp</label>
-                            <select value={formN.kalip_id} onChange={e => setFormN({ ...formN, kalip_id: e.target.value })} style={{ ...inp, cursor: 'pointer', background: 'white' }}>
+                            <select value={formN.kalip_id} onChange={e => setFormN({ ...formN, kalip_id: e.target.value })} style={{ ...inp, cursor: 'pointer', background: '#122b27' }}>
                                 <option value="">— Kalıp Seçiniz —</option>
                                 {kaliplar.map(k => <option key={k.id} value={k.id}>{k.kalip_adi} ({k.versiyon})</option>)}
                             </select>
                         </div>
                         <div>
                             <label style={lbl}>Beden *</label>
-                            <select value={formN.numune_beden} onChange={e => setFormN({ ...formN, numune_beden: e.target.value })} style={{ ...inp, cursor: 'pointer', background: 'white' }}>
+                            <select value={formN.numune_beden} onChange={e => setFormN({ ...formN, numune_beden: e.target.value })} style={{ ...inp, cursor: 'pointer', background: '#122b27' }}>
                                 {BEDENLER.map(b => <option key={b} value={b}>{b}</option>)}
                             </select>
                         </div>
@@ -588,7 +588,7 @@ export default function ModelhaneSayfasi() {
                         </div>
                     </div>
                     <div style={{ display: 'flex', gap: '0.75rem', marginTop: '1rem', justifyContent: 'flex-end' }}>
-                        <button onClick={() => { setFormN(BOSH_NUMUNE); setFormAcik(false); }} style={{ padding: '9px 18px', border: '2px solid #e5e7eb', borderRadius: 8, background: 'white', fontWeight: 700, cursor: 'pointer' }}>İptal</button>
+                        <button onClick={() => { setFormN(BOSH_NUMUNE); setFormAcik(false); }} style={{ padding: '9px 18px', border: '2px solid #1e4a43', borderRadius: 8, background: '#122b27', fontWeight: 700, cursor: 'pointer' }}>İptal</button>
                         <button onClick={kaydetNumune} disabled={loading} style={{ padding: '9px 24px', background: loading ? '#94a3b8' : '#047857', color: 'white', border: 'none', borderRadius: 8, fontWeight: 800, cursor: loading ? 'not-allowed' : 'pointer' }}>{loading ? '...' : 'Kaydet'}</button>
                     </div>
                 </div>
@@ -596,12 +596,12 @@ export default function ModelhaneSayfasi() {
 
             {/* TALİMAT FORMU */}
             {formAcik && sekme === 'talimatlar' && (
-                <div style={{ background: 'white', border: '2px solid #047857', borderRadius: 16, padding: '1.5rem', marginBottom: '1.5rem', boxShadow: '0 8px 32px rgba(4,120,87,0.10)' }}>
+                <div style={{ background: '#122b27', border: '2px solid #047857', borderRadius: 16, padding: '1.5rem', marginBottom: '1.5rem', boxShadow: '0 8px 32px rgba(4,120,87,0.10)' }}>
                     <h3 style={{ fontWeight: 800, color: '#065f46', marginBottom: '1rem', fontSize: '1rem' }}>Yeni Dikim Talimatı</h3>
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '0.875rem' }}>
                         <div>
                             <label style={lbl}>Onaylı Numune *</label>
-                            <select value={formT.numune_id} onChange={e => setFormT({ ...formT, numune_id: e.target.value })} style={{ ...inp, cursor: 'pointer', background: 'white' }}>
+                            <select value={formT.numune_id} onChange={e => setFormT({ ...formT, numune_id: e.target.value })} style={{ ...inp, cursor: 'pointer', background: '#122b27' }}>
                                 <option value="">— Onaylı Numune Seçiniz —</option>
                                 {numuneler.map(n => <option key={n.id} value={n.id}>{n.b1_model_taslaklari?.model_kodu} | Beden: {n.numune_beden}</option>)}
                             </select>
@@ -636,10 +636,10 @@ export default function ModelhaneSayfasi() {
                                     <button type="button" onClick={adimEkle} style={{ padding: '4px 12px', background: '#0f172a', color: 'white', border: 'none', borderRadius: 6, fontWeight: 700, cursor: 'pointer', fontSize: '0.78rem' }}>+ Adım</button>
                                 </div>
                             </div>
-                            {formT.yazili_adimlari.length === 0 && <div style={{ textAlign: 'center', padding: '1.5rem', background: '#f8fafc', borderRadius: 8, color: '#94a3b8', fontSize: '0.85rem', fontWeight: 600 }}>Adım yok. + Adım ekleyin.</div>}
+                            {formT.yazili_adimlari.length === 0 && <div style={{ textAlign: 'center', padding: '1.5rem', background: '#0b1d1a', borderRadius: 8, color: '#94a3b8', fontSize: '0.85rem', fontWeight: 600 }}>Adım yok. + Adım ekleyin.</div>}
                             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', overflowX: 'auto' }}>
                                 {formT.yazili_adimlari.map((adim, i) => (
-                                    <div key={i} style={{ display: 'grid', gridTemplateColumns: 'minmax(30px, 40px) 1fr minmax(70px, 100px) minmax(70px, 90px) minmax(60px, 70px) 32px', gap: '0.375rem', alignItems: 'center', background: '#f8fafc', padding: '8px', borderRadius: 8 }}>
+                                    <div key={i} style={{ display: 'grid', gridTemplateColumns: 'minmax(30px, 40px) 1fr minmax(70px, 100px) minmax(70px, 90px) minmax(60px, 70px) 32px', gap: '0.375rem', alignItems: 'center', background: '#0b1d1a', padding: '8px', borderRadius: 8 }}>
                                         <div style={{ textAlign: 'center', fontWeight: 900, color: '#f59e0b', fontSize: '1rem' }}>{i + 1}</div>
                                         <input value={adim.aciklama} onChange={e => adimGuncelle(i, 'aciklama', e.target.value)} placeholder={`Adım ${i + 1}...`} style={{ ...inp, padding: '6px 10px' }} />
 
@@ -666,7 +666,7 @@ export default function ModelhaneSayfasi() {
                         </div>
                     </div>
                     <div style={{ display: 'flex', gap: '0.75rem', marginTop: '1rem', justifyContent: 'flex-end' }}>
-                        <button onClick={() => { setFormT(BOSH_TALIMAT); setFormAcik(false); }} style={{ padding: '9px 18px', border: '2px solid #e5e7eb', borderRadius: 8, background: 'white', fontWeight: 700, cursor: 'pointer' }}>İptal</button>
+                        <button onClick={() => { setFormT(BOSH_TALIMAT); setFormAcik(false); }} style={{ padding: '9px 18px', border: '2px solid #1e4a43', borderRadius: 8, background: '#122b27', fontWeight: 700, cursor: 'pointer' }}>İptal</button>
                         <button onClick={kaydetTalimat} disabled={loading} style={{ padding: '9px 24px', background: loading ? '#94a3b8' : '#047857', color: 'white', border: 'none', borderRadius: 8, fontWeight: 800, cursor: loading ? 'not-allowed' : 'pointer' }}>{loading ? '...' : 'Kaydet'}</button>
                     </div>
                 </div>
@@ -676,13 +676,13 @@ export default function ModelhaneSayfasi() {
             {sekme === 'numuneler' && (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
                     {!loading && numuneler.length === 0 && (
-                        <div style={{ textAlign: 'center', padding: '4rem', background: '#f8fafc', borderRadius: 16, border: '2px dashed #e5e7eb' }}>
+                        <div style={{ textAlign: 'center', padding: '4rem', background: '#0b1d1a', borderRadius: 16, border: '2px dashed #e5e7eb' }}>
                             <Camera size={48} style={{ color: '#e5e7eb', marginBottom: '1rem' }} />
                             <p style={{ color: '#94a3b8', fontWeight: 700 }}>Numune yok.</p>
                         </div>
                     )}
                     {numuneler.map(n => (
-                        <div key={n.id} style={{ background: 'white', border: '2px solid', borderColor: n.onay_durumu === 'onaylandi' ? '#10b981' : n.onay_durumu === 'revizyon_gerekli' ? '#ef4444' : '#f1f5f9', borderRadius: 14, padding: '1.25rem' }}>
+                        <div key={n.id} style={{ background: '#122b27', border: '2px solid', borderColor: n.onay_durumu === 'onaylandi' ? '#10b981' : n.onay_durumu === 'revizyon_gerekli' ? '#ef4444' : '#f1f5f9', borderRadius: 14, padding: '1.25rem' }}>
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                                 <div>
                                     <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: '0.375rem' }}>
@@ -690,8 +690,8 @@ export default function ModelhaneSayfasi() {
                                         <span style={{ fontSize: '0.65rem', fontWeight: 800, background: '#0f172a', color: 'white', padding: '2px 8px', borderRadius: 4 }}>Beden: {n.numune_beden}</span>
                                         <span style={{ fontSize: '0.65rem', fontWeight: 800, padding: '2px 8px', borderRadius: 4, background: `${ONAY_RENK[n.onay_durumu]}20`, color: ONAY_RENK[n.onay_durumu] }}>{ONAY_ETIKET[n.onay_durumu]}</span>
                                     </div>
-                                    <h3 style={{ fontWeight: 800, color: '#0f172a', margin: 0, fontSize: '0.95rem' }}>{n.b1_model_taslaklari?.model_adi}</h3>
-                                    {n.notlar && <p style={{ fontSize: '0.78rem', color: '#64748b', margin: '4px 0 0' }}>{n.notlar}</p>}
+                                    <h3 style={{ fontWeight: 800, color: 'white', margin: 0, fontSize: '0.95rem' }}>{n.b1_model_taslaklari?.model_adi}</h3>
+                                    {n.notlar && <p style={{ fontSize: '0.78rem', color: '#a7f3d0', margin: '4px 0 0' }}>{n.notlar}</p>}
                                 </div>
                                 <div style={{ display: 'flex', gap: '0.375rem' }}>
                                     <button onClick={() => {
@@ -713,7 +713,7 @@ export default function ModelhaneSayfasi() {
                             <div style={{ fontSize: '0.62rem', color: '#94a3b8', fontWeight: 600, marginTop: 4 }}>🕐 {formatTarih(n.created_at)}</div>
                             {/* FOTOĞRAF SATIRI */}
                             <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 8, paddingTop: 8, borderTop: '1px solid #f1f5f9' }}>
-                                <span style={{ fontSize: '0.65rem', fontWeight: 700, color: '#64748b' }}>📷 {n.fotograflar?.length || 0} sayfa</span>
+                                <span style={{ fontSize: '0.65rem', fontWeight: 700, color: '#a7f3d0' }}>📷 {n.fotograflar?.length || 0} sayfa</span>
                                 <label style={{ display: 'flex', alignItems: 'center', gap: 4, background: '#ecfdf5', color: '#047857', border: '2px solid #047857', borderRadius: 7, padding: '4px 10px', cursor: 'pointer', fontWeight: 700, fontSize: '0.72rem' }}>
                                     {fotYukleniyor ? 'Yükleniyor...' : '+ Fotoğraf Ekle'}
                                     <input type="file" accept="image/*" multiple style={{ display: 'none' }}
@@ -742,7 +742,7 @@ export default function ModelhaneSayfasi() {
             {sekme === 'talimatlar' && (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
                     {!loading && talimatlar.length === 0 && (
-                        <div style={{ textAlign: 'center', padding: '4rem', background: '#f8fafc', borderRadius: 16, border: '2px dashed #e5e7eb' }}>
+                        <div style={{ textAlign: 'center', padding: '4rem', background: '#0b1d1a', borderRadius: 16, border: '2px dashed #e5e7eb' }}>
                             <FileText size={48} style={{ color: '#e5e7eb', marginBottom: '1rem' }} />
                             <p style={{ color: '#94a3b8', fontWeight: 700 }}>Talimat yok.</p>
                         </div>
@@ -750,16 +750,16 @@ export default function ModelhaneSayfasi() {
                     {talimatlar.map(t => {
                         const videoVar = t.talimat_video_url && t.talimat_video_url.trim() !== '';
                         return (
-                            <div key={t.id} style={{ background: 'white', border: '2px solid', borderColor: videoVar ? '#10b981' : '#ef4444', borderRadius: 14, padding: '1.25rem' }}>
+                            <div key={t.id} style={{ background: '#122b27', border: '2px solid', borderColor: videoVar ? '#10b981' : '#ef4444', borderRadius: 14, padding: '1.25rem' }}>
                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.75rem' }}>
                                     <div>
                                         <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: '0.375rem' }}>
                                             <span style={{ fontSize: '0.65rem', fontWeight: 800, background: videoVar ? '#ecfdf5' : '#fef2f2', color: videoVar ? '#065f46' : '#991b1b', padding: '2px 8px', borderRadius: 4 }}>
                                                 {videoVar ? 'FASON AÇIK' : 'FASON KİLİTLİ'}
                                             </span>
-                                            <span style={{ fontSize: '0.65rem', fontWeight: 700, color: '#64748b' }}>{t.toplam_sure_dk} dk</span>
+                                            <span style={{ fontSize: '0.65rem', fontWeight: 700, color: '#a7f3d0' }}>{t.toplam_sure_dk} dk</span>
                                         </div>
-                                        <h3 style={{ fontWeight: 800, color: '#0f172a', margin: 0, fontSize: '0.95rem' }}>{t.b1_numune_uretimleri?.b1_model_taslaklari?.model_adi}</h3>
+                                        <h3 style={{ fontWeight: 800, color: 'white', margin: 0, fontSize: '0.95rem' }}>{t.b1_numune_uretimleri?.b1_model_taslaklari?.model_adi}</h3>
                                     </div>
                                     <button disabled={islemdeId === t.id} onClick={() => { setIslemdeId(t.id); sil('b1_dikim_talimatlari', t.id).finally(() => setIslemdeId(null)); }} style={{ background: '#fef2f2', border: 'none', color: '#dc2626', padding: '6px 10px', borderRadius: 8, cursor: islemdeId === t.id ? 'wait' : 'pointer' }}><Trash2 size={14} /></button>
                                 </div>
@@ -770,12 +770,12 @@ export default function ModelhaneSayfasi() {
                                 )}
                                 {t.yazili_adimlari && t.yazili_adimlari.length > 0 && (
                                     <div>
-                                        <div style={{ fontSize: '0.7rem', fontWeight: 800, color: '#374151', marginBottom: '0.375rem', textTransform: 'uppercase' }}>İşlem Adımları</div>
+                                        <div style={{ fontSize: '0.7rem', fontWeight: 800, color: '#e2e8f0', marginBottom: '0.375rem', textTransform: 'uppercase' }}>İşlem Adımları</div>
                                         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
                                             {t.yazili_adimlari.map((a, i) => (
-                                                <div key={i} style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', background: '#f8fafc', padding: '4px 10px', borderRadius: 6 }}>
+                                                <div key={i} style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', background: '#0b1d1a', padding: '4px 10px', borderRadius: 6 }}>
                                                     <span style={{ fontWeight: 900, color: '#f59e0b', fontSize: '0.85rem', minWidth: 20 }}>{a.adim_no}.</span>
-                                                    <span style={{ flex: 1, fontSize: '0.8rem', color: '#374151', fontWeight: 500 }}>{a.aciklama}</span>
+                                                    <span style={{ flex: 1, fontSize: '0.8rem', color: '#e2e8f0', fontWeight: 500 }}>{a.aciklama}</span>
                                                     <span style={{ fontSize: '0.7rem', color: '#94a3b8', fontWeight: 700 }}>{a.sure_dk} dk</span>
                                                 </div>
                                             ))}
@@ -824,7 +824,7 @@ export default function ModelhaneSayfasi() {
                     )}
 
                     {galeriNumuneler.length === 0 && (
-                        <div style={{ textAlign: 'center', padding: '4rem', background: '#f8fafc', borderRadius: 16, border: '2px dashed #e5e7eb' }}>
+                        <div style={{ textAlign: 'center', padding: '4rem', background: '#0b1d1a', borderRadius: 16, border: '2px dashed #e5e7eb' }}>
                             <Camera size={48} style={{ color: '#e5e7eb', marginBottom: '1rem' }} />
                             <p style={{ color: '#94a3b8', fontWeight: 700 }}>Henüz fotoğraf yüklenmemiş.<br />Numune kartlarındaki 📷 butonu ile fotoğraf ekleyebilirsiniz.</p>
                         </div>
@@ -834,11 +834,11 @@ export default function ModelhaneSayfasi() {
                         {galeriNumuneler
                             .filter(n => galeridFiltre === 'hepsi' || n.b1_model_taslaklari?.id === galeridFiltre || n.b1_model_taslaklari === null)
                             .map(n => (
-                                <div key={n.id} style={{ background: 'white', border: '2px solid #f1f5f9', borderRadius: 16, padding: '1.25rem', boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
+                                <div key={n.id} style={{ background: '#122b27', border: '2px solid #1e4a43', borderRadius: 16, padding: '1.25rem', boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
                                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
                                         <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
                                             <span style={{ fontSize: '0.65rem', fontWeight: 800, background: '#fffbeb', color: '#d97706', padding: '2px 8px', borderRadius: 4 }}>{n.b1_model_taslaklari?.model_kodu || '?'}</span>
-                                            <span style={{ fontSize: '0.82rem', fontWeight: 800, color: '#0f172a' }}>Beden: {n.numune_beden}</span>
+                                            <span style={{ fontSize: '0.82rem', fontWeight: 800, color: 'white' }}>Beden: {n.numune_beden}</span>
                                             <span style={{ fontSize: '0.62rem', fontWeight: 700, background: n.onay_durumu === 'onaylandi' ? '#d1fae5' : '#fef3c7', color: n.onay_durumu === 'onaylandi' ? '#065f46' : '#92400e', padding: '2px 8px', borderRadius: 4 }}>{n.onay_durumu === 'onaylandi' ? '✅ Onaylı' : '⏳ Bekliyor'}</span>
                                             <span style={{ fontSize: '0.62rem', color: '#94a3b8', fontWeight: 600 }}>{n.fotograflar?.length || 0} fotoğraf</span>
                                         </div>
@@ -850,7 +850,7 @@ export default function ModelhaneSayfasi() {
                                     {fotYukleniyor && <div style={{ textAlign: 'center', padding: '1rem', color: '#ef4444', fontWeight: 700 }}>⏳ Yükleniyor...</div>}
                                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(180px,1fr))', gap: '0.75rem' }}>
                                         {(n.fotograflar || []).map((url, i) => (
-                                            <div key={i} style={{ position: 'relative', borderRadius: 10, overflow: 'hidden', border: '2px solid #e5e7eb' }}>
+                                            <div key={i} style={{ position: 'relative', borderRadius: 10, overflow: 'hidden', border: '2px solid #1e4a43' }}>
                                                 <img src={url} alt={`Foto ${i + 1}`} loading="lazy" style={{ width: '100%', height: 200, objectFit: 'cover', cursor: 'zoom-in', display: 'block' }} onClick={() => window.open(url, '_blank')} />
                                                 <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, background: 'rgba(0,0,0,0.6)', padding: '4px 8px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                                                     <span style={{ color: 'white', fontSize: '0.65rem', fontWeight: 700 }}>📷 {i + 1}</span>
@@ -868,12 +868,12 @@ export default function ModelhaneSayfasi() {
             {fotGaleri && (
                 <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.85)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' }}
                     onClick={() => setFotGaleri(null)}>
-                    <div style={{ background: 'white', borderRadius: 20, padding: '1.5rem', maxWidth: 900, width: '100%', maxHeight: '90vh', overflowY: 'auto' }}
+                    <div style={{ background: '#122b27', borderRadius: 20, padding: '1.5rem', maxWidth: 900, width: '100%', maxHeight: '90vh', overflowY: 'auto' }}
                         onClick={e => e.stopPropagation()}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
                             <div>
-                                <div style={{ fontWeight: 900, fontSize: '1rem', color: '#0f172a' }}>Teknik Föy Fotoğrafları</div>
-                                <div style={{ fontSize: '0.75rem', color: '#64748b', fontWeight: 600 }}>{fotGaleri.model} — {fotGaleri.fotograflar.length} sayfa</div>
+                                <div style={{ fontWeight: 900, fontSize: '1rem', color: 'white' }}>Teknik Föy Fotoğrafları</div>
+                                <div style={{ fontSize: '0.75rem', color: '#a7f3d0', fontWeight: 600 }}>{fotGaleri.model} — {fotGaleri.fotograflar.length} sayfa</div>
                             </div>
                             <div style={{ display: 'flex', gap: 8 }}>
                                 <label style={{ background: '#047857', color: 'white', border: 'none', borderRadius: 8, padding: '7px 14px', cursor: 'pointer', fontWeight: 700, fontSize: '0.8rem' }}>
@@ -881,12 +881,12 @@ export default function ModelhaneSayfasi() {
                                     <input type="file" accept="image/*" multiple style={{ display: 'none' }}
                                         onChange={e => fotografYukle(fotGaleri.numune_id, e.target.files)} />
                                 </label>
-                                <button onClick={() => setFotGaleri(null)} style={{ background: '#f1f5f9', border: 'none', borderRadius: 8, padding: '7px 14px', cursor: 'pointer', fontWeight: 700 }}>Kapat</button>
+                                <button onClick={() => setFotGaleri(null)} style={{ background: '#173a34', border: 'none', borderRadius: 8, padding: '7px 14px', cursor: 'pointer', fontWeight: 700 }}>Kapat</button>
                             </div>
                         </div>
                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '0.75rem' }}>
                             {fotGaleri.fotograflar.map((url, i) => (
-                                <div key={i} style={{ position: 'relative', borderRadius: 12, overflow: 'hidden', border: '2px solid #e5e7eb' }}>
+                                <div key={i} style={{ position: 'relative', borderRadius: 12, overflow: 'hidden', border: '2px solid #1e4a43' }}>
                                     <img src={url} alt={`Sayfa ${i + 1}`} loading="lazy"
                                         style={{ width: '100%', height: 260, objectFit: 'cover', display: 'block', cursor: 'zoom-in' }}
                                         onClick={() => window.open(url, '_blank')} />

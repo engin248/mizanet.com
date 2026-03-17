@@ -330,8 +330,8 @@ export default function KumasArsiviSayfasi() {
     const filtreli_kumaslar = kumaslar.filter(k => k.kumas_adi?.toLowerCase().includes(arama.toLowerCase()) || k.kumas_kodu?.toLowerCase().includes(arama.toLowerCase()));
     const filtreli_aksesuarlar = aksesuarlar.filter(a => a.aksesuar_adi?.toLowerCase().includes(arama.toLowerCase()) || a.aksesuar_kodu?.toLowerCase().includes(arama.toLowerCase()));
 
-    const inp = /** @type {any} */ ({ width: '100%', padding: '9px 12px', border: '2px solid #e5e7eb', borderRadius: '8px', fontSize: '0.875rem', fontFamily: 'inherit', boxSizing: 'border-box', outline: 'none' });
-    const lbl = { display: 'block', fontSize: '0.7rem', fontWeight: 700, color: '#374151', marginBottom: 5, textTransform: 'uppercase', letterSpacing: '0.05em' };
+    const inp = /** @type {any} */ ({ width: '100%', padding: '9px 12px', border: '2px solid #1e4a43', borderRadius: '8px', fontSize: '0.875rem', fontFamily: 'inherit', boxSizing: 'border-box', outline: 'none' });
+    const lbl = { display: 'block', fontSize: '0.7rem', fontWeight: 700, color: '#e2e8f0', marginBottom: 5, textTransform: 'uppercase', letterSpacing: '0.05em' };
 
     // Hydration Mismatch Koruması
     if (!mounted) return null;
@@ -359,10 +359,10 @@ export default function KumasArsiviSayfasi() {
                         <Layers size={24} className="text-emerald-50" />
                     </div>
                     <div>
-                        <h1 className="text-2xl font-black text-slate-800 tracking-tight m-0">
+                        <h1 className="text-2xl font-black text-white tracking-tight m-0">
                             {isAR ? 'أرشيف الأقمشة والمواد' : 'M2 Kumaş & Materyal Deposu'}
                         </h1>
-                        <p className="text-xs font-bold text-slate-500 mt-1 uppercase tracking-wider">
+                        <p className="text-xs font-bold text-emerald-200 mt-1 uppercase tracking-wider">
                             {isAR ? 'كتالوج رقمي — يتم اختيار القماش المناسب لكل نموذج من هنا' : 'THE ORDER Hammadde Zırhı'}
                         </p>
                     </div>
@@ -425,7 +425,7 @@ export default function KumasArsiviSayfasi() {
                     { label: 'Tedarikçi', val: tedarikciler.length, color: 'text-indigo-600', bg: 'bg-indigo-50', border: 'border-indigo-200' },
                 ].filter(Boolean).map((s, i) => (
                     <div key={i} className={`${s.bg} border ${s.border} rounded-xl p-4 shadow-sm`}>
-                        <div className="text-[10px] text-slate-500 font-bold uppercase tracking-widest mb-1">{s.label}</div>
+                        <div className="text-[10px] text-emerald-200 font-bold uppercase tracking-widest mb-1">{s.label}</div>
                         <div className={`font-black text-2xl ${s.color}`}>{s.val}</div>
                     </div>
                 ))}
@@ -465,7 +465,7 @@ export default function KumasArsiviSayfasi() {
 
             {/* =========== KUMAŞ FORMU =========== */}
             {formAcik && sekme === 'kumas' && (
-                <div style={{ background: 'white', border: '2px solid #10b981', borderRadius: 16, padding: '1.5rem', marginBottom: '1.5rem', boxShadow: '0 8px 32px rgba(16,185,129,0.12)' }}>
+                <div style={{ background: '#122b27', border: '2px solid #10b981', borderRadius: 16, padding: '1.5rem', marginBottom: '1.5rem', boxShadow: '0 8px 32px rgba(16,185,129,0.12)' }}>
                     <h3 style={{ fontWeight: 800, color: '#065f46', marginBottom: '1rem', fontSize: '1rem', display: 'flex', alignItems: 'center', gap: 8 }}>
                         <Scissors size={16} /> {isAR ? 'إضافة قماش جديد' : 'Yeni Kumaş Ekle'}
                     </h3>
@@ -492,7 +492,7 @@ export default function KumasArsiviSayfasi() {
                         ))}
                         <div>
                             <label style={lbl}>{isAR ? 'المورد (حساب)' : 'Sistem_Tedarikçi_Seç'}</label>
-                            <select value={form.tedarikci_id} onChange={e => setForm({ ...form, tedarikci_id: e.target.value })} style={{ ...inp, cursor: 'pointer', background: 'white' }}>
+                            <select value={form.tedarikci_id} onChange={e => setForm({ ...form, tedarikci_id: e.target.value })} style={{ ...inp, cursor: 'pointer', background: '#122b27' }}>
                                 <option value="">— Sistemden Tedarikçi Seç (Rehberden) —</option>
                                 {tedarikciler.map(t => <option key={t.id} value={t.id}>{t.firma_adi}</option>)}
                             </select>
@@ -505,13 +505,13 @@ export default function KumasArsiviSayfasi() {
                         </div>
                         <div>
                             <label style={lbl}>{isAR ? 'نوع القماش *' : 'Kumaş Tipi *'}</label>
-                            <select value={form.kumas_tipi} onChange={e => setForm({ ...form, kumas_tipi: e.target.value })} style={{ ...inp, cursor: 'pointer', background: 'white' }}>
+                            <select value={form.kumas_tipi} onChange={e => setForm({ ...form, kumas_tipi: e.target.value })} style={{ ...inp, cursor: 'pointer', background: '#122b27' }}>
                                 {KUMAS_TIPLERI.map(t => <option key={t} value={t}>{t.charAt(0).toUpperCase() + t.slice(1)}</option>)}
                             </select>
                         </div>
                     </div>
                     <div style={{ display: 'flex', gap: '0.75rem', marginTop: '1rem', justifyContent: 'flex-end' }}>
-                        <button onClick={() => { setForm(BOSH_KUMAS); setFormAcik(false); }} style={{ padding: '9px 18px', border: '2px solid #e5e7eb', borderRadius: 8, background: 'white', fontWeight: 700, cursor: 'pointer' }}>{isAR ? 'إلغاء' : 'İptal'}</button>
+                        <button onClick={() => { setForm(BOSH_KUMAS); setFormAcik(false); }} style={{ padding: '9px 18px', border: '2px solid #1e4a43', borderRadius: 8, background: '#122b27', fontWeight: 700, cursor: 'pointer' }}>{isAR ? 'إلغاء' : 'İptal'}</button>
                         <button onClick={duzenleId && duzenleTip === 'kumas' ? kaydetKumasGuncelle : kaydetKumas} disabled={loading}
                             style={{ padding: '9px 24px', background: loading ? '#94a3b8' : '#10b981', color: 'white', border: 'none', borderRadius: 8, fontWeight: 800, cursor: loading ? 'not-allowed' : 'pointer' }}>
                             {loading ? '...' : (duzenleId ? 'Güncelle' : (isAR ? 'حفظ' : 'Kaydet'))}
@@ -522,7 +522,7 @@ export default function KumasArsiviSayfasi() {
 
             {/* =========== AKSESUAR FORMU =========== */}
             {formAcik && sekme === 'aksesuar' && (
-                <div style={{ background: 'white', border: '2px solid #047857', borderRadius: 16, padding: '1.5rem', marginBottom: '1.5rem', boxShadow: '0 8px 32px rgba(4,120,87,0.12)' }}>
+                <div style={{ background: '#122b27', border: '2px solid #047857', borderRadius: 16, padding: '1.5rem', marginBottom: '1.5rem', boxShadow: '0 8px 32px rgba(4,120,87,0.12)' }}>
                     <h3 style={{ fontWeight: 800, color: '#065f46', marginBottom: '1rem', fontSize: '1rem' }}>
                         {isAR ? '🧷 إضافة إكسسوار جديد' : '🧷 Yeni Aksesuar Ekle'}
                     </h3>
@@ -546,19 +546,19 @@ export default function KumasArsiviSayfasi() {
                         ))}
                         <div>
                             <label style={lbl}>{isAR ? 'النوع *' : 'Tip *'}</label>
-                            <select value={aksForm.tip} onChange={e => setAksForm({ ...aksForm, tip: e.target.value })} style={{ ...inp, cursor: 'pointer', background: 'white' }}>
+                            <select value={aksForm.tip} onChange={e => setAksForm({ ...aksForm, tip: e.target.value })} style={{ ...inp, cursor: 'pointer', background: '#122b27' }}>
                                 {AKSESUAR_TIPLERI.map(t => <option key={t} value={t}>{t.charAt(0).toUpperCase() + t.slice(1)}</option>)}
                             </select>
                         </div>
                         <div>
                             <label style={lbl}>{isAR ? 'الوحدة *' : 'Birim *'}</label>
-                            <select value={aksForm.birim} onChange={e => setAksForm({ ...aksForm, birim: e.target.value })} style={{ ...inp, cursor: 'pointer', background: 'white' }}>
+                            <select value={aksForm.birim} onChange={e => setAksForm({ ...aksForm, birim: e.target.value })} style={{ ...inp, cursor: 'pointer', background: '#122b27' }}>
                                 {BIRIMLER.map(b => <option key={b} value={b}>{b}</option>)}
                             </select>
                         </div>
                     </div>
                     <div style={{ display: 'flex', gap: '0.75rem', marginTop: '1rem', justifyContent: 'flex-end' }}>
-                        <button onClick={() => { setAksForm(BOSH_AKS); setFormAcik(false); setDuzenleId(null); setDuzenleTip(null); }} style={{ padding: '9px 18px', border: '2px solid #e5e7eb', borderRadius: 8, background: 'white', fontWeight: 700, cursor: 'pointer' }}>{isAR ? 'إلغاء' : 'İptal'}</button>
+                        <button onClick={() => { setAksForm(BOSH_AKS); setFormAcik(false); setDuzenleId(null); setDuzenleTip(null); }} style={{ padding: '9px 18px', border: '2px solid #1e4a43', borderRadius: 8, background: '#122b27', fontWeight: 700, cursor: 'pointer' }}>{isAR ? 'إلغاء' : 'İptal'}</button>
                         <button onClick={kaydetAksesuar} disabled={loading}
                             style={{ padding: '9px 24px', background: loading ? '#94a3b8' : '#047857', color: 'white', border: 'none', borderRadius: 8, fontWeight: 800, cursor: loading ? 'not-allowed' : 'pointer', boxShadow: '0 4px 14px rgba(4,120,87,0.3)' }}>
                             {loading ? '...' : (duzenleId ? 'Güncelle' : (isAR ? 'حفظ' : 'Kaydet'))}
@@ -572,7 +572,7 @@ export default function KumasArsiviSayfasi() {
                 <div>
                     {loading && <p style={{ color: '#94a3b8', textAlign: 'center', padding: '2rem', fontWeight: 700 }}>Yükleniyor...</p>}
                     {!loading && filtreli_kumaslar.length === 0 && (
-                        <div style={{ textAlign: 'center', padding: '4rem', background: '#f8fafc', borderRadius: 16, border: '2px dashed #e5e7eb' }}>
+                        <div style={{ textAlign: 'center', padding: '4rem', background: '#0b1d1a', borderRadius: 16, border: '2px dashed #e5e7eb' }}>
                             <Layers size={48} style={{ color: '#e5e7eb', marginBottom: '1rem' }} />
                             <p style={{ color: '#94a3b8', fontWeight: 700 }}>{isAR ? 'لا توجد أقمشة. أضف قماشاً جديداً.' : 'Kayıtlı kumaş yok. Yeni kumaş ekleyin.'}</p>
                         </div>
@@ -581,10 +581,10 @@ export default function KumasArsiviSayfasi() {
                         {filtreli_kumaslar.map(k => {
                             const dusukStok = k.stok_mt < k.min_stok_mt;
                             return (
-                                <div key={k.id} style={{ background: 'white', border: '2px solid', borderColor: dusukStok ? '#ef4444' : '#f1f5f9', borderRadius: 14, overflow: 'hidden', boxShadow: '0 2px 8px rgba(0,0,0,0.04)', transition: 'all 0.2s' }}>
+                                <div key={k.id} style={{ background: '#122b27', border: '2px solid', borderColor: dusukStok ? '#ef4444' : '#f1f5f9', borderRadius: 14, overflow: 'hidden', boxShadow: '0 2px 8px rgba(0,0,0,0.04)', transition: 'all 0.2s' }}>
                                     {/* Fotoğraf */}
                                     {k.fotograf_url ? (
-                                        <div style={{ height: 140, overflow: 'hidden', background: '#f8fafc' }}>
+                                        <div style={{ height: 140, overflow: 'hidden', background: '#0b1d1a' }}>
                                             <img src={k.fotograf_url} alt={k.kumas_adi} loading="lazy" style={{ width: '100%', height: '100%', objectFit: 'cover' }} onError={e => /** @type {any} */(e.target).style.display = 'none'} />
                                         </div>
                                     ) : (
@@ -596,10 +596,10 @@ export default function KumasArsiviSayfasi() {
                                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.5rem' }}>
                                             <div>
                                                 <span style={{ fontSize: '0.65rem', fontWeight: 800, background: '#ecfdf5', color: '#047857', padding: '2px 8px', borderRadius: 4 }}>{k.kumas_kodu}</span>
-                                                <h3 style={{ fontWeight: 800, fontSize: '0.95rem', color: '#0f172a', margin: '4px 0 0' }}>{isAR && k.kumas_adi_ar ? k.kumas_adi_ar : k.kumas_adi}</h3>
+                                                <h3 style={{ fontWeight: 800, fontSize: '0.95rem', color: 'white', margin: '4px 0 0' }}>{isAR && k.kumas_adi_ar ? k.kumas_adi_ar : k.kumas_adi}</h3>
                                             </div>
                                             <div style={{ display: 'flex', gap: 4 }}>
-                                                <button onClick={() => { setSeciliKumas(k); setBarkodModaliAcik(true); }} title="Barkod Çıkart" style={{ background: '#f8fafc', border: '1px solid #e2e8f0', color: '#0f172a', padding: '4px 8px', borderRadius: 6, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><QrCode size={14} /></button>
+                                                <button onClick={() => { setSeciliKumas(k); setBarkodModaliAcik(true); }} title="Barkod Çıkart" style={{ background: '#0b1d1a', border: '1px solid #1e4a43', color: 'white', padding: '4px 8px', borderRadius: 6, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><QrCode size={14} /></button>
                                                 <button onClick={() => duzenleKumas(k)} style={{ background: '#ecfdf5', border: 'none', color: '#047857', padding: '4px 8px', borderRadius: 6, cursor: 'pointer', fontSize: '0.68rem', fontWeight: 700 }}>✏️</button>
                                                 <button onClick={() => sil('b1_kumas_arsivi', k.id)} disabled={islemdeId === 'sil_' + k.id} style={{ background: '#fef2f2', border: 'none', color: '#dc2626', padding: '4px 8px', borderRadius: 6, cursor: islemdeId === 'sil_' + k.id ? 'not-allowed' : 'pointer', opacity: islemdeId === 'sil_' + k.id ? 0.5 : 1 }}><Trash2 size={13} /></button>
                                             </div>
@@ -609,9 +609,9 @@ export default function KumasArsiviSayfasi() {
                                             {k.kompozisyon && <span style={{ fontSize: '0.7rem', background: '#fefce8', color: '#ca8a04', padding: '2px 8px', borderRadius: 4, fontWeight: 600 }}>{k.kompozisyon}</span>}
                                         </div>
                                         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.375rem' }}>
-                                            <div style={{ background: '#f8fafc', borderRadius: 6, padding: '6px 10px' }}>
-                                                <div style={{ fontSize: '0.6rem', color: '#64748b', fontWeight: 700, textTransform: 'uppercase' }}>{isAR ? 'التكلفة' : 'Maliyet'}</div>
-                                                <div style={{ fontWeight: 900, color: '#0f172a', fontSize: '0.9rem' }}>₺{parseFloat(k.birim_maliyet_tl).toFixed(2)}<span style={{ fontSize: '0.65rem', color: '#94a3b8' }}>/mt</span></div>
+                                            <div style={{ background: '#0b1d1a', borderRadius: 6, padding: '6px 10px' }}>
+                                                <div style={{ fontSize: '0.6rem', color: '#a7f3d0', fontWeight: 700, textTransform: 'uppercase' }}>{isAR ? 'التكلفة' : 'Maliyet'}</div>
+                                                <div style={{ fontWeight: 900, color: 'white', fontSize: '0.9rem' }}>₺{parseFloat(k.birim_maliyet_tl).toFixed(2)}<span style={{ fontSize: '0.65rem', color: '#94a3b8' }}>/mt</span></div>
                                             </div>
                                             <div style={{ background: dusukStok ? '#fef2f2' : '#f0fdf4', borderRadius: 6, padding: '6px 10px', border: dusukStok ? '1px solid #fca5a5' : '1px solid #bbf7d0' }}>
                                                 <div style={{ fontSize: '0.6rem', color: dusukStok ? '#ef4444' : '#16a34a', fontWeight: 700, textTransform: 'uppercase' }}>
@@ -620,7 +620,7 @@ export default function KumasArsiviSayfasi() {
                                                 <div style={{ fontWeight: 900, color: dusukStok ? '#ef4444' : '#059669', fontSize: '0.9rem' }}>{k.stok_mt} <span style={{ fontSize: '0.65rem' }}>mt</span></div>
                                             </div>
                                         </div>
-                                        {(k.b2_tedarikciler?.firma_adi || k.tedarikci_adi) && <p style={{ fontSize: '0.72rem', color: '#64748b', margin: '0.5rem 0 0', display: 'flex', alignItems: 'center', gap: 4 }}><Tag size={11} /> {k.b2_tedarikciler?.firma_adi || k.tedarikci_adi} {k.b2_tedarikciler && <span style={{ fontSize: '0.55rem', background: '#e0e7ff', color: '#4f46e5', padding: '1px 4px', borderRadius: 2, fontWeight: 700 }}>REHBER ONAYLI</span>}</p>}
+                                        {(k.b2_tedarikciler?.firma_adi || k.tedarikci_adi) && <p style={{ fontSize: '0.72rem', color: '#a7f3d0', margin: '0.5rem 0 0', display: 'flex', alignItems: 'center', gap: 4 }}><Tag size={11} /> {k.b2_tedarikciler?.firma_adi || k.tedarikci_adi} {k.b2_tedarikciler && <span style={{ fontSize: '0.55rem', background: '#e0e7ff', color: '#4f46e5', padding: '1px 4px', borderRadius: 2, fontWeight: 700 }}>REHBER ONAYLI</span>}</p>}
                                         <div style={{ marginTop: 6, fontSize: '0.62rem', color: '#94a3b8', fontWeight: 600 }}>🕐 {formatTarih(k.created_at)}</div>
                                     </div>
                                 </div>
@@ -634,8 +634,8 @@ export default function KumasArsiviSayfasi() {
                             { label: 'Düşük Stok', val: kumaslar.filter(k => k.stok_mt < k.min_stok_mt).length, color: '#ef4444' },
                             { label: 'Stokta Var', val: kumaslar.filter(k => parseFloat(k.stok_mt) > 0).length, color: '#10b981' },
                         ].filter(Boolean).map((s, i) => (
-                            <div key={i} style={{ background: 'white', border: '1px solid #f1f5f9', borderRadius: 10, padding: '0.75rem 1.25rem', display: 'flex', gap: '1rem', alignItems: 'center', boxShadow: '0 1px 4px rgba(0,0,0,0.04)' }}>
-                                <span style={{ fontSize: '0.8rem', color: '#64748b', fontWeight: 600 }}>{s?.label}</span>
+                            <div key={i} style={{ background: '#122b27', border: '1px solid #1e4a43', borderRadius: 10, padding: '0.75rem 1.25rem', display: 'flex', gap: '1rem', alignItems: 'center', boxShadow: '0 1px 4px rgba(0,0,0,0.04)' }}>
+                                <span style={{ fontSize: '0.8rem', color: '#a7f3d0', fontWeight: 600 }}>{s?.label}</span>
                                 <span style={{ fontWeight: 900, fontSize: '1.1rem', color: s?.color }}>{s?.val}</span>
                             </div>
                         ))}
@@ -647,7 +647,7 @@ export default function KumasArsiviSayfasi() {
             {sekme === 'aksesuar' && (
                 <div>
                     {!loading && filtreli_aksesuarlar.length === 0 && (
-                        <div style={{ textAlign: 'center', padding: '4rem', background: '#f8fafc', borderRadius: 16, border: '2px dashed #e5e7eb' }}>
+                        <div style={{ textAlign: 'center', padding: '4rem', background: '#0b1d1a', borderRadius: 16, border: '2px dashed #e5e7eb' }}>
                             <Package size={48} style={{ color: '#e5e7eb', marginBottom: '1rem' }} />
                             <p style={{ color: '#94a3b8', fontWeight: 700 }}>{isAR ? 'لا توجد إكسسوارات.' : 'Kayıtlı aksesuar yok.'}</p>
                         </div>
@@ -656,11 +656,11 @@ export default function KumasArsiviSayfasi() {
                         {filtreli_aksesuarlar.map(a => {
                             const dusuk = a.stok_adet < a.min_stok;
                             return (
-                                <div key={a.id} style={{ background: 'white', border: '2px solid', borderColor: dusuk ? '#ef4444' : '#f1f5f9', borderRadius: 14, padding: '1.25rem', boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
+                                <div key={a.id} style={{ background: '#122b27', border: '2px solid', borderColor: dusuk ? '#ef4444' : '#f1f5f9', borderRadius: 14, padding: '1.25rem', boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
                                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                                         <div>
                                             <span style={{ fontSize: '0.65rem', fontWeight: 800, background: '#fef3c7', color: '#b45309', padding: '2px 8px', borderRadius: 4 }}>{a.aksesuar_kodu}</span>
-                                            <h3 style={{ fontWeight: 800, fontSize: '0.9rem', color: '#0f172a', margin: '4px 0 0' }}>{isAR && a.aksesuar_adi_ar ? a.aksesuar_adi_ar : a.aksesuar_adi}</h3>
+                                            <h3 style={{ fontWeight: 800, fontSize: '0.9rem', color: 'white', margin: '4px 0 0' }}>{isAR && a.aksesuar_adi_ar ? a.aksesuar_adi_ar : a.aksesuar_adi}</h3>
                                         </div>
                                         <div style={{ display: 'flex', gap: 4 }}>
                                             <button onClick={() => { setAksForm({ aksesuar_kodu: a.aksesuar_kodu, aksesuar_adi: a.aksesuar_adi, aksesuar_adi_ar: a.aksesuar_adi_ar || '', tip: a.tip, birim: a.birim, birim_maliyet_tl: String(a.birim_maliyet_tl || ''), stok_adet: String(a.stok_adet || ''), min_stok: String(a.min_stok || '100'), fotograf_url: a.fotograf_url || '', tedarikci_adi: a.tedarikci_adi || '' }); setDuzenleId(a.id); setDuzenleTip('aksesuar'); setSekme('aksesuar'); setFormAcik(true); window.scrollTo({ top: 0, behavior: 'smooth' }); }} style={{ background: '#fef3c7', border: 'none', color: '#b45309', padding: '4px 8px', borderRadius: 6, cursor: 'pointer', fontSize: '0.68rem', fontWeight: 700 }}>✏️</button>
@@ -672,9 +672,9 @@ export default function KumasArsiviSayfasi() {
                                         <span style={{ fontSize: '0.7rem', background: '#f0fdf4', color: '#16a34a', padding: '2px 8px', borderRadius: 4, fontWeight: 600 }}>{a.birim}</span>
                                     </div>
                                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.375rem' }}>
-                                        <div style={{ background: '#f8fafc', borderRadius: 6, padding: '6px 10px' }}>
-                                            <div style={{ fontSize: '0.6rem', color: '#64748b', fontWeight: 700 }}>MALİYET</div>
-                                            <div style={{ fontWeight: 900, color: '#0f172a' }}>₺{parseFloat(a.birim_maliyet_tl).toFixed(2)}</div>
+                                        <div style={{ background: '#0b1d1a', borderRadius: 6, padding: '6px 10px' }}>
+                                            <div style={{ fontSize: '0.6rem', color: '#a7f3d0', fontWeight: 700 }}>MALİYET</div>
+                                            <div style={{ fontWeight: 900, color: 'white' }}>₺{parseFloat(a.birim_maliyet_tl).toFixed(2)}</div>
                                         </div>
                                         <div style={{ background: dusuk ? '#fef2f2' : '#f0fdf4', borderRadius: 6, padding: '6px 10px', border: dusuk ? '1px solid #fca5a5' : '1px solid #bbf7d0' }}>
                                             <div style={{ fontSize: '0.6rem', color: dusuk ? '#ef4444' : '#16a34a', fontWeight: 700 }}>{dusuk ? '⚠️ DÜŞÜK' : 'STOK'}</div>
@@ -693,7 +693,7 @@ export default function KumasArsiviSayfasi() {
             {sekme === 'gorsel' && (
                 <div>
                     {!loading && gorselArşiv.length === 0 && (
-                        <div style={{ textAlign: 'center', padding: '4rem', background: '#f8fafc', borderRadius: 16, border: '2px dashed #e5e7eb' }}>
+                        <div style={{ textAlign: 'center', padding: '4rem', background: '#0b1d1a', borderRadius: 16, border: '2px dashed #e5e7eb' }}>
                             <Image size={48} style={{ color: '#e5e7eb', marginBottom: '1rem' }} />
                             <p style={{ color: '#94a3b8', fontWeight: 700 }}>
                                 {isAR ? 'لا توجد صور. أضف روابط صور عند إضافة الأقمشة والإكسسوارات.' : 'Görsel yok. Kumaş veya aksesuar eklerken fotoğraf URL girin.'}
@@ -702,13 +702,13 @@ export default function KumasArsiviSayfasi() {
                     )}
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px,1fr))', gap: '1rem' }}>
                         {gorselArşiv.map(g => (
-                            <div key={g.id} style={{ background: 'white', border: '1px solid #f1f5f9', borderRadius: 12, overflow: 'hidden', boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}>
-                                <div style={{ height: 160, background: '#f8fafc', overflow: 'hidden' }}>
+                            <div key={g.id} style={{ background: '#122b27', border: '1px solid #1e4a43', borderRadius: 12, overflow: 'hidden', boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}>
+                                <div style={{ height: 160, background: '#0b1d1a', overflow: 'hidden' }}>
                                     <img src={g.fotograf_url} alt={g.ad} loading="lazy" style={{ width: '100%', height: '100%', objectFit: 'cover' }} onError={e => { /** @type {any} */(e.target).parentElement.style.display = 'flex'; /** @type {any} */(e.target).parentElement.style.alignItems = 'center'; /** @type {any} */(e.target).parentElement.style.justifyContent = 'center'; /** @type {any} */(e.target).style.display = 'none'; }} />
                                 </div>
                                 <div style={{ padding: '0.75rem' }}>
                                     <span style={{ fontSize: '0.6rem', fontWeight: 800, background: g.tip === 'kumas' ? '#ecfdf5' : '#fef3c7', color: g.tip === 'kumas' ? '#047857' : '#b45309', padding: '2px 6px', borderRadius: 4 }}>{g.tip === 'kumas' ? 'KUMAŞ' : 'AKSESUAR'}</span>
-                                    <p style={{ fontWeight: 700, fontSize: '0.8rem', color: '#0f172a', margin: '4px 0 0' }}>{g.ad}</p>
+                                    <p style={{ fontWeight: 700, fontSize: '0.8rem', color: 'white', margin: '4px 0 0' }}>{g.ad}</p>
                                     <a href={g.fotograf_url} target="_blank" rel="noreferrer" style={{ fontSize: '0.7rem', color: '#10b981', fontWeight: 700, display: 'flex', alignItems: 'center', gap: 4, marginTop: 4 }}>
                                         <Eye size={11} /> {isAR ? 'عرض كامل الحجم' : 'Tam boyut gör'}
                                     </a>
@@ -722,13 +722,13 @@ export default function KumasArsiviSayfasi() {
             {/* BARKOD MODALI: Fiziksel Dünya Bağlantısı */}
             <SilBastanModal acik={barkodModaliAcik} onClose={() => setBarkodModaliAcik(false)} title="🖨️ Kumaş Barkodu Yazdır">
                 {seciliKumas ? (
-                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem', background: 'white', padding: '2rem', borderRadius: '12px' }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem', background: '#122b27', padding: '2rem', borderRadius: '12px' }}>
                         <FizikselQRBarkod
                             veriKodu={seciliKumas.kumas_kodu}
                             baslik={seciliKumas.kumas_adi}
                             aciklama={`${seciliKumas.stok_mt} mt • ${seciliKumas.kumas_tipi}`}
                         />
-                        <p style={{ margin: 0, fontSize: '0.75rem', color: '#64748b', textAlign: 'center' }}>
+                        <p style={{ margin: 0, fontSize: '0.75rem', color: '#a7f3d0', textAlign: 'center' }}>
                             Depocu bu barkodu top kumaşın üzerine yapıştırır.<br />Kesimhanede kumaş kameraya okutulduğu an dijital iş akışı başlar.
                         </p>
                     </div>

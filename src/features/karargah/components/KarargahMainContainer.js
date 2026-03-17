@@ -154,7 +154,7 @@ export function KarargahMainContainer() {
     // RENDER
     // ═══════════════════════════════════════════════
     return (
-        <div className="min-h-screen text-white font-sans" style={{ background: '#0d1117' }}>
+        <div className="min-h-screen font-sans">
 
             {/* Bildirim Toast */}
             {mesaj.text && (
@@ -186,17 +186,17 @@ export function KarargahMainContainer() {
                 {/* ── METRİK KARTLARI ── */}
                 <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
                     {[
-                        { label: 'Günlük Ciro', value: `₺${fm(stats.ciro + ((stats.ciro * simulasyon) / 100))}`, color: '#818cf8' },
-                        { label: 'Toplam Maliyet', value: `₺${fm(stats.maliyet)}`, color: '#f472b6' },
-                        { label: 'Personel Gider', value: `₺${fm(stats.personel)}`, color: '#38bdf8' },
-                        { label: 'Fire / Zayiat', value: `%${stats.fire}`, color: '#fbbf24' },
+                        { label: 'Günlük Ciro', value: `₺${fm(stats.ciro + ((stats.ciro * simulasyon) / 100))}`, color: '#22c55e', tx: 'text-white' },
+                        { label: 'Toplam Maliyet', value: `₺${fm(stats.maliyet)}`, color: '#3b82f6', tx: 'text-white' },
+                        { label: 'Personel Gider', value: `₺${fm(stats.personel)}`, color: '#8b5cf6', tx: 'text-white' },
+                        { label: 'Fire / Zayiat', value: `%${stats.fire}`, color: '#ef4444', tx: 'text-white' },
                     ].map((m, i) => (
-                        <div key={i} className="bg-[#161b22] border border-[#21262d] rounded-xl p-5 hover:border-[#30363d] transition-colors">
+                        <div key={i} className="rounded-xl p-5 shadow-lg border border-white/10 hover:shadow-xl transition-shadow" style={{ background: m.color }}>
                             <div className="flex items-center justify-between mb-3">
-                                <span className="text-[11px] font-medium text-[#484f58] uppercase tracking-wider">{m.label}</span>
-                                <div className="w-2 h-2 rounded-full" style={{ background: m.color }}></div>
+                                <span className="text-[11px] font-bold text-white/90 uppercase tracking-wider">{m.label}</span>
+                                <div className="w-2 h-2 rounded-full bg-white shadow-[0_0_8px_white]"></div>
                             </div>
-                            <span className="text-2xl font-semibold text-[#e6edf3]">{isAdmin ? m.value : '••••'}</span>
+                            <span className="text-3xl font-bold text-white tracking-tight">{isAdmin ? m.value : '••••'}</span>
                         </div>
                     ))}
                 </div>
@@ -204,15 +204,15 @@ export function KarargahMainContainer() {
                 {/* ── GÖREV + AI ── */}
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 mb-6">
                     {/* Komut */}
-                    <div className="bg-[#161b22] border border-[#21262d] rounded-xl p-5">
-                        <div className="text-[11px] font-medium text-[#484f58] uppercase tracking-wider mb-4 flex items-center gap-2">
-                            <Zap size={12} className="text-indigo-400" /> Görev & Komut
+                    <div className="bg-[#122b27] border border-[#1e4a43] rounded-xl p-5 shadow-md">
+                        <div className="text-[11px] font-medium text-emerald-200 uppercase tracking-wider mb-4 flex items-center gap-2">
+                            <Zap size={12} className="text-emerald-400" /> Görev Arama Motoru (CMD+K)
                         </div>
                         <div className="flex gap-2 mb-4">
-                            <input value={commandText} onChange={(e) => setCommandText(e.target.value)} placeholder="Ne yapmamı istersiniz..."
-                                className="flex-1 bg-[#0d1117] border border-[#21262d] rounded-lg px-4 py-2.5 text-sm text-[#e6edf3] placeholder-[#484f58] outline-none focus:border-indigo-500/50 transition-colors" />
-                            <button onClick={hizliGorevAtama} className="px-5 py-2.5 text-sm font-semibold bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg transition-colors">
-                                Gönder
+                            <input value={commandText} onChange={(e) => setCommandText(e.target.value)} placeholder="/komut (Zod korumalıdır)"
+                                className="flex-1 bg-[#0b1d1a] border border-[#1e4a43] rounded-lg px-4 py-2.5 text-sm text-white placeholder-emerald-600/50 outline-none focus:border-emerald-500/50 transition-colors" />
+                            <button onClick={hizliGorevAtama} className="px-5 py-2.5 text-sm font-semibold bg-blue-600 hover:bg-blue-500 text-white rounded-lg transition-colors">
+                                BAŞLAT
                             </button>
                         </div>
                         <div className="flex items-center justify-between text-[11px] text-[#484f58] mb-2">
@@ -224,29 +224,29 @@ export function KarargahMainContainer() {
                     </div>
 
                     {/* AI */}
-                    <div className="bg-[#161b22] border border-[#21262d] rounded-xl p-5">
-                        <div className="text-[11px] font-medium text-[#484f58] uppercase tracking-wider mb-4 flex items-center gap-2">
-                            <Bot size={12} className="text-indigo-400" /> Dijital Asistan
+                    <div className="bg-[#122b27] border border-[#1e4a43] rounded-xl p-5 shadow-md">
+                        <div className="text-[11px] font-medium text-emerald-200 uppercase tracking-wider mb-4 flex items-center gap-2">
+                            <Bot size={12} className="text-emerald-400" /> Yapay Zeka Komuta Merkezi
                         </div>
                         <div className="flex gap-2 mb-4">
-                            <input value={aiSorgu} onChange={(e) => setAiSorgu(e.target.value)} placeholder="Analiz veya yorum isteyin..."
-                                className="flex-1 bg-[#0d1117] border border-[#21262d] rounded-lg px-4 py-2.5 text-sm text-[#e6edf3] placeholder-[#484f58] outline-none focus:border-indigo-500/50 transition-colors" />
+                            <input value={aiSorgu} onChange={(e) => setAiSorgu(e.target.value)} placeholder="Pazar Analizi veya Rapor İsteyin..."
+                                className="flex-1 bg-[#0b1d1a] border border-[#1e4a43] rounded-lg px-4 py-2.5 text-sm text-white placeholder-emerald-600/50 outline-none focus:border-emerald-500/50 transition-colors" />
                             <button onClick={aiAnalizBaslat} disabled={isAiLoading}
-                                className="px-5 py-2.5 text-sm font-semibold bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg transition-colors disabled:opacity-40">
-                                {isAiLoading ? '...' : 'Analiz'}
+                                className="px-5 py-2.5 text-sm font-semibold bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg transition-colors disabled:opacity-40">
+                                {isAiLoading ? '...' : 'ANALİZ'}
                             </button>
                         </div>
                         {aiSonuc && (
-                            <div className="bg-[#0d1117] border border-[#21262d] rounded-lg p-4 mb-3">
-                                <p className="text-sm text-[#8b949e] leading-relaxed whitespace-pre-wrap">{aiSonuc}</p>
+                            <div className="bg-[#0b1d1a] border border-emerald-500/30 rounded-lg p-4 mb-3">
+                                <p className="text-sm text-emerald-100 leading-relaxed whitespace-pre-wrap">{aiSonuc}</p>
                             </div>
                         )}
                         <div className="flex items-center gap-3">
-                            <span className="text-[10px] text-[#484f58] uppercase tracking-widest">Bant</span>
+                            <span className="text-[10px] text-emerald-400 uppercase tracking-widest font-semibold">Bant Akışı:</span>
                             <div className="flex items-center gap-1 flex-1">
-                                <div className="h-1 flex-[3] bg-indigo-500/30 rounded-full"></div>
-                                <div className="h-1 flex-[2] bg-amber-500/20 rounded-full"></div>
-                                <div className="h-1 flex-[5] bg-[#21262d] rounded-full"></div>
+                                <div className="h-1.5 flex-[3] bg-emerald-500 rounded-full"></div>
+                                <div className="h-1.5 flex-[2] bg-amber-500 rounded-full"></div>
+                                <div className="h-1.5 flex-[5] bg-[#1e4a43] rounded-full"></div>
                             </div>
                         </div>
                     </div>
@@ -258,17 +258,16 @@ export function KarargahMainContainer() {
                     {/* SOL: Modüller (3 kolon) */}
                     <div className="lg:col-span-3 space-y-3">
                         {MODUL_GRUPLARI.map((grup, gIdx) => (
-                            <div key={gIdx} className="bg-[#161b22] border border-[#21262d] rounded-xl p-5">
-                                <h3 className="text-[11px] font-medium text-[#484f58] uppercase tracking-wider mb-3">{grup.baslik}</h3>
-                                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-2">
-                                    {grup.moduller.map((mod, i) => {
-                                        const Icon = mod.icon;
+                            <div key={gIdx} className="bg-[#122b27] border border-[#1e4a43] rounded-xl p-5 shadow-lg">
+                                <h3 className="text-[11px] font-semibold text-emerald-300 uppercase tracking-wider mb-4 border-b border-[#1e4a43] pb-2">{grup.baslik}</h3>
+                                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                                    {grup.moduller.map((md, mIdx) => {
+                                        const MIcon = md.icon;
                                         return (
-                                            <Link href={mod.link} key={i}>
-                                                <div className="flex items-center gap-2.5 px-3.5 py-2.5 rounded-lg bg-[#0d1117] border border-[#21262d] text-[#8b949e] hover:text-[#e6edf3] hover:border-[#30363d] hover:bg-[#161b22] transition-all group cursor-pointer">
-                                                    <Icon size={14} className="text-[#484f58] group-hover:text-indigo-400 transition-colors shrink-0" />
-                                                    <span className="text-sm font-medium truncate">{mod.name}</span>
-                                                    <ChevronRight size={11} className="ml-auto opacity-0 group-hover:opacity-60 transition-opacity shrink-0" />
+                                            <Link href={md.link} key={mIdx}>
+                                                <div className="bg-[#173a34] hover:bg-white hover:text-[#0D2825] border border-[#265e54] rounded-xl p-3 flex flex-col items-center justify-center gap-2 group transition-all duration-300 cursor-pointer h-24 shadow-md">
+                                                    <MIcon size={24} className="text-emerald-400 group-hover:text-[#0D2825] transition-colors" />
+                                                    <span className="text-xs font-semibold text-white/90 group-hover:text-[#0D2825] text-center">{md.name}</span>
                                                 </div>
                                             </Link>
                                         );
@@ -308,86 +307,86 @@ export function KarargahMainContainer() {
                         </div>
 
                         {/* Kamera */}
-                        <Link href="/kameralar" className="bg-[#161b22] border border-[#21262d] rounded-xl p-4 flex items-center gap-3 hover:border-[#30363d] transition-colors block">
-                            <div className={`w-9 h-9 rounded-lg flex items-center justify-center ${kameraStreamDurum === 'aktif' ? 'bg-emerald-500/10' : 'bg-[#21262d]'}`}>
-                                <Camera size={15} className={kameraStreamDurum === 'aktif' ? 'text-emerald-400' : 'text-[#484f58]'} />
+                        <Link href="/kameralar" className="bg-[#122b27] border border-[#1e4a43] rounded-xl p-4 flex items-center gap-3 hover:border-emerald-500/50 transition-colors block shadow-md">
+                            <div className={`w-9 h-9 rounded-lg flex items-center justify-center ${kameraStreamDurum === 'aktif' ? 'bg-emerald-500/20' : 'bg-[#0b1d1a]'}`}>
+                                <Camera size={15} className={kameraStreamDurum === 'aktif' ? 'text-emerald-400' : 'text-emerald-300'} />
                             </div>
                             <div>
-                                <div className={`text-xs font-semibold ${kameraStreamDurum === 'aktif' ? 'text-emerald-400' : 'text-[#8b949e]'}`}>
+                                <div className={`text-xs font-semibold ${kameraStreamDurum === 'aktif' ? 'text-emerald-400' : 'text-emerald-200'}`}>
                                     {kameraStreamDurum === 'aktif' ? 'Kameralar Aktif' : 'Görüş Kapalı'}
                                 </div>
-                                <div className="text-[10px] text-[#484f58]">{kameraStreamDurum === 'aktif' ? 'AI tarama aktif' : 'go2rtc başlatılmalı'}</div>
+                                <div className="text-[10px] text-emerald-100/70">{kameraStreamDurum === 'aktif' ? 'AI tarama aktif' : 'go2rtc başlatılmalı'}</div>
                             </div>
                         </Link>
 
                         {/* Ajan Ağı */}
-                        <div className="bg-[#161b22] border border-[#21262d] rounded-xl p-5">
-                            <h3 className="text-[11px] font-medium text-[#484f58] uppercase tracking-wider mb-3 flex items-center justify-between">
+                        <div className="bg-[#122b27] border border-[#1e4a43] rounded-xl p-5 shadow-md">
+                            <h3 className="text-[11px] font-medium text-emerald-200 uppercase tracking-wider mb-3 flex items-center justify-between">
                                 <span className="flex items-center gap-2"><Cpu size={12} /> Ajan Ağı</span>
-                                <span className="text-[10px] text-indigo-400 font-semibold flex items-center gap-1.5">
-                                    <span className="w-1.5 h-1.5 rounded-full bg-indigo-400" style={{ animation: 'subtle-pulse 2s ease-in-out infinite' }}></span> Otonom
+                                <span className="text-[10px] text-blue-400 font-semibold flex items-center gap-1.5">
+                                    <span className="w-1.5 h-1.5 rounded-full bg-blue-400" style={{ animation: 'subtle-pulse 2s ease-in-out infinite' }}></span> Otonom
                                 </span>
                             </h3>
                             {[
                                 { label: 'Veri Madencileri', desc: 'Web tarama aktif', stat: '24/s', icon: Network },
                                 { label: 'Analistler', desc: 'Modeller güncel', stat: '18ms', icon: Zap },
                             ].map((a, i) => (
-                                <div key={i} className="bg-[#0d1117] border border-[#21262d] rounded-lg p-3 mb-2 last:mb-0 flex items-center justify-between">
+                                <div key={i} className="bg-[#0b1d1a] border border-[#1e4a43] rounded-lg p-3 mb-2 last:mb-0 flex items-center justify-between">
                                     <div className="flex items-center gap-2.5">
-                                        <a.icon size={13} className="text-[#484f58]" />
-                                        <div><div className="text-xs font-medium text-[#8b949e]">{a.label}</div><div className="text-[10px] text-[#484f58]">{a.desc}</div></div>
+                                        <a.icon size={13} className="text-emerald-400" />
+                                        <div><div className="text-xs font-medium text-white">{a.label}</div><div className="text-[10px] text-emerald-100/70">{a.desc}</div></div>
                                     </div>
-                                    <span className="text-[10px] text-[#484f58] font-mono">{a.stat}</span>
+                                    <span className="text-[10px] text-emerald-200 font-mono">{a.stat}</span>
                                 </div>
                             ))}
-                            <Link href="/arge" className="mt-3 block text-center text-[10px] text-indigo-400 hover:text-indigo-300 font-semibold transition-colors uppercase tracking-wider">
+                            <Link href="/arge" className="mt-3 block text-center text-[10px] text-blue-400 hover:text-blue-300 font-semibold transition-colors uppercase tracking-wider">
                                 Detay →
                             </Link>
                         </div>
 
                         {/* Mesajlar */}
-                        <div className="bg-[#161b22] border border-[#21262d] rounded-xl p-5">
-                            <h3 className="text-[11px] font-medium text-[#484f58] uppercase tracking-wider mb-3 flex items-center justify-between">
+                        <div className="bg-[#122b27] border border-[#1e4a43] rounded-xl p-5 shadow-md">
+                            <h3 className="text-[11px] font-medium text-emerald-200 uppercase tracking-wider mb-3 flex items-center justify-between">
                                 <span className="flex items-center gap-2"><MessageSquare size={12} /> Mesajlar</span>
-                                {mesajSayisi > 0 && <span className="bg-indigo-500/20 text-indigo-300 text-[10px] font-bold px-2 py-0.5 rounded-full">{mesajSayisi}</span>}
+                                {mesajSayisi > 0 && <span className="bg-blue-500/20 text-blue-300 text-[10px] font-bold px-2 py-0.5 rounded-full">{mesajSayisi}</span>}
                             </h3>
                             {sonMesajlar.length === 0 ? (
-                                <div className="text-xs text-[#30363d] text-center py-3">Yeni mesaj yok</div>
+                                <div className="text-xs text-emerald-100/50 text-center py-3">Yeni mesaj yok</div>
                             ) : sonMesajlar.map(m => (
-                                <Link key={m.id} href="/haberlesme" className="bg-[#0d1117] border border-[#21262d] rounded-lg p-3 mb-2 last:mb-0 block hover:border-[#30363d] transition-colors">
+                                <Link key={m.id} href="/haberlesme" className="bg-[#0b1d1a] border border-[#1e4a43] rounded-lg p-3 mb-2 last:mb-0 block hover:border-emerald-500/50 transition-colors">
                                     <div className="flex items-center gap-2 mb-1">
-                                        <span className={`w-1.5 h-1.5 rounded-full ${m.oncelik === 'kritik' ? 'bg-red-400' : m.oncelik === 'acil' ? 'bg-amber-400' : 'bg-indigo-400'}`}></span>
-                                        <span className="text-xs font-medium text-[#e6edf3] truncate">{m.konu}</span>
+                                        <span className={`w-1.5 h-1.5 rounded-full ${m.oncelik === 'kritik' ? 'bg-red-400' : m.oncelik === 'acil' ? 'bg-amber-400' : 'bg-blue-400'}`}></span>
+                                        <span className="text-xs font-medium text-white truncate">{m.konu}</span>
                                     </div>
-                                    <div className="text-[10px] text-[#484f58] pl-4">{m.gonderen_adi}</div>
+                                    <div className="text-[10px] text-emerald-100/70 pl-4">{m.gonderen_adi}</div>
                                 </Link>
                             ))}
                         </div>
 
                         {/* NİZAMBOT Mini */}
-                        <div className="bg-[#161b22] border border-[#21262d] rounded-xl p-5">
-                            <h3 className="text-[11px] font-medium text-[#484f58] uppercase tracking-wider mb-3 flex items-center gap-2">
+                        <div className="bg-[#122b27] border border-[#1e4a43] rounded-xl p-5 shadow-md">
+                            <h3 className="text-[11px] font-medium text-emerald-200 uppercase tracking-wider mb-3 flex items-center gap-2">
                                 <Activity size={12} /> NİZAMBOT
                             </h3>
                             <div className="flex items-center justify-between mb-3">
                                 <div className="flex items-center gap-2">
-                                    <Bot size={14} className={botDurum === 'aktif' ? 'text-indigo-400' : 'text-[#484f58]'} />
-                                    <span className="text-xs font-medium text-[#8b949e]">@Lumora_47bot</span>
+                                    <Bot size={14} className={botDurum === 'aktif' ? 'text-emerald-400' : 'text-emerald-100/50'} />
+                                    <span className="text-xs font-medium text-white">@Lumora_47bot</span>
                                 </div>
-                                <span className={`text-[10px] font-mono ${ping !== null && ping < 200 ? 'text-emerald-400' : 'text-[#484f58]'}`}>
+                                <span className={`text-[10px] font-mono ${ping !== null && ping < 200 ? 'text-emerald-400' : 'text-emerald-100/70'}`}>
                                     {ping === null ? '...' : `${ping}ms`}
                                 </span>
                             </div>
                             <div className="space-y-1.5 max-h-28 overflow-y-auto styled-scroll">
                                 {botLoglar.length === 0 ? (
-                                    <div className="text-[10px] text-[#30363d] text-center py-2">Log yok</div>
+                                    <div className="text-[10px] text-emerald-100/50 text-center py-2">Log yok</div>
                                 ) : botLoglar.slice(0, 5).map((log, i) => (
-                                    <div key={i} className="flex items-center justify-between py-1 border-b border-[#21262d] last:border-0">
+                                    <div key={i} className="flex items-center justify-between py-1 border-b border-[#1e4a43] last:border-0">
                                         <div className="flex items-center gap-1.5">
                                             <span className={`w-1 h-1 rounded-full ${log.sonuc === 'basarili' ? 'bg-emerald-400' : 'bg-red-400'}`}></span>
-                                            <span className="text-[10px] text-[#8b949e] truncate max-w-[140px]">{log.mesaj || log.islem_tipi}</span>
+                                            <span className="text-[10px] text-emerald-100/90 truncate max-w-[140px]">{log.mesaj || log.islem_tipi}</span>
                                         </div>
-                                        <span className="text-[9px] text-[#30363d] font-mono shrink-0">
+                                        <span className="text-[9px] text-emerald-100/50 font-mono shrink-0">
                                             {new Date(log.created_at).toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' })}
                                         </span>
                                     </div>
@@ -397,8 +396,8 @@ export function KarargahMainContainer() {
 
                         {/* Gizlenen İzler — Minimal */}
                         {gizlenIzleri.length > 0 && (
-                            <div className="bg-[#161b22] border border-[#21262d] rounded-xl p-5">
-                                <button onClick={() => setIzPanelAcik(v => !v)} className="w-full flex items-center justify-between text-[11px] font-medium text-[#484f58] uppercase tracking-wider">
+                            <div className="bg-[#122b27] border border-[#1e4a43] rounded-xl p-5 shadow-md">
+                                <button onClick={() => setIzPanelAcik(v => !v)} className="w-full flex items-center justify-between text-[11px] font-medium text-emerald-200 uppercase tracking-wider">
                                     <span>İzler ({gizlenIzleri.length})</span>
                                     <ChevronRight size={12} className={`transition-transform ${izPanelAcik ? 'rotate-90' : ''}`} />
                                 </button>
@@ -407,8 +406,8 @@ export function KarargahMainContainer() {
                                         {gizlenIzleri.map((g, i) => {
                                             const b1 = Array.isArray(g.b1_ic_mesajlar) ? g.b1_ic_mesajlar[0] : g.b1_ic_mesajlar;
                                             return (
-                                                <div key={i} className="text-[10px] text-[#484f58] py-1 border-b border-[#21262d] last:border-0 truncate">
-                                                    {b1?.konu || '—'} <span className="text-[#30363d]">· {g.kullanici_adi}</span>
+                                                <div key={i} className="text-[10px] text-emerald-100/90 py-1 border-b border-[#1e4a43] last:border-0 truncate">
+                                                    {b1?.konu || '—'} <span className="text-emerald-100/50">· {g.kullanici_adi}</span>
                                                 </div>
                                             );
                                         })}
@@ -423,8 +422,8 @@ export function KarargahMainContainer() {
             {/* Slider thumb */}
             <style dangerouslySetInnerHTML={{
                 __html: `
-                input[type=range]::-webkit-slider-thumb { -webkit-appearance:none; height:14px; width:14px; border-radius:50%; background:#6366f1; cursor:pointer; border:2px solid #0d1117; }
-                input[type=range]::-moz-range-thumb { height:14px; width:14px; border-radius:50%; background:#6366f1; cursor:pointer; border:2px solid #0d1117; }
+                input[type=range]::-webkit-slider-thumb { -webkit-appearance:none; height:14px; width:14px; border-radius:50%; background:#22c55e; cursor:pointer; border:2px solid #173a34; }
+                input[type=range]::-moz-range-thumb { height:14px; width:14px; border-radius:50%; background:#22c55e; cursor:pointer; border:2px solid #173a34; }
             `}} />
         </div>
     );

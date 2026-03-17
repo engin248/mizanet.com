@@ -633,7 +633,7 @@ export default function ArgeSayfasi() {
     // Auth yükleniyorsa bekle — race condition önlemi
     if (authYukleniyor) {
         return (
-            <div style={{ padding: '4rem', textAlign: 'center', color: '#64748b' }}>
+            <div style={{ padding: '4rem', textAlign: 'center', color: '#a7f3d0' }}>
                 <div style={{ width: 40, height: 40, border: '4px solid #e2e8f0', borderTop: '4px solid #047857', borderRadius: '50%', animation: 'spin 1s linear infinite', margin: '0 auto 1rem' }} />
                 <p style={{ fontWeight: 600 }}>Yükleniyor...</p>
             </div>
@@ -676,10 +676,10 @@ export default function ArgeSayfasi() {
                                 <TrendingUp size={24} color="white" />
                             </div>
                             <div>
-                                <h1 style={{ fontSize: '1.5rem', fontWeight: 900, color: '#0f172a', margin: 0 }}>
+                                <h1 style={{ fontSize: '1.5rem', fontWeight: 900, color: 'white', margin: 0 }}>
                                     {isAR ? 'بحث وتطوير وأبحاث الاتجاهات' : 'Ar-Ge & Trend Araştırması'}
                                 </h1>
-                                <p style={{ fontSize: '0.8rem', color: '#64748b', margin: '2px 0 0', fontWeight: 600 }}>
+                                <p style={{ fontSize: '0.8rem', color: '#a7f3d0', margin: '2px 0 0', fontWeight: 600 }}>
                                     {isAR ? 'حدد هدف الإنتاج من تحليل السوق. لا يُفتح مسودة النموذج دون الموافقة.' : 'Pazar analiziyle üretim hedefini belirle. Onaylanmadan model taslağı açılmaz.'}
                                 </p>
                             </div>
@@ -746,7 +746,7 @@ export default function ArgeSayfasi() {
                                         </div>
                                         <div style={{ textAlign: 'right' }}>
                                             <div style={{ fontSize: '1rem', fontWeight: 900, color: '#38bdf8', fontFamily: 'monospace' }}>{toplamTrend}</div>
-                                            <div style={{ fontSize: '0.55rem', fontWeight: 700, color: '#64748b', textTransform: 'uppercase' }}>Toplam</div>
+                                            <div style={{ fontSize: '0.55rem', fontWeight: 700, color: '#a7f3d0', textTransform: 'uppercase' }}>Toplam</div>
                                         </div>
                                     </div>
 
@@ -763,7 +763,7 @@ export default function ArgeSayfasi() {
                                         </div>
                                         <div style={{ textAlign: 'right' }}>
                                             <div style={{ fontSize: '1rem', fontWeight: 900, color: '#fbbf24', fontFamily: 'monospace' }}>%{onayOrani}</div>
-                                            <div style={{ fontSize: '0.55rem', fontWeight: 700, color: '#64748b', textTransform: 'uppercase' }}>Karar İsabeti</div>
+                                            <div style={{ fontSize: '0.55rem', fontWeight: 700, color: '#a7f3d0', textTransform: 'uppercase' }}>Karar İsabeti</div>
                                         </div>
                                     </div>
 
@@ -780,7 +780,7 @@ export default function ArgeSayfasi() {
                                         </div>
                                         <div style={{ textAlign: 'right' }}>
                                             <div style={{ fontSize: '1rem', fontWeight: 900, color: '#10b981', fontFamily: 'monospace' }}>HAZIR</div>
-                                            <div style={{ fontSize: '0.55rem', fontWeight: 700, color: '#64748b', textTransform: 'uppercase' }}>Nihai Onay</div>
+                                            <div style={{ fontSize: '0.55rem', fontWeight: 700, color: '#a7f3d0', textTransform: 'uppercase' }}>Nihai Onay</div>
                                         </div>
                                     </div>
                                 </div>
@@ -822,7 +822,7 @@ export default function ArgeSayfasi() {
                                 />
                             ))}
                         </div>
-                        <button onClick={() => setAiPanelAcik(false)} style={{ marginTop: 8, fontSize: '0.72rem', color: '#64748b', background: 'none', border: 'none', cursor: 'pointer' }}>Sonuçları Kapat</button>
+                        <button onClick={() => setAiPanelAcik(false)} style={{ marginTop: 8, fontSize: '0.72rem', color: '#a7f3d0', background: 'none', border: 'none', cursor: 'pointer' }}>Sonuçları Kapat</button>
                     </div>
                 )}
 
@@ -830,7 +830,7 @@ export default function ArgeSayfasi() {
                 <div style={{ marginTop: '2rem', marginBottom: '1rem' }}>
                     <button
                         onClick={() => setDuzenleId(duzenleId === 'hermai_gunlugu' ? null : 'hermai_gunlugu')}
-                        style={{ display: 'flex', alignItems: 'center', gap: '8px', background: 'transparent', border: '1px solid #cbd5e1', color: '#475569', padding: '8px 16px', borderRadius: '8px', fontWeight: 600, fontSize: '0.8rem', cursor: 'pointer', transition: 'all 0.2s' }}
+                        style={{ display: 'flex', alignItems: 'center', gap: '8px', background: 'transparent', border: '1px solid #cbd5e1', color: '#a7f3d0', padding: '8px 16px', borderRadius: '8px', fontWeight: 600, fontSize: '0.8rem', cursor: 'pointer', transition: 'all 0.2s' }}
                     >
                         <Network size={16} />
                         {duzenleId === 'hermai_gunlugu' ? 'HermAI Günlüklerini Gizle' : 'HermAI Günlüklerini Göster'}
@@ -838,10 +838,10 @@ export default function ArgeSayfasi() {
                     </button>
 
                     {duzenleId === 'hermai_gunlugu' && (
-                        <div style={{ marginTop: '1rem', background: 'white', borderRadius: '16px', border: '1px solid #e2e8f0', overflow: 'hidden', boxShadow: '0 10px 25px -5px rgba(0,0,0,0.05)' }}>
-                            <div style={{ padding: '1rem 1.5rem', background: '#f8fafc', borderBottom: '1px solid #e2e8f0', display: 'flex', alignItems: 'center', gap: '10px' }}>
+                        <div style={{ marginTop: '1rem', background: '#122b27', borderRadius: '16px', border: '1px solid #1e4a43', overflow: 'hidden', boxShadow: '0 10px 25px -5px rgba(0,0,0,0.05)' }}>
+                            <div style={{ padding: '1rem 1.5rem', background: '#0b1d1a', borderBottom: '1px solid #e2e8f0', display: 'flex', alignItems: 'center', gap: '10px' }}>
                                 <Bot size={20} color="#047857" />
-                                <h3 style={{ margin: 0, fontSize: '0.95rem', fontWeight: 800, color: '#0f172a' }}>HermAI Otonom Karar Günlüğü</h3>
+                                <h3 style={{ margin: 0, fontSize: '0.95rem', fontWeight: 800, color: 'white' }}>HermAI Otonom Karar Günlüğü</h3>
                             </div>
                             <div style={{ padding: '1rem', maxHeight: '400px', overflowY: 'auto' }}>
                                 {/* b0_herm_ai_kararlar tablosundan readonly veri çekilecek */}
@@ -853,15 +853,15 @@ export default function ArgeSayfasi() {
                                                     <span style={{ fontWeight: 800, fontSize: '0.8rem', color: karar.karar === 'RED' ? '#991b1b' : (karar.karar === 'ONAY' ? '#065f46' : '#92400e') }}>
                                                         {karar.karar === 'RED' ? '❌ İPTAL/BLOKAJ' : (karar.karar === 'ONAY' ? '✅ UYGUN' : '⚠️ İNCELEME')}
                                                     </span>
-                                                    <span style={{ fontSize: '0.7rem', color: '#64748b' }}>{formatTarih(karar.created_at)}</span>
+                                                    <span style={{ fontSize: '0.7rem', color: '#a7f3d0' }}>{formatTarih(karar.created_at)}</span>
                                                 </div>
-                                                <div style={{ fontSize: '0.8rem', color: '#334155' }}>{karar.ajan_tavsiyesi}</div>
-                                                <div style={{ marginTop: '8px', fontSize: '0.7rem', color: '#475569', fontWeight: 600 }}>Güven Skoru: {karar.guven_skoru}/10</div>
+                                                <div style={{ fontSize: '0.8rem', color: '#e2e8f0' }}>{karar.ajan_tavsiyesi}</div>
+                                                <div style={{ marginTop: '8px', fontSize: '0.7rem', color: '#a7f3d0', fontWeight: 600 }}>Güven Skoru: {karar.guven_skoru}/10</div>
                                             </div>
                                         ))}
                                     </div>
                                 ) : (
-                                    <div style={{ textAlign: 'center', padding: '2rem', color: '#64748b', fontSize: '0.85rem' }}>
+                                    <div style={{ textAlign: 'center', padding: '2rem', color: '#a7f3d0', fontSize: '0.85rem' }}>
                                         <Database size={32} style={{ opacity: 0.3, margin: '0 auto 10px' }} />
                                         <span>Şu an kaydedilmiş sistem hafızası veya HermAI engellemesi bulunmuyor.</span>
                                     </div>
@@ -883,7 +883,7 @@ export default function ArgeSayfasi() {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4"> {/* 🚨 EKİP ALPHA: gridTemplateColumns sabiti grid-cols-1 md:grid-cols-2 esnekliğine çekildi */}
                             {/* Başlık TR */}
                             <div>
-                                <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: '#374151', marginBottom: 6, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                                <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: '#e2e8f0', marginBottom: 6, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
                                     🇹🇷 {isAR ? 'العنوان بالتركية' : 'Trend Başlığı (Türkçe)'} *
                                 </label>
                                 <input
@@ -892,7 +892,7 @@ export default function ArgeSayfasi() {
                                     onChange={e => setForm({ ...form, baslik: e.target.value })}
                                     maxLength={150} // X Kriteri
                                     placeholder={isAR ? 'عنوان الاتجاه بالتركية' : 'Örn: Yazlık Keten Gömlek Serisi'}
-                                    style={{ width: '100%', padding: '10px 14px', border: '2px solid #e5e7eb', borderRadius: '8px', fontSize: '0.9rem', fontFamily: 'inherit', boxSizing: 'border-box', outline: 'none', transition: 'border 0.2s' }}
+                                    style={{ width: '100%', padding: '10px 14px', border: '2px solid #1e4a43', borderRadius: '8px', fontSize: '0.9rem', fontFamily: 'inherit', boxSizing: 'border-box', outline: 'none', transition: 'border 0.2s' }}
                                     onFocus={e => e.target.style.borderColor = '#047857'}
                                     onBlur={e => e.target.style.borderColor = '#e5e7eb'}
                                 />
@@ -900,7 +900,7 @@ export default function ArgeSayfasi() {
 
                             {/* Başlık AR */}
                             <div>
-                                <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: '#374151', marginBottom: 6, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                                <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: '#e2e8f0', marginBottom: 6, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
                                     🇸🇦 {isAR ? 'العنوان بالعربية' : 'Trend Başlığı (Arapça)'}
                                 </label>
                                 <input
@@ -910,19 +910,19 @@ export default function ArgeSayfasi() {
                                     maxLength={150} // X Kriteri
                                     onChange={e => setForm({ ...form, baslik_ar: e.target.value })}
                                     placeholder="مثال: سلسلة قمصان صيفية من الكتان"
-                                    style={{ width: '100%', padding: '10px 14px', border: '2px solid #e5e7eb', borderRadius: '8px', fontSize: '0.9rem', fontFamily: 'Tahoma, Arial', boxSizing: 'border-box', outline: 'none', textAlign: 'right' }}
+                                    style={{ width: '100%', padding: '10px 14px', border: '2px solid #1e4a43', borderRadius: '8px', fontSize: '0.9rem', fontFamily: 'Tahoma, Arial', boxSizing: 'border-box', outline: 'none', textAlign: 'right' }}
                                 />
                             </div>
 
                             {/* Platform */}
                             <div>
-                                <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: '#374151', marginBottom: 6, textTransform: 'uppercase' }}>
+                                <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: '#e2e8f0', marginBottom: 6, textTransform: 'uppercase' }}>
                                     {isAR ? 'المنصة' : 'Platform'} *
                                 </label>
                                 <select
                                     value={form.platform}
                                     onChange={e => setForm({ ...form, platform: e.target.value })}
-                                    style={{ width: '100%', padding: '10px 14px', border: '2px solid #e5e7eb', borderRadius: '8px', fontSize: '0.9rem', fontFamily: 'inherit', boxSizing: 'border-box', outline: 'none', background: 'white', cursor: 'pointer' }}
+                                    style={{ width: '100%', padding: '10px 14px', border: '2px solid #1e4a43', borderRadius: '8px', fontSize: '0.9rem', fontFamily: 'inherit', boxSizing: 'border-box', outline: 'none', background: '#122b27', cursor: 'pointer' }}
                                 >
                                     {PLATFORMLAR.map(p => (
                                         <option key={p} value={p}>{isAR ? TX.ar['platform_' + p] : TX.tr['platform_' + p]}</option>
@@ -932,13 +932,13 @@ export default function ArgeSayfasi() {
 
                             {/* Kategori */}
                             <div>
-                                <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: '#374151', marginBottom: 6, textTransform: 'uppercase' }}>
+                                <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: '#e2e8f0', marginBottom: 6, textTransform: 'uppercase' }}>
                                     {isAR ? 'فئة المنتج' : 'Ürün Kategorisi'} *
                                 </label>
                                 <select
                                     value={form.kategori}
                                     onChange={e => setForm({ ...form, kategori: e.target.value })}
-                                    style={{ width: '100%', padding: '10px 14px', border: '2px solid #e5e7eb', borderRadius: '8px', fontSize: '0.9rem', fontFamily: 'inherit', boxSizing: 'border-box', outline: 'none', background: 'white', cursor: 'pointer' }}
+                                    style={{ width: '100%', padding: '10px 14px', border: '2px solid #1e4a43', borderRadius: '8px', fontSize: '0.9rem', fontFamily: 'inherit', boxSizing: 'border-box', outline: 'none', background: '#122b27', cursor: 'pointer' }}
                                 >
                                     {KATEGORILER.map(k => (
                                         <option key={k} value={k}>{KAT_LABEL[lang][k] || k}</option>
@@ -948,13 +948,13 @@ export default function ArgeSayfasi() {
 
                             {/* Hedef Kitle */}
                             <div>
-                                <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: '#374151', marginBottom: 6, textTransform: 'uppercase' }}>
+                                <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: '#e2e8f0', marginBottom: 6, textTransform: 'uppercase' }}>
                                     {isAR ? 'الجمهور المستهدف' : 'Hedef Kitle'} *
                                 </label>
                                 <select
                                     value={form.hedef_kitle}
                                     onChange={e => setForm({ ...form, hedef_kitle: e.target.value })}
-                                    style={{ width: '100%', padding: '10px 14px', border: '2px solid #e5e7eb', borderRadius: '8px', fontSize: '0.9rem', fontFamily: 'inherit', boxSizing: 'border-box', outline: 'none', background: 'white', cursor: 'pointer' }}
+                                    style={{ width: '100%', padding: '10px 14px', border: '2px solid #1e4a43', borderRadius: '8px', fontSize: '0.9rem', fontFamily: 'inherit', boxSizing: 'border-box', outline: 'none', background: '#122b27', cursor: 'pointer' }}
                                 >
                                     <option value="kadın">{isAR ? 'نسائي' : 'Kadın'}</option>
                                     <option value="erkek">{isAR ? 'رجالي' : 'Erkek'}</option>
@@ -966,7 +966,7 @@ export default function ArgeSayfasi() {
                             {/* Talep Skoru ve Zorluk Derecesi (2 Kolon) */}
                             <div style={{ gridColumn: '1 / -1', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                                 <div>
-                                    <label style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', fontWeight: 700, color: '#374151', marginBottom: 6 }}>
+                                    <label style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', fontWeight: 700, color: '#e2e8f0', marginBottom: 6 }}>
                                         <span style={{ textTransform: 'uppercase' }}>{isAR ? 'درجة الطلب في السوق' : 'Pazar Talep Skoru'} *</span>
                                         <span style={{ color: skorRenk(form.talep_skoru), fontWeight: 900, fontSize: '1rem' }}>{form.talep_skoru} / 10</span>
                                     </label>
@@ -982,7 +982,7 @@ export default function ArgeSayfasi() {
                                 </div>
 
                                 <div>
-                                    <label style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', fontWeight: 700, color: '#374151', marginBottom: 6 }}>
+                                    <label style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', fontWeight: 700, color: '#e2e8f0', marginBottom: 6 }}>
                                         <span style={{ textTransform: 'uppercase' }}>{isAR ? 'مستوى صعوبة الإنتاج' : 'Üretim Zorluk Derecesi'} *</span>
                                         <span style={{ color: '#4f46e5', fontWeight: 900, fontSize: '1rem' }}>{form.zorluk_derecesi || 5} / 10</span>
                                     </label>
@@ -1000,7 +1000,7 @@ export default function ArgeSayfasi() {
 
                             {/* Referans Link */}
                             <div>
-                                <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: '#374151', marginBottom: 6, textTransform: 'uppercase' }}>
+                                <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: '#e2e8f0', marginBottom: 6, textTransform: 'uppercase' }}>
                                     {isAR ? 'الرابط المرجعي' : 'Referans Link'}
                                 </label>
                                 <div style={{ display: 'flex', gap: 8 }}>
@@ -1009,7 +1009,7 @@ export default function ArgeSayfasi() {
                                         value={form.referans_link}
                                         onChange={e => setForm({ ...form, referans_link: e.target.value })}
                                         placeholder="https://..."
-                                        style={{ flex: 1, padding: '10px 14px', border: '2px solid #e5e7eb', borderRadius: '8px', fontSize: '0.85rem', fontFamily: 'monospace', boxSizing: 'border-box', outline: 'none' }}
+                                        style={{ flex: 1, padding: '10px 14px', border: '2px solid #1e4a43', borderRadius: '8px', fontSize: '0.85rem', fontFamily: 'monospace', boxSizing: 'border-box', outline: 'none' }}
                                     />
                                     <Link size={16} style={{ alignSelf: 'center', color: '#9ca3af' }} />
                                 </div>
@@ -1017,7 +1017,7 @@ export default function ArgeSayfasi() {
 
                             {/* Görsel URL & Kamera Çekimi */}
                             <div style={{ gridColumn: '1 / -1' }}>
-                                <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: '#374151', marginBottom: 6, textTransform: 'uppercase' }}>
+                                <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: '#e2e8f0', marginBottom: 6, textTransform: 'uppercase' }}>
                                     {isAR ? 'رابط الصورة / الكاميرا' : 'Numune Görseli / Kamera'}
                                 </label>
                                 <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap' }}>
@@ -1026,7 +1026,7 @@ export default function ArgeSayfasi() {
                                         value={form.gorsel_url}
                                         onChange={e => setForm({ ...form, gorsel_url: e.target.value })}
                                         placeholder="https://...jpg veya Kameradan çekin"
-                                        style={{ flex: 1, minWidth: 200, padding: '10px 14px', border: '2px solid #e5e7eb', borderRadius: '8px', fontSize: '0.85rem', fontFamily: 'monospace', boxSizing: 'border-box', outline: 'none' }}
+                                        style={{ flex: 1, minWidth: 200, padding: '10px 14px', border: '2px solid #1e4a43', borderRadius: '8px', fontSize: '0.85rem', fontFamily: 'monospace', boxSizing: 'border-box', outline: 'none' }}
                                     />
                                     {/* 🟢 DÜZELTİLDİ: Saha Gerçekliği -> Tablet Kamera Capture Yeteneği */}
                                     <input
@@ -1082,14 +1082,14 @@ export default function ArgeSayfasi() {
                                 </div>
                                 {form.gorsel_url && form.gorsel_url.startsWith('data:image') && (
                                     <div style={{ marginTop: 8 }}>
-                                        <img src={form.gorsel_url} alt="Kamera Özeti" loading="lazy" style={{ width: 60, height: 60, objectFit: 'cover', borderRadius: 8, border: '2px solid #e5e7eb' }} />
+                                        <img src={form.gorsel_url} alt="Kamera Özeti" loading="lazy" style={{ width: 60, height: 60, objectFit: 'cover', borderRadius: 8, border: '2px solid #1e4a43' }} />
                                     </div>
                                 )}
                             </div>
 
                             {/* Açıklama TR */}
                             <div>
-                                <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: '#374151', marginBottom: 6, textTransform: 'uppercase' }}>
+                                <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: '#e2e8f0', marginBottom: 6, textTransform: 'uppercase' }}>
                                     🇹🇷 {isAR ? 'الملاحظات بالتركية' : 'Açıklama / Not'}
                                 </label>
                                 <textarea
@@ -1098,13 +1098,13 @@ export default function ArgeSayfasi() {
                                     maxLength={400} // X Kriteri
                                     onChange={e => setForm({ ...form, aciklama: e.target.value })}
                                     placeholder={isAR ? 'ملاحظات بالتركية...' : 'Bu trendin genel değerlendirmesi...'}
-                                    style={{ width: '100%', padding: '10px 14px', border: '2px solid #e5e7eb', borderRadius: '8px', fontSize: '0.875rem', fontFamily: 'inherit', boxSizing: 'border-box', outline: 'none', resize: 'vertical' }}
+                                    style={{ width: '100%', padding: '10px 14px', border: '2px solid #1e4a43', borderRadius: '8px', fontSize: '0.875rem', fontFamily: 'inherit', boxSizing: 'border-box', outline: 'none', resize: 'vertical' }}
                                 />
                             </div>
 
                             {/* Açıklama AR */}
                             <div>
-                                <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: '#374151', marginBottom: 6, textTransform: 'uppercase' }}>
+                                <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: '#e2e8f0', marginBottom: 6, textTransform: 'uppercase' }}>
                                     🇸🇦 {isAR ? 'الملاحظات بالعربية' : 'Açıklama (Arapça)'}
                                 </label>
                                 <textarea
@@ -1113,7 +1113,7 @@ export default function ArgeSayfasi() {
                                     value={form.aciklama_ar}
                                     onChange={e => setForm({ ...form, aciklama_ar: e.target.value })}
                                     placeholder="التقييم العام لهذا الاتجاه..."
-                                    style={{ width: '100%', padding: '10px 14px', border: '2px solid #e5e7eb', borderRadius: '8px', fontSize: '0.875rem', fontFamily: 'Tahoma, Arial', boxSizing: 'border-box', outline: 'none', resize: 'vertical', textAlign: 'right' }}
+                                    style={{ width: '100%', padding: '10px 14px', border: '2px solid #1e4a43', borderRadius: '8px', fontSize: '0.875rem', fontFamily: 'Tahoma, Arial', boxSizing: 'border-box', outline: 'none', resize: 'vertical', textAlign: 'right' }}
                                 />
                             </div>
                         </div>
@@ -1122,7 +1122,7 @@ export default function ArgeSayfasi() {
                         <div style={{ display: 'flex', gap: '0.75rem', marginTop: '1.25rem', justifyContent: 'flex-end', flexDirection: isAR ? 'row-reverse' : 'row' }}>
                             <button
                                 onClick={() => { setForm(BOSH_FORM); setFormAcik(false); }}
-                                style={{ padding: '10px 20px', border: '2px solid #e5e7eb', borderRadius: '8px', background: 'white', fontWeight: 700, cursor: 'pointer', color: '#374151' }}
+                                style={{ padding: '10px 20px', border: '2px solid #1e4a43', borderRadius: '8px', background: '#122b27', fontWeight: 700, cursor: 'pointer', color: '#e2e8f0' }}
                             >
                                 {isAR ? 'إلغاء' : 'İptal'}
                             </button>
@@ -1192,7 +1192,7 @@ export default function ArgeSayfasi() {
                         {!loading && filtreliTrendler.length === 0 && (
                             <div style={{ textAlign: 'center', padding: '4rem', background: 'rgba(255,255,255,0.4)', backdropFilter: 'blur(10px)', borderRadius: '20px', border: '2px dashed rgba(148, 163, 184, 0.3)' }}>
                                 <TrendingUp size={48} style={{ color: '#cbd5e1', marginBottom: '1rem' }} />
-                                <p style={{ color: '#64748b', fontWeight: 800 }}>
+                                <p style={{ color: '#a7f3d0', fontWeight: 800 }}>
                                     {isAR ? 'لا توجد اتجاهات مسجلة. أضف اتجاهاً جديداً.' : 'Kayıtlı trend yok. Yeni trend ekleyin.'}
                                 </p>
                             </div>
@@ -1228,7 +1228,7 @@ export default function ArgeSayfasi() {
                     {arsivTrendler.length > 0 && (
                         <div style={{ background: 'rgba(255,255,255,0.6)', backdropFilter: 'blur(16px)', border: '1px solid rgba(255,255,255,0.8)', borderRadius: '24px', padding: '1.5rem', marginTop: '1rem', boxShadow: '0 10px 40px -10px rgba(0,0,0,0.05)' }}>
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
-                                <h3 style={{ fontSize: '0.85rem', fontWeight: 900, color: '#1e293b', textTransform: 'uppercase', letterSpacing: '0.08em', display: 'flex', alignItems: 'center', gap: 8 }}>
+                                <h3 style={{ fontSize: '0.85rem', fontWeight: 900, color: 'white', textTransform: 'uppercase', letterSpacing: '0.08em', display: 'flex', alignItems: 'center', gap: 8 }}>
                                     <div style={{ background: '#f5f3ff', padding: '6px', borderRadius: '8px', color: '#7c3aed' }}>🗃️</div>
                                     Arşiv — Zamansal Doğrulama
                                 </h3>
@@ -1268,8 +1268,8 @@ export default function ArgeSayfasi() {
                                             {/* Başlık satırı */}
                                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 8 }}>
                                                 <div style={{ flex: 1 }}>
-                                                    <div style={{ fontSize: '0.8rem', fontWeight: 900, color: '#1e293b' }}>{trend.baslik}</div>
-                                                    <div style={{ fontSize: '0.6rem', color: '#64748b', marginTop: 2 }}>
+                                                    <div style={{ fontSize: '0.8rem', fontWeight: 900, color: 'white' }}>{trend.baslik}</div>
+                                                    <div style={{ fontSize: '0.6rem', color: '#a7f3d0', marginTop: 2 }}>
                                                         {trend.platform} · {trend.kategori}
                                                         {gunFark !== null && ' · ' + gunFark + ' gün önce arşivlendi'}
                                                     </div>
@@ -1288,11 +1288,11 @@ export default function ArgeSayfasi() {
                                             {/* Periyot seç — henüz planlanmamışsa */}
                                             {!trend.dogrulama_zamani ? (
                                                 <div style={{ borderTop: '1px solid #e2e8f0', paddingTop: 8, marginBottom: 8 }}>
-                                                    <div style={{ fontSize: '0.6rem', fontWeight: 700, color: '#64748b', marginBottom: 5 }}>⏰ Kaç gün sonra yeniden araştırılsın?</div>
+                                                    <div style={{ fontSize: '0.6rem', fontWeight: 700, color: '#a7f3d0', marginBottom: 5 }}>⏰ Kaç gün sonra yeniden araştırılsın?</div>
                                                     <div style={{ display: 'flex', gap: 4 }}>
                                                         {[15, 30, 45, 90].map(gun => (
                                                             <button key={gun} onClick={() => dogrulamaPeriyoduAyarla(trend.id, gun)}
-                                                                style={{ flex: 1, padding: '5px 0', background: '#f1f5f9', color: '#475569', border: '1px solid #cbd5e1', borderRadius: 6, fontSize: '0.65rem', fontWeight: 800, cursor: 'pointer' }}>
+                                                                style={{ flex: 1, padding: '5px 0', background: '#173a34', color: '#a7f3d0', border: '1px solid #cbd5e1', borderRadius: 6, fontSize: '0.65rem', fontWeight: 800, cursor: 'pointer' }}>
                                                                 {gun + ' gün'}
                                                             </button>
                                                         ))}
@@ -1362,7 +1362,7 @@ export default function ArgeSayfasi() {
                                                         {/* Tam metin — açılır */}
                                                         <details>
                                                             <summary style={{ fontSize: '0.58rem', color: '#94a3b8', cursor: 'pointer', marginBottom: 4 }}>Tam araştırma metnini gör</summary>
-                                                            <div style={{ fontSize: '0.6rem', color: '#374151', lineHeight: 1.6, background: '#f8fafc', borderRadius: 6, padding: '8px', maxHeight: 160, overflowY: 'auto' }}>
+                                                            <div style={{ fontSize: '0.6rem', color: '#e2e8f0', lineHeight: 1.6, background: '#0b1d1a', borderRadius: 6, padding: '8px', maxHeight: 160, overflowY: 'auto' }}>
                                                                 {metin}
                                                             </div>
                                                         </details>
@@ -1370,7 +1370,7 @@ export default function ArgeSayfasi() {
                                                         {/* HermAI uyum değerlendirme */}
                                                         {!trend.gercek_sonuc && (
                                                             <div style={{ marginTop: 8 }}>
-                                                                <div style={{ fontSize: '0.6rem', color: '#64748b', fontWeight: 700, marginBottom: 4 }}>
+                                                                <div style={{ fontSize: '0.6rem', color: '#a7f3d0', fontWeight: 700, marginBottom: 4 }}>
                                                                     {uyum ? 'Sistem tahmini: ' + uyum + ' — Siz onaylıyor musunuz?' : 'HermAI bu kararında:'}
                                                                 </div>
                                                                 <div style={{ display: 'flex', gap: 4 }}>
@@ -1390,7 +1390,7 @@ export default function ArgeSayfasi() {
                                             {/* İmalat yapıldıysa satış sonucu */}
                                             {!trend.yeniden_arastirma && !trend.gercek_sonuc && (
                                                 <div style={{ borderTop: '1px solid #e2e8f0', paddingTop: 8 }}>
-                                                    <div style={{ fontSize: '0.6rem', fontWeight: 700, color: '#64748b', marginBottom: 5 }}>📋 İmalat yaptıysanız gerçek sonuç neydi?</div>
+                                                    <div style={{ fontSize: '0.6rem', fontWeight: 700, color: '#a7f3d0', marginBottom: 5 }}>📋 İmalat yaptıysanız gerçek sonuç neydi?</div>
                                                     <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
                                                         {[
                                                             { v: 'cok_satti', l: '🔥 Çok Sattı', c: '#10b981' },
@@ -1419,7 +1419,7 @@ export default function ArgeSayfasi() {
 
                         {/* İstatistik */}
                         <div style={{ background: 'rgba(255,255,255,0.6)', backdropFilter: 'blur(16px)', border: '1px solid rgba(255,255,255,0.8)', borderRadius: '20px', padding: '1.5rem', boxShadow: '0 10px 40px -10px rgba(0,0,0,0.05)' }}>
-                            <h3 style={{ fontSize: '0.85rem', fontWeight: 900, color: '#1e293b', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: 8, flexDirection: isAR ? 'row-reverse' : 'row' }}>
+                            <h3 style={{ fontSize: '0.85rem', fontWeight: 900, color: 'white', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: 8, flexDirection: isAR ? 'row-reverse' : 'row' }}>
                                 <div style={{ background: '#eff6ff', padding: '6px', borderRadius: '8px', color: '#3b82f6' }}><BarChart3 size={16} /></div> {isAR ? 'إحصائيات' : 'İstatistik'}
                             </h3>
                             {[
@@ -1429,7 +1429,7 @@ export default function ArgeSayfasi() {
                                 { label_tr: 'İptal', label_ar: 'ملغي', val: trendler.filter(t => t.durum === 'iptal').length, color: '#ef4444' },
                             ].map((s, i) => (
                                 <div key={i} style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0', borderBottom: '1px solid #f8fafc', flexDirection: isAR ? 'row-reverse' : 'row' }}>
-                                    <span style={{ fontSize: '0.8rem', color: '#64748b', fontWeight: 600 }}>{isAR ? s.label_ar : s.label_tr}</span>
+                                    <span style={{ fontSize: '0.8rem', color: '#a7f3d0', fontWeight: 600 }}>{isAR ? s.label_ar : s.label_tr}</span>
                                     <span style={{ fontSize: '0.9rem', fontWeight: 900, color: s.color }}>{s.val}</span>
                                 </div>
                             ))}
@@ -1441,7 +1441,7 @@ export default function ArgeSayfasi() {
                                 <div style={{ background: 'rgba(56, 189, 248, 0.1)', padding: '6px', borderRadius: '8px', color: '#38bdf8' }}><Bot size={16} /></div> {isAR ? 'سجل الوكيل: الكاشف' : 'Ajan Log: Trend Kâşifi'}
                             </h3>
                             {agentLoglari.length === 0 ? (
-                                <p style={{ fontSize: '0.75rem', color: '#475569', textAlign: 'center', fontStyle: 'italic', padding: '0.5rem' }}>
+                                <p style={{ fontSize: '0.75rem', color: '#a7f3d0', textAlign: 'center', fontStyle: 'italic', padding: '0.5rem' }}>
                                     {isAR ? 'لا توجد عمليات بعد' : 'Henüz işlem yok'}
                                 </p>
                             ) : (
@@ -1449,8 +1449,8 @@ export default function ArgeSayfasi() {
                                     {agentLoglari.map(log => (
                                         <div key={log.id} style={{ padding: '8px 10px', background: '#1e293b', borderRadius: '8px', borderLeft: '3px solid #22c55e' }}>
                                             <div style={{ fontSize: '0.7rem', color: '#22c55e', fontWeight: 700 }}>{log.islem_tipi}</div>
-                                            <div style={{ fontSize: '0.65rem', color: '#64748b', marginTop: 2 }}>{log.mesaj}</div>
-                                            <div style={{ fontSize: '0.6rem', color: '#334155', marginTop: 2 }}>{new Date(log.created_at).toLocaleString('tr-TR')}</div>
+                                            <div style={{ fontSize: '0.65rem', color: '#a7f3d0', marginTop: 2 }}>{log.mesaj}</div>
+                                            <div style={{ fontSize: '0.6rem', color: '#e2e8f0', marginTop: 2 }}>{new Date(log.created_at).toLocaleString('tr-TR')}</div>
                                         </div>
                                     ))}
                                 </div>
@@ -1459,8 +1459,8 @@ export default function ArgeSayfasi() {
 
                         {/* 📊 B-08: Trend Karşılaştırma Grafiği */}
                         {trendler.length > 0 && (
-                            <div style={{ background: 'white', border: '1px solid #f1f5f9', borderRadius: '14px', padding: '1.25rem', boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
-                                <h3 style={{ fontSize: '0.78rem', fontWeight: 800, color: '#374151', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.875rem', display: 'flex', alignItems: 'center', gap: 6 }}>
+                            <div style={{ background: '#122b27', border: '1px solid #1e4a43', borderRadius: '14px', padding: '1.25rem', boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
+                                <h3 style={{ fontSize: '0.78rem', fontWeight: 800, color: '#e2e8f0', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.875rem', display: 'flex', alignItems: 'center', gap: 6 }}>
                                     <BarChart3 size={13} /> Trend Karşılaştırma
                                 </h3>
                                 {/* Kategori Bar Grafiği */}
@@ -1473,8 +1473,8 @@ export default function ArgeSayfasi() {
                                         <div style={{ display: 'flex', flexDirection: 'column', gap: 4, marginBottom: 12 }}>
                                             {Object.entries(katSay).filter(([, v]) => v > 0).sort((a, b) => b[1] - a[1]).map(([kat, val]) => (
                                                 <div key={kat} style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
-                                                    <span style={{ fontSize: '0.57rem', color: '#64748b', width: 70, flexShrink: 0, fontWeight: 600 }}>{KAT_LABEL.tr[kat] || kat}</span>
-                                                    <div style={{ flex: 1, height: 10, background: '#f1f5f9', borderRadius: 5, overflow: 'hidden' }}>
+                                                    <span style={{ fontSize: '0.57rem', color: '#a7f3d0', width: 70, flexShrink: 0, fontWeight: 600 }}>{KAT_LABEL.tr[kat] || kat}</span>
+                                                    <div style={{ flex: 1, height: 10, background: '#173a34', borderRadius: 5, overflow: 'hidden' }}>
                                                         <div style={{ width: `${(val / max) * 100}%`, height: '100%', background: 'linear-gradient(90deg,#047857,#34d399)', borderRadius: 5, transition: 'width 0.5s ease' }} />
                                                     </div>
                                                     <span style={{ fontSize: '0.62rem', fontWeight: 900, color: '#047857', width: 14, textAlign: 'right' }}>{val}</span>
@@ -1508,7 +1508,7 @@ export default function ArgeSayfasi() {
                                                 {plat.map(x => (
                                                     <div key={x.p} style={{ display: 'flex', alignItems: 'center', gap: 4, marginBottom: 2 }}>
                                                         <div style={{ width: 7, height: 7, borderRadius: '50%', background: x.renk, flexShrink: 0 }} />
-                                                        <span style={{ fontSize: '0.6rem', color: '#374151', fontWeight: 600 }}>{x.p.toUpperCase()}</span>
+                                                        <span style={{ fontSize: '0.6rem', color: '#e2e8f0', fontWeight: 600 }}>{x.p.toUpperCase()}</span>
                                                         <span style={{ marginLeft: 'auto', fontSize: '0.62rem', fontWeight: 900, color: x.renk }}>{x.sayi}</span>
                                                     </div>
                                                 ))}
@@ -1518,7 +1518,7 @@ export default function ArgeSayfasi() {
                                 })()}
                                 {/* Ortalama Talep Skoru */}
                                 <div style={{ background: '#f0fdf4', borderRadius: 8, padding: '7px 10px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                    <span style={{ fontSize: '0.68rem', color: '#64748b', fontWeight: 700 }}>Ort. Talep Skoru</span>
+                                    <span style={{ fontSize: '0.68rem', color: '#a7f3d0', fontWeight: 700 }}>Ort. Talep Skoru</span>
                                     <span style={{ fontSize: '1rem', fontWeight: 900, color: '#047857' }}>
                                         {(trendler.reduce((s, t) => s + (t.talep_skoru || 0), 0) / trendler.length).toFixed(1)}/10
                                     </span>

@@ -287,7 +287,7 @@ export default function KameralarMainContainer() {
             <p style={{ color: '#94a3b8', fontWeight: 600, marginTop: 8 }}>
                 Endüstriyel kamera sistemi için Üretim PIN doğrulaması gereklidir.
             </p>
-            <a href="/" style={{ display: 'inline-block', marginTop: '1.5rem', padding: '10px 24px', background: '#38bdf8', color: '#0f172a', borderRadius: 10, fontWeight: 800, textDecoration: 'none' }}>
+            <a href="/" style={{ display: 'inline-block', marginTop: '1.5rem', padding: '10px 24px', background: '#38bdf8', color: 'white', borderRadius: 10, fontWeight: 800, textDecoration: 'none' }}>
                 🔑 Karargâh'a Git (PIN Giriş)
             </a>
         </div>
@@ -303,10 +303,10 @@ export default function KameralarMainContainer() {
                         <Camera size={24} color="#38bdf8" />
                     </div>
                     <div>
-                        <h1 style={{ fontSize: '1.4rem', fontWeight: 900, color: '#0f172a', margin: 0 }}>
+                        <h1 style={{ fontSize: '1.4rem', fontWeight: 900, color: 'white', margin: 0 }}>
                             KARARGÂH VİZYON PANELİ
                         </h1>
-                        <p style={{ fontSize: '0.75rem', color: '#64748b', margin: '2px 0 0', fontWeight: 600 }}>
+                        <p style={{ fontSize: '0.75rem', color: '#a7f3d0', margin: '2px 0 0', fontWeight: 600 }}>
                             {kameralar.length} Kamera · Endüstriyel AI İzleme (go2rtc WebRTC)
                         </p>
                     </div>
@@ -333,13 +333,13 @@ export default function KameralarMainContainer() {
 
                     {/* Log Panel */}
                     <button onClick={() => setLogPanelAcik(!logPanelAcik)}
-                        style={{ background: logPanelAcik ? '#1e293b' : 'white', border: '1px solid #e2e8f0', padding: '6px 12px', borderRadius: 8, color: logPanelAcik ? 'white' : '#374151', fontSize: '0.75rem', fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 5 }}>
+                        style={{ background: logPanelAcik ? '#1e293b' : 'white', border: '1px solid #1e4a43', padding: '6px 12px', borderRadius: 8, color: logPanelAcik ? 'white' : '#374151', fontSize: '0.75rem', fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 5 }}>
                         <Clock size={14} /> Erişim Logu ({erisimLog.length})
                     </button>
 
                     {/* Yenile */}
                     <button onClick={() => { streamDurumKontrol(); }}
-                        style={{ background: 'white', border: '1px solid #e2e8f0', padding: '6px 10px', borderRadius: 8, color: '#374151', cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
+                        style={{ background: '#122b27', border: '1px solid #1e4a43', padding: '6px 10px', borderRadius: 8, color: '#e2e8f0', cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
                         <RefreshCw size={15} />
                     </button>
                 </div>
@@ -358,13 +358,13 @@ export default function KameralarMainContainer() {
                     <div style={{ fontSize: '0.7rem', fontWeight: 800, color: '#38bdf8', textTransform: 'uppercase', marginBottom: '0.5rem' }}>
                         🔐 Kamera Erişim Logu (Son {erisimLog.length} Kayıt)
                     </div>
-                    {erisimLog.length === 0 && <div style={{ color: '#64748b', fontSize: '0.75rem' }}>Henüz kayıt yok.</div>}
+                    {erisimLog.length === 0 && <div style={{ color: '#a7f3d0', fontSize: '0.75rem' }}>Henüz kayıt yok.</div>}
                     {erisimLog.map((log, i) => (
                         <div key={i} style={{ display: 'flex', gap: 12, fontSize: '0.72rem', color: '#94a3b8', padding: '3px 0', borderBottom: '1px solid #1e293b' }}>
                             <span style={{ color: '#38bdf8', fontWeight: 700, whiteSpace: 'nowrap' }}>{new Date(log.zaman).toLocaleTimeString('tr-TR')}</span>
                             <span style={{ color: '#f8fafc', fontWeight: 700 }}>{log.islem}</span>
                             {log.kamera && <span style={{ color: '#fbbf24' }}>{log.kamera}</span>}
-                            <span style={{ marginLeft: 'auto', color: '#475569' }}>{log.kullanici}</span>
+                            <span style={{ marginLeft: 'auto', color: '#a7f3d0' }}>{log.kullanici}</span>
                         </div>
                     ))}
                 </div>
@@ -407,7 +407,7 @@ export default function KameralarMainContainer() {
                         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                             <div style={{ width: 10, height: 10, background: '#ef4444', borderRadius: '50%', animation: 'camPulse 1s infinite' }} />
                             <span style={{ color: 'white', fontWeight: 800 }}>{odakliKamera.name}</span>
-                            <span style={{ fontSize: '0.68rem', color: '#64748b', background: '#0f172a', padding: '2px 8px', borderRadius: 4 }}>MAIN STREAM · 1080p 25fps</span>
+                            <span style={{ fontSize: '0.68rem', color: '#a7f3d0', background: '#0f172a', padding: '2px 8px', borderRadius: 4 }}>MAIN STREAM · 1080p 25fps</span>
                             <span style={{ fontSize: '0.68rem', background: `${ROL_ETİKET[odakliKamera.role]?.renk}30`, color: ROL_ETİKET[odakliKamera.role]?.renk, padding: '2px 8px', borderRadius: 4, fontWeight: 700 }}>
                                 {ROL_ETİKET[odakliKamera.role]?.emoji} {ROL_ETİKET[odakliKamera.role]?.label}
                             </span>
@@ -425,10 +425,10 @@ export default function KameralarMainContainer() {
                     </div>
                     <div style={{ position: 'relative', width: '100%', aspectRatio: '16/9', background: 'black' }}>
                         {(isTabHidden || isIdle) ? (
-                            <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', color: '#64748b', gap: 15, background: '#0f172a' }}>
+                            <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', color: '#a7f3d0', gap: 15, background: '#0f172a' }}>
                                 <Activity size={32} color="#64748b" />
                                 <div style={{ fontWeight: 800, fontSize: '1rem' }}>GÖZLEM BEKLEMEDE (UYKU MODU)</div>
-                                <div style={{ fontSize: '0.8rem', color: '#475569' }}>Sistem ağı korumak için yayını duraklattı. Harekete geçmek için dokunun.</div>
+                                <div style={{ fontSize: '0.8rem', color: '#a7f3d0' }}>Sistem ağı korumak için yayını duraklattı. Harekete geçmek için dokunun.</div>
                             </div>
                         ) : (
                             <CameraPlayer src={odakliKamera.src} type="main" kameraAdi={odakliKamera.name} offline={odakliKamera.status === 'offline'} />
@@ -439,7 +439,7 @@ export default function KameralarMainContainer() {
 
             {/* KAMERA GRİD */}
             {filtreliKameralar.length === 0 ? (
-                <div style={{ textAlign: 'center', padding: '4rem', background: '#f8fafc', borderRadius: 16, border: '2px dashed #e5e7eb' }}>
+                <div style={{ textAlign: 'center', padding: '4rem', background: '#0b1d1a', borderRadius: 16, border: '2px dashed #e5e7eb' }}>
                     <Camera size={48} style={{ color: '#e5e7eb', marginBottom: '1rem' }} />
                     <p style={{ color: '#94a3b8', fontWeight: 700 }}>Bu kategoride kamera bulunamadı.</p>
                 </div>
@@ -458,7 +458,7 @@ export default function KameralarMainContainer() {
                                     <Camera size={13} color="#38bdf8" />
                                     <span style={{ color: '#f8fafc', fontWeight: 700, fontSize: '0.82rem' }}>{kam.name}</span>
                                     {kam.work_center && (
-                                        <span style={{ fontSize: '0.6rem', background: '#0f172a', color: '#64748b', padding: '1px 6px', borderRadius: 4, fontWeight: 600 }}>{kam.work_center}</span>
+                                        <span style={{ fontSize: '0.6rem', background: '#0f172a', color: '#a7f3d0', padding: '1px 6px', borderRadius: 4, fontWeight: 600 }}>{kam.work_center}</span>
                                     )}
                                 </div>
                                 <div style={{ display: 'flex', gap: 4 }}>
@@ -478,7 +478,7 @@ export default function KameralarMainContainer() {
                             {/* Video Alanı */}
                             <div style={{ width: '100%', aspectRatio: '16/9', background: '#020617', position: 'relative' }}>
                                 {(isTabHidden || isIdle) ? (
-                                    <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', color: '#64748b', gap: 10, background: '#0f172a' }}>
+                                    <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', color: '#a7f3d0', gap: 10, background: '#0f172a' }}>
                                         <Activity size={24} color="#64748b" />
                                         <div style={{ fontWeight: 700, fontSize: '0.8rem' }}>UYKU MODU</div>
                                         <div style={{ fontSize: '0.65rem' }}>İzlemeye devam etmek için tıklayın / hareket edin</div>
@@ -497,7 +497,7 @@ export default function KameralarMainContainer() {
                                 <span style={{ fontSize: '0.62rem', color: ROL_ETİKET[kam.role]?.renk || '#64748b', fontWeight: 700 }}>
                                     {ROL_ETİKET[kam.role]?.emoji} {ROL_ETİKET[kam.role]?.label || kam.role}
                                 </span>
-                                <span style={{ fontSize: '0.6rem', color: '#475569', fontWeight: 600 }}>360p · 10fps sub</span>
+                                <span style={{ fontSize: '0.6rem', color: '#a7f3d0', fontWeight: 600 }}>360p · 10fps sub</span>
                             </div>
                         </div>
                     ))}
@@ -510,7 +510,7 @@ export default function KameralarMainContainer() {
                     <Activity size={18} color="#10b981" />
                     <span style={{ color: 'white', fontWeight: 800, fontSize: '0.9rem' }}>AI Hareket Analiz Motoru</span>
                     <span style={{ fontSize: '0.65rem', background: '#064e3b', color: '#34d399', padding: '2px 8px', borderRadius: 4, fontWeight: 700 }}>CANLI</span>
-                    <span style={{ marginLeft: 'auto', fontSize: '0.7rem', color: '#64748b', fontWeight: 600 }}>
+                    <span style={{ marginLeft: 'auto', fontSize: '0.7rem', color: '#a7f3d0', fontWeight: 600 }}>
                         {streamDurum === 'aktif' ? `${kameralar.filter(k => k.status === 'online').length} kamera taranıyor` : 'Stream kapalı — tarama pasif'}
                     </span>
                 </div>
@@ -561,7 +561,7 @@ export default function KameralarMainContainer() {
                                                 </span>
                                             </>
                                         ) : (
-                                            <span style={{ fontSize: '0.6rem', color: '#475569', fontWeight: 600 }}>
+                                            <span style={{ fontSize: '0.6rem', color: '#a7f3d0', fontWeight: 600 }}>
                                                 {streamDurum === 'aktif' ? 'İlk okuma bekleniyor...' : 'Stream kapalı'}
                                             </span>
                                         )}
@@ -594,7 +594,7 @@ export default function KameralarMainContainer() {
                                         <div style={{ color: '#94a3b8', fontSize: '0.65rem', marginTop: 2 }}>
                                             {olay.metadata?.uyari || 'Bant hareketsizliği tespit edildi'}
                                         </div>
-                                        <div style={{ color: '#475569', fontSize: '0.6rem', marginTop: 4 }}>
+                                        <div style={{ color: '#a7f3d0', fontSize: '0.6rem', marginTop: 4 }}>
                                             {new Date(olay.created_at).toLocaleString('tr-TR')}
                                         </div>
                                     </div>

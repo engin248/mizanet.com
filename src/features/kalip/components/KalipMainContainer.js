@@ -300,8 +300,8 @@ export default function KalipMainContainer() {
     const isAR = lang === 'ar';
 
 
-    const inp = { width: '100%', padding: '9px 12px', border: '2px solid #e5e7eb', borderRadius: '8px', fontSize: '0.875rem', fontFamily: 'inherit', boxSizing: 'border-box', outline: 'none' };
-    const lbl = { display: 'block', fontSize: '0.7rem', fontWeight: 700, color: '#374151', marginBottom: 5, textTransform: 'uppercase' };
+    const inp = { width: '100%', padding: '9px 12px', border: '2px solid #1e4a43', borderRadius: '8px', fontSize: '0.875rem', fontFamily: 'inherit', boxSizing: 'border-box', outline: 'none' };
+    const lbl = { display: 'block', fontSize: '0.7rem', fontWeight: 700, color: '#e2e8f0', marginBottom: 5, textTransform: 'uppercase' };
 
     const DURUM_RENK = { taslak: '#94a3b8', kumas_secildi: '#047857', kalip_hazir: '#f59e0b', numune_onay_bekliyor: '#eab308', uretim_hazir: '#10b981', iptal: '#ef4444' };
 
@@ -325,10 +325,10 @@ export default function KalipMainContainer() {
                         <BookOpen size={24} className="text-amber-50" />
                     </div>
                     <div>
-                        <h1 className="text-2xl font-black text-slate-800 tracking-tight m-0">
+                        <h1 className="text-2xl font-black text-white tracking-tight m-0">
                             {isAR ? 'القالب والتسلسل' : 'M3 Kalıp & Serileme Karargahı'}
                         </h1>
-                        <p className="text-xs font-bold text-slate-500 mt-1 uppercase tracking-wider">
+                        <p className="text-xs font-bold text-emerald-200 mt-1 uppercase tracking-wider">
                             {isAR ? 'إنشاء نموذج → استخراج القالب → تسلسل المقاسات → حساب الاستهلاك' : 'Model taslağı → Kalıp çıkar → Beden serile → Metraj hesapla'}
                         </p>
                     </div>
@@ -366,32 +366,32 @@ export default function KalipMainContainer() {
 
             {/* MODEL FORMU */}
             {formAcik && sekme === 'modeller' && (
-                <div style={{ background: 'white', border: '2px solid #f59e0b', borderRadius: 16, padding: '1.5rem', marginBottom: '1.5rem', boxShadow: '0 8px 32px rgba(245,158,11,0.12)' }}>
+                <div style={{ background: '#122b27', border: '2px solid #f59e0b', borderRadius: 16, padding: '1.5rem', marginBottom: '1.5rem', boxShadow: '0 8px 32px rgba(245,158,11,0.12)' }}>
                     <h3 style={{ fontWeight: 800, color: '#92400e', marginBottom: '1rem', fontSize: '1rem' }}>📐 {isAR ? 'إضافة/تعديل نموذج' : (formModel.id ? 'Model Düzenle' : 'Yeni Model Taslağı')}</h3>
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '0.875rem' }}>
                         <div><label style={lbl}>Model Kodu *</label><input value={formModel.model_kodu} onChange={e => setFormModel({ ...formModel, model_kodu: e.target.value })} placeholder="MDL-001" style={inp} /></div>
                         <div><label style={lbl}>Model Adı (TR) *</label><input value={formModel.model_adi} onChange={e => setFormModel({ ...formModel, model_adi: e.target.value })} placeholder="Yazlık Keten Gömlek" style={inp} /></div>
                         <div><label style={lbl}>Model Adı (AR)</label><input dir="rtl" value={formModel.model_adi_ar} onChange={e => setFormModel({ ...formModel, model_adi_ar: e.target.value })} placeholder="قميص كتان صيفي" style={{ ...inp, textAlign: 'right' }} /></div>
                         <div><label style={lbl}>İlgili Trend (Onaylı)</label>
-                            <select value={formModel.trend_id} onChange={e => setFormModel({ ...formModel, trend_id: e.target.value })} style={{ ...inp, cursor: 'pointer', background: 'white' }}>
+                            <select value={formModel.trend_id} onChange={e => setFormModel({ ...formModel, trend_id: e.target.value })} style={{ ...inp, cursor: 'pointer', background: '#122b27' }}>
                                 <option value="">— Seçiniz —</option>
                                 {trendler.map(t => <option key={t.id} value={t.id}>{isAR && t.baslik_ar ? t.baslik_ar : t.baslik}</option>)}
                             </select>
                         </div>
                         <div><label style={lbl}>Hedef Kitle</label>
-                            <select value={formModel.hedef_kitle} onChange={e => setFormModel({ ...formModel, hedef_kitle: e.target.value })} style={{ ...inp, cursor: 'pointer', background: 'white' }}>
+                            <select value={formModel.hedef_kitle} onChange={e => setFormModel({ ...formModel, hedef_kitle: e.target.value })} style={{ ...inp, cursor: 'pointer', background: '#122b27' }}>
                                 {HEDEF_KITLE.map(h => <option key={h} value={h}>{h}</option>)}
                             </select>
                         </div>
                         <div><label style={lbl}>Sezon</label>
-                            <select value={formModel.sezon} onChange={e => setFormModel({ ...formModel, sezon: e.target.value })} style={{ ...inp, cursor: 'pointer', background: 'white' }}>
+                            <select value={formModel.sezon} onChange={e => setFormModel({ ...formModel, sezon: e.target.value })} style={{ ...inp, cursor: 'pointer', background: '#122b27' }}>
                                 {SEZON.map(s => <option key={s} value={s}>{s}</option>)}
                             </select>
                         </div>
                         <div style={{ gridColumn: '1/-1' }}><label style={lbl}>Açıklama</label><textarea rows={2} value={formModel.aciklama} onChange={e => setFormModel({ ...formModel, aciklama: e.target.value })} style={{ ...inp, resize: 'vertical' }} /></div>
                     </div>
                     <div style={{ display: 'flex', gap: '0.75rem', marginTop: '1rem', justifyContent: 'flex-end' }}>
-                        <button onClick={() => { setFormModel(BOSH_MODEL); setFormAcik(false); }} style={{ padding: '9px 18px', border: '2px solid #e5e7eb', borderRadius: 8, background: 'white', fontWeight: 700, cursor: 'pointer' }}>İptal</button>
+                        <button onClick={() => { setFormModel(BOSH_MODEL); setFormAcik(false); }} style={{ padding: '9px 18px', border: '2px solid #1e4a43', borderRadius: 8, background: '#122b27', fontWeight: 700, cursor: 'pointer' }}>İptal</button>
                         <button onClick={kaydetModel} disabled={loading} style={{ padding: '9px 24px', background: loading ? '#94a3b8' : '#f59e0b', color: 'white', border: 'none', borderRadius: 8, fontWeight: 800, cursor: loading ? 'not-allowed' : 'pointer' }}>{loading ? '...' : 'Kaydet'}</button>
                     </div>
                 </div>
@@ -399,12 +399,12 @@ export default function KalipMainContainer() {
 
             {/* KALIP FORMU */}
             {formAcik && sekme === 'kaliplar' && (
-                <div style={{ background: 'white', border: '2px solid #f59e0b', borderRadius: 16, padding: '1.5rem', marginBottom: '1.5rem', boxShadow: '0 8px 32px rgba(245,158,11,0.12)' }}>
+                <div style={{ background: '#122b27', border: '2px solid #f59e0b', borderRadius: 16, padding: '1.5rem', marginBottom: '1.5rem', boxShadow: '0 8px 32px rgba(245,158,11,0.12)' }}>
                     <h3 style={{ fontWeight: 800, color: '#92400e', marginBottom: '1rem', fontSize: '1rem' }}>📏 {isAR ? 'إضافة/تعديل قالب' : (formKalip.id ? 'Kalıp Düzenle' : 'Yeni Kalıp')}</h3>
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '0.875rem' }}>
                         <div style={{ gridColumn: '1/-1' }}>
                             <label style={lbl}>Model Seç *</label>
-                            <select value={formKalip.model_id} onChange={e => setFormKalip({ ...formKalip, model_id: e.target.value })} style={{ ...inp, cursor: 'pointer', background: 'white' }}>
+                            <select value={formKalip.model_id} onChange={e => setFormKalip({ ...formKalip, model_id: e.target.value })} style={{ ...inp, cursor: 'pointer', background: '#122b27' }}>
                                 <option value="">— Model Seçiniz —</option>
                                 {modeller.map(m => <option key={m.id} value={m.id}>{m.model_kodu} — {m.model_adi}</option>)}
                             </select>
@@ -446,13 +446,13 @@ export default function KalipMainContainer() {
                                     setTimeout(() => {
                                         setFormKalip({ ...formKalip, kalip_dosya_url: 'https://storage.kamera-panel.com/kaliplar/' + file.name });
                                     }, 1000);
-                                }} style={{ flex: 1, ...inp, padding: '6px', background: '#f8fafc', cursor: 'pointer' }} />
+                                }} style={{ flex: 1, ...inp, padding: '6px', background: '#0b1d1a', cursor: 'pointer' }} />
                                 <input value={formKalip.kalip_dosya_url} onChange={e => setFormKalip({ ...formKalip, kalip_dosya_url: e.target.value })} placeholder="Veya manuel link girin" style={{ flex: 2, ...inp }} />
                             </div>
                         </div>
                     </div>
                     <div style={{ display: 'flex', gap: '0.75rem', marginTop: '1rem', justifyContent: 'flex-end' }}>
-                        <button onClick={() => { setFormKalip(BOSH_KALIP); setFormAcik(false); }} style={{ padding: '9px 18px', border: '2px solid #e5e7eb', borderRadius: 8, background: 'white', fontWeight: 700, cursor: 'pointer' }}>İptal</button>
+                        <button onClick={() => { setFormKalip(BOSH_KALIP); setFormAcik(false); }} style={{ padding: '9px 18px', border: '2px solid #1e4a43', borderRadius: 8, background: '#122b27', fontWeight: 700, cursor: 'pointer' }}>İptal</button>
                         <button onClick={kaydetKalip} disabled={loading} style={{ padding: '9px 24px', background: loading ? '#94a3b8' : '#f59e0b', color: 'white', border: 'none', borderRadius: 8, fontWeight: 800, cursor: loading ? 'not-allowed' : 'pointer' }}>{loading ? '...' : 'Kalıbı Kaydet'}</button>
                     </div>
                 </div>
@@ -462,18 +462,18 @@ export default function KalipMainContainer() {
             {sekme === 'modeller' && (
                 <div>
                     {!loading && modeller.length === 0 && (
-                        <div style={{ textAlign: 'center', padding: '4rem', background: '#f8fafc', borderRadius: 16, border: '2px dashed #e5e7eb' }}>
+                        <div style={{ textAlign: 'center', padding: '4rem', background: '#0b1d1a', borderRadius: 16, border: '2px dashed #e5e7eb' }}>
                             <BookOpen size={48} style={{ color: '#e5e7eb', marginBottom: '1rem' }} />
                             <p style={{ color: '#94a3b8', fontWeight: 700 }}>Kayıtlı model yok. İlk modeli oluşturun.</p>
                         </div>
                     )}
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(280px,1fr))', gap: '1rem' }}>
                         {modeller.map(m => (
-                            <div key={m.id} style={{ background: 'white', border: '2px solid #f1f5f9', borderRadius: 14, padding: '1.25rem', boxShadow: '0 2px 8px rgba(0,0,0,0.04)', transition: 'all 0.2s' }}>
+                            <div key={m.id} style={{ background: '#122b27', border: '2px solid #1e4a43', borderRadius: 14, padding: '1.25rem', boxShadow: '0 2px 8px rgba(0,0,0,0.04)', transition: 'all 0.2s' }}>
                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                                     <div>
                                         <span style={{ fontSize: '0.65rem', fontWeight: 800, background: '#fffbeb', color: '#d97706', padding: '2px 8px', borderRadius: 4 }}>{m.model_kodu}</span>
-                                        <h3 style={{ fontWeight: 800, color: '#0f172a', margin: '4px 0 0', fontSize: '0.95rem' }}>{isAR && m.model_adi_ar ? m.model_adi_ar : m.model_adi}</h3>
+                                        <h3 style={{ fontWeight: 800, color: 'white', margin: '4px 0 0', fontSize: '0.95rem' }}>{isAR && m.model_adi_ar ? m.model_adi_ar : m.model_adi}</h3>
                                     </div>
                                     <div style={{ display: 'flex', gap: 4 }}>
                                         <button onClick={() => { setFormModel({ id: m.id, model_kodu: m.model_kodu, model_adi: m.model_adi, model_adi_ar: m.model_adi_ar || '', trend_id: m.trend_id || '', hedef_kitle: m.hedef_kitle, sezon: m.sezon, aciklama: m.aciklama || '' }); setSekme('modeller'); setFormAcik(true); window.scrollTo({ top: 0, behavior: 'smooth' }); }} style={{ background: '#fef3c7', border: 'none', color: '#d97706', padding: '4px 8px', borderRadius: 6, cursor: 'pointer', fontSize: '0.68rem', fontWeight: 700 }}>✏️</button>
@@ -485,7 +485,7 @@ export default function KalipMainContainer() {
                                     <span style={{ fontSize: '0.7rem', background: '#fef3c7', color: '#d97706', padding: '2px 8px', borderRadius: 4, fontWeight: 600 }}>{m.hedef_kitle}</span>
                                     <span style={{ fontSize: '0.7rem', padding: '2px 8px', borderRadius: 4, fontWeight: 700, background: `${DURUM_RENK[m.durum]}20`, color: DURUM_RENK[m.durum] }}>{m.durum?.replace('_', ' ')}</span>
                                 </div>
-                                {m.aciklama && <p style={{ fontSize: '0.78rem', color: '#64748b', margin: '0.5rem 0 0' }}>{m.aciklama}</p>}
+                                {m.aciklama && <p style={{ fontSize: '0.78rem', color: '#a7f3d0', margin: '0.5rem 0 0' }}>{m.aciklama}</p>}
                                 <div style={{ marginTop: 6, fontSize: '0.62rem', color: '#94a3b8', fontWeight: 600 }}>🕐 {formatTarih(m.created_at)}</div>
                             </div>
                         ))}
@@ -497,7 +497,7 @@ export default function KalipMainContainer() {
             {sekme === 'kaliplar' && (
                 <div>
                     {!loading && kaliplar.length === 0 && (
-                        <div style={{ textAlign: 'center', padding: '4rem', background: '#f8fafc', borderRadius: 16, border: '2px dashed #e5e7eb' }}>
+                        <div style={{ textAlign: 'center', padding: '4rem', background: '#0b1d1a', borderRadius: 16, border: '2px dashed #e5e7eb' }}>
                             <Ruler size={48} style={{ color: '#e5e7eb', marginBottom: '1rem' }} />
                             <p style={{ color: '#94a3b8', fontWeight: 700 }}>Kayıtlı kalıp yok. Önce model oluşturun, sonra kalıp ekleyin.</p>
                         </div>
@@ -509,12 +509,12 @@ export default function KalipMainContainer() {
                             const fire = parseFloat(k.fire_orani_yuzde) / 100;
                             const metraj = (boy * en * (1 + fire)).toFixed(3);
                             return (
-                                <div key={k.id} style={{ background: 'white', border: '2px solid #f1f5f9', borderRadius: 14, padding: '1.25rem', display: 'flex', gap: '1.5rem', alignItems: 'flex-start', boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
+                                <div key={k.id} style={{ background: '#122b27', border: '2px solid #1e4a43', borderRadius: 14, padding: '1.25rem', display: 'flex', gap: '1.5rem', alignItems: 'flex-start', boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
                                     <div style={{ flex: 1 }}>
                                         <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: '0.5rem' }}>
                                             <span style={{ fontSize: '0.65rem', fontWeight: 800, background: '#fffbeb', color: '#d97706', padding: '2px 8px', borderRadius: 4 }}>{k.b1_model_taslaklari?.model_kodu}</span>
                                             <ChevronRight size={14} style={{ color: '#cbd5e1' }} />
-                                            <h3 style={{ fontWeight: 800, color: '#0f172a', margin: 0, fontSize: '0.95rem' }}>{k.kalip_adi}</h3>
+                                            <h3 style={{ fontWeight: 800, color: 'white', margin: 0, fontSize: '0.95rem' }}>{k.kalip_adi}</h3>
                                             <span style={{ fontSize: '0.65rem', background: '#f0fdf4', color: '#16a34a', padding: '2px 8px', borderRadius: 4, fontWeight: 700 }}>{k.versiyon}</span>
                                         </div>
                                         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.375rem', marginBottom: '0.5rem' }}>
@@ -522,7 +522,7 @@ export default function KalipMainContainer() {
                                                 <span key={b} style={{ fontSize: '0.72rem', fontWeight: 800, background: '#f59e0b', color: 'white', padding: '2px 8px', borderRadius: 12 }}>{b}</span>
                                             ))}
                                         </div>
-                                        <div style={{ display: 'flex', gap: '1rem', fontSize: '0.78rem', color: '#64748b', fontWeight: 600, alignItems: 'center' }}>
+                                        <div style={{ display: 'flex', gap: '1rem', fontSize: '0.78rem', color: '#a7f3d0', fontWeight: 600, alignItems: 'center' }}>
                                             <span>📏 Pastal: {k.pastal_boyu_cm}cm × {k.pastal_eni_cm}cm</span>
                                             <span>🔥 Fire: %{k.fire_orani_yuzde}</span>
                                             {k.kalip_dosya_url && <a href={k.kalip_dosya_url} target="_blank" rel="noreferrer" style={{ textDecoration: 'none', background: '#fef3c7', color: '#d97706', padding: '2px 8px', borderRadius: 4, fontWeight: 700 }}>⬇️ Kalıbı İndir</a>}

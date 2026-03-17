@@ -416,14 +416,14 @@ export default function AjanlarMainContainer() {
                         <Bot size={26} className="text-white" />
                     </div>
                     <div>
-                        <h1 className="text-2xl font-black text-slate-900 m-0">AI Ajan Komuta Merkezi</h1>
-                        <p className="text-xs text-slate-500 mt-1 font-semibold">
+                        <h1 className="text-2xl font-black text-white m-0">AI Ajan Komuta Merkezi</h1>
+                        <p className="text-xs text-emerald-200 mt-1 font-semibold">
                             Görev Tahtası — Ajanlar okur, sonuçları kendi tablolarına yazar
                         </p>
                     </div>
                 </div>
                 <div className="flex gap-2 flex-wrap">
-                    <button onClick={yukle} className="flex items-center gap-1.5 px-4 py-2.5 bg-white border-2 border-slate-200 rounded-xl font-bold cursor-pointer text-slate-700 text-sm hover:bg-slate-50 transition-colors">
+                    <button onClick={yukle} className="flex items-center gap-1.5 px-4 py-2.5 bg-[#122b27] border-2 border-[#1e4a43] rounded-xl font-bold cursor-pointer text-slate-700 text-sm hover:bg-[#0d1117] text-white transition-colors">
                         <RefreshCw size={14} /> Yenile
                     </button>
                     <button onClick={() => setFormAcik(!formAcik)} className="flex items-center gap-2 bg-gradient-to-br from-indigo-500 to-purple-500 text-white border-none px-5 py-2.5 rounded-xl font-black cursor-pointer text-sm shadow-[0_4px_14px_rgba(99,102,241,0.4)] hover:shadow-[0_6px_20px_rgba(99,102,241,0.6)] transition-all transform hover:-translate-y-0.5">
@@ -450,13 +450,13 @@ export default function AjanlarMainContainer() {
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 mb-5">
                 {[
                     { label: 'Toplam Görev', val: istatistik.toplam, renk: 'text-indigo-600', bg: 'bg-indigo-50', border: 'border-indigo-100' },
-                    { label: 'Bekliyor', val: istatistik.bekliyor, renk: 'text-slate-500', bg: 'bg-slate-50', border: 'border-slate-100' },
+                    { label: 'Bekliyor', val: istatistik.bekliyor, renk: 'text-emerald-200', bg: 'bg-[#0d1117] text-white', border: 'border-slate-100' },
                     { label: 'Çalışıyor', val: istatistik.calisıyor, renk: 'text-amber-500', bg: 'bg-amber-50', border: 'border-amber-100' },
                     { label: 'Tamamlandı', val: istatistik.tamamlandi, renk: 'text-emerald-500', bg: 'bg-emerald-50', border: 'border-emerald-100' },
                     { label: 'Hata', val: istatistik.hata, renk: 'text-red-500', bg: 'bg-red-50', border: 'border-red-100' },
                 ].map((k, i) => (
                     <div key={i} className={`${k.bg} border-2 ${k.border} rounded-xl p-3.5 text-center`}>
-                        <div className="text-[10px] text-slate-500 font-extrabold uppercase mb-1 tracking-wider">{k.label}</div>
+                        <div className="text-[10px] text-emerald-200 font-extrabold uppercase mb-1 tracking-wider">{k.label}</div>
                         <div className={`font-black text-2xl md:text-3xl leading-none ${k.renk}`}>{k.val}</div>
                     </div>
                 ))}
@@ -470,7 +470,7 @@ export default function AjanlarMainContainer() {
                 ].map(s => (
                     <button key={s.key} onClick={() => setSekme(s.key)} className={`
                         flex-1 px-4 py-2.5 rounded-lg border-none cursor-pointer font-bold text-sm transition-all text-center
-                        ${sekme === s.key ? 'bg-white text-indigo-600 shadow-sm' : 'bg-transparent text-slate-500 hover:text-slate-700 hover:bg-slate-200/50'}
+                        ${sekme === s.key ? 'bg-[#122b27] text-indigo-600 shadow-sm' : 'bg-transparent text-emerald-200 hover:text-slate-700 hover:bg-slate-200/50'}
                     `}>
                         {s.label}
                         <span className="block text-[10px] font-semibold text-slate-400 mt-0.5">{s.desc}</span>
@@ -494,7 +494,7 @@ export default function AjanlarMainContainer() {
                                     <div style={{ fontSize: '1rem', fontWeight: 900, color: 'white' }}>🎖️ Yeni Görev Emri</div>
                                     <div style={{ fontSize: '0.7rem', color: '#94a3b8' }}>Tüm ajanlar bu görev tahtasını okur</div>
                                 </div>
-                                <button onClick={() => setFormAcik(false)} style={{ marginLeft: 'auto', background: 'none', border: 'none', color: '#64748b', cursor: 'pointer', fontSize: '1.2rem' }}>✕</button>
+                                <button onClick={() => setFormAcik(false)} style={{ marginLeft: 'auto', background: 'none', border: 'none', color: '#a7f3d0', cursor: 'pointer', fontSize: '1.2rem' }}>✕</button>
                             </div>
 
                             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
@@ -563,7 +563,7 @@ export default function AjanlarMainContainer() {
                             </div>
 
                             <div style={{ display: 'flex', gap: 10, marginTop: '1.5rem', justifyContent: 'flex-end' }}>
-                                <button onClick={() => setFormAcik(false)} style={{ padding: '11px 22px', background: 'transparent', border: '2px solid #334155', borderRadius: 10, color: '#64748b', cursor: 'pointer', fontWeight: 700 }}>İptal</button>
+                                <button onClick={() => setFormAcik(false)} style={{ padding: '11px 22px', background: 'transparent', border: '2px solid #334155', borderRadius: 10, color: '#a7f3d0', cursor: 'pointer', fontWeight: 700 }}>İptal</button>
                                 <button disabled={islemdeId === 'yeniGorev'} onClick={gorevGonder} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '11px 28px', background: 'linear-gradient(135deg,#6366f1,#8b5cf6)', color: 'white', border: 'none', borderRadius: 10, fontWeight: 900, cursor: islemdeId === 'yeniGorev' ? 'wait' : 'pointer', fontSize: '0.95rem', opacity: islemdeId === 'yeniGorev' ? 0.5 : 1 }}>
                                     <Send size={16} /> {islemdeId === 'yeniGorev' ? 'Gönderiliyor...' : 'Görevi Gönder'}
                                 </button>
@@ -590,10 +590,10 @@ export default function AjanlarMainContainer() {
                     </div>
 
                     {/* Görev Tablosu */}
-                    <div style={{ background: 'white', borderRadius: 16, border: '1px solid #f1f5f9', overflow: 'hidden', boxShadow: '0 4px 16px rgba(0,0,0,0.04)' }}>
+                    <div style={{ background: '#122b27', borderRadius: 16, border: '1px solid #1e4a43', overflow: 'hidden', boxShadow: '0 4px 16px rgba(0,0,0,0.04)' }}>
                         <div style={{ overflowX: 'auto' }}>
                             <div style={{ minWidth: 680 }}>
-                                <div style={{ display: 'grid', gridTemplateColumns: '2fr 100px 80px 100px 120px 80px 100px', gap: '0.5rem', padding: '10px 16px', background: '#f8fafc', borderBottom: '2px solid #f1f5f9', fontSize: '0.65rem', fontWeight: 800, color: '#94a3b8', textTransform: 'uppercase' }}>
+                                <div style={{ display: 'grid', gridTemplateColumns: '2fr 100px 80px 100px 120px 80px 100px', gap: '0.5rem', padding: '10px 16px', background: '#0b1d1a', borderBottom: '2px solid #f1f5f9', fontSize: '0.65rem', fontWeight: 800, color: '#94a3b8', textTransform: 'uppercase' }}>
                                     <span>GÖREV</span><span>AJAN</span><span>TİP</span><span>ÖNCELİK</span><span>DURUM</span><span>SÜRE</span><span>İŞLEM</span>
                                 </div>
 
@@ -617,14 +617,14 @@ export default function AjanlarMainContainer() {
                                             <div style={{ display: 'grid', gridTemplateColumns: '2fr 100px 80px 100px 120px 80px 100px', gap: '0.5rem', padding: '12px 16px', alignItems: 'center', background: secili ? '#f5f3ff' : 'white', cursor: 'pointer' }}
                                                 onClick={() => setSecilenGorev(secili ? null : gorev)}>
                                                 <div>
-                                                    <div style={{ fontWeight: 800, fontSize: '0.9rem', color: '#0f172a', marginBottom: 2 }}>{gorev.gorev_adi}</div>
+                                                    <div style={{ fontWeight: 800, fontSize: '0.9rem', color: 'white', marginBottom: 2 }}>{gorev.gorev_adi}</div>
                                                     <div style={{ fontSize: '0.7rem', color: '#94a3b8', fontWeight: 600 }}>{formatTarih(gorev.created_at)} — {gorev.hedef_modul?.toUpperCase() || 'GENEL'}</div>
                                                 </div>
                                                 <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
                                                     <span style={{ fontSize: '1rem' }}>{ajan.ikon}</span>
                                                     <span style={{ fontSize: '0.7rem', fontWeight: 700, color: ajan.renk }}>{gorev.ajan_adi}</span>
                                                 </div>
-                                                <span style={{ fontSize: '0.68rem', fontWeight: 700, background: '#f1f5f9', color: '#64748b', padding: '3px 8px', borderRadius: 6 }}>
+                                                <span style={{ fontSize: '0.68rem', fontWeight: 700, background: '#173a34', color: '#a7f3d0', padding: '3px 8px', borderRadius: 6 }}>
                                                     {GOREV_TIPLERI.find(t => t.deger === gorev.gorev_tipi)?.ikon} {gorev.gorev_tipi}
                                                 </span>
                                                 <span style={{ fontSize: '0.68rem', fontWeight: 800, background: onc.bg, color: onc.renk, padding: '3px 10px', borderRadius: 10, border: `1px solid ${onc.renk}` }}>{onc.etiket}</span>
@@ -632,7 +632,7 @@ export default function AjanlarMainContainer() {
                                                     <DurumIcon size={12} style={{ animation: gorev.durum === 'calisıyor' ? 'spin 1s linear infinite' : 'none' }} />
                                                     {dur.etiket}
                                                 </span>
-                                                <div style={{ fontSize: '0.72rem', color: '#64748b' }}>{sure(gorev.baslangic_tarihi, gorev.bitis_tarihi) || '—'}</div>
+                                                <div style={{ fontSize: '0.72rem', color: '#a7f3d0' }}>{sure(gorev.baslangic_tarihi, gorev.bitis_tarihi) || '—'}</div>
                                                 <div style={{ display: 'flex', gap: 4 }} onClick={e => e.stopPropagation()}>
                                                     {gorev.durum === 'bekliyor' && (
                                                         <button onClick={() => gorevCalistir(gorev.id)} disabled={calisiyor}
@@ -642,12 +642,12 @@ export default function AjanlarMainContainer() {
                                                     )}
                                                     {gorev.durum === 'tamamlandi' && (
                                                         <button onClick={() => gorevCalistir(gorev.id)}
-                                                            style={{ display: 'flex', alignItems: 'center', gap: 4, padding: '5px 10px', background: '#f1f5f9', color: '#6366f1', border: '1px solid #6366f1', borderRadius: 7, fontWeight: 700, cursor: 'pointer', fontSize: '0.68rem' }}>
+                                                            style={{ display: 'flex', alignItems: 'center', gap: 4, padding: '5px 10px', background: '#173a34', color: '#6366f1', border: '1px solid #6366f1', borderRadius: 7, fontWeight: 700, cursor: 'pointer', fontSize: '0.68rem' }}>
                                                             <RefreshCw size={11} /> Tekrar
                                                         </button>
                                                     )}
                                                     <button disabled={islemdeId === 'sil_' + gorev.id} onClick={() => gorevSil(gorev.id)}
-                                                        style={{ padding: '5px 8px', background: '#f8fafc', color: '#94a3b8', border: '1px solid #e5e7eb', borderRadius: 7, cursor: islemdeId === 'sil_' + gorev.id ? 'wait' : 'pointer', opacity: islemdeId === 'sil_' + gorev.id ? 0.3 : 1 }}>
+                                                        style={{ padding: '5px 8px', background: '#0b1d1a', color: '#94a3b8', border: '1px solid #1e4a43', borderRadius: 7, cursor: islemdeId === 'sil_' + gorev.id ? 'wait' : 'pointer', opacity: islemdeId === 'sil_' + gorev.id ? 0.3 : 1 }}>
                                                         <Trash2 size={11} />
                                                     </button>
                                                 </div>
@@ -656,14 +656,14 @@ export default function AjanlarMainContainer() {
                                                 <div style={{ background: '#fafafa', borderTop: '1px solid #f1f5f9', padding: '1rem 1.25rem', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1rem' }}>
                                                     <div>
                                                         <div style={{ fontSize: '0.65rem', fontWeight: 800, color: '#94a3b8', textTransform: 'uppercase', marginBottom: 6 }}>📋 Görev Emri</div>
-                                                        <div style={{ fontSize: '0.82rem', color: '#374151', lineHeight: 1.6, background: 'white', border: '1px solid #f1f5f9', borderRadius: 8, padding: '10px 12px' }}>{gorev.gorev_emri}</div>
+                                                        <div style={{ fontSize: '0.82rem', color: '#e2e8f0', lineHeight: 1.6, background: '#122b27', border: '1px solid #1e4a43', borderRadius: 8, padding: '10px 12px' }}>{gorev.gorev_emri}</div>
                                                     </div>
                                                     <div>
                                                         <div style={{ fontSize: '0.65rem', fontWeight: 800, color: '#94a3b8', textTransform: 'uppercase', marginBottom: 6 }}>✅ Görev Sonucu</div>
                                                         {gorev.sonuc_ozeti ? (
                                                             <div style={{ fontSize: '0.82rem', color: '#065f46', lineHeight: 1.6, background: '#ecfdf5', border: '1px solid #bbf7d0', borderRadius: 8, padding: '10px 12px', maxHeight: 150, overflowY: 'auto' }}>{gorev.sonuc_ozeti}</div>
                                                         ) : (
-                                                            <div style={{ fontSize: '0.78rem', color: '#94a3b8', background: 'white', border: '1px dashed #e5e7eb', borderRadius: 8, padding: '16px 12px', textAlign: 'center' }}>
+                                                            <div style={{ fontSize: '0.78rem', color: '#94a3b8', background: '#122b27', border: '1px dashed #e5e7eb', borderRadius: 8, padding: '16px 12px', textAlign: 'center' }}>
                                                                 {gorev.durum === 'bekliyor' ? '▶ Başlat butonuna bas' : '⏳ Bekleniyor...'}
                                                             </div>
                                                         )}
@@ -697,14 +697,14 @@ export default function AjanlarMainContainer() {
                         {Object.entries(konfig).map(([ajanKey, ajan]) => {
                             const aktifSayisi = ajan.gorevler.filter(g => g.aktif).length;
                             return (
-                                <div key={ajanKey} style={{ background: 'white', borderRadius: 16, border: '2px solid #f1f5f9', overflow: 'hidden', boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
+                                <div key={ajanKey} style={{ background: '#122b27', borderRadius: 16, border: '2px solid #1e4a43', overflow: 'hidden', boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
                                     {/* Ajan başlık */}
                                     <div style={{ padding: '14px 18px', borderBottom: '2px solid #f8fafc', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: `${ajan.renk}08` }}>
                                         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                                             <span style={{ fontSize: '1.4rem' }}>{ajan.ikon}</span>
                                             <div>
-                                                <div style={{ fontWeight: 900, color: '#0f172a', fontSize: '0.92rem' }}>{ajan.isim}</div>
-                                                <div style={{ fontSize: '0.66rem', color: '#64748b' }}>{aktifSayisi}/{ajan.gorevler.length} görev aktif</div>
+                                                <div style={{ fontWeight: 900, color: 'white', fontSize: '0.92rem' }}>{ajan.isim}</div>
+                                                <div style={{ fontSize: '0.66rem', color: '#a7f3d0' }}>{aktifSayisi}/{ajan.gorevler.length} görev aktif</div>
                                             </div>
                                         </div>
                                         <div style={{ display: 'flex', gap: 4 }}>
@@ -737,7 +737,7 @@ export default function AjanlarMainContainer() {
                                                         {gorev.ad}
                                                     </div>
                                                     <div style={{ fontSize: '0.62rem', color: '#94a3b8', marginTop: 2, display: 'flex', alignItems: 'center', gap: 6 }}>
-                                                        <span style={{ background: '#f1f5f9', padding: '1px 6px', borderRadius: 4, fontFamily: 'monospace' }}>{gorev.tablo}</span>
+                                                        <span style={{ background: '#173a34', padding: '1px 6px', borderRadius: 4, fontFamily: 'monospace' }}>{gorev.tablo}</span>
                                                         {!gorev.aktif && gorev.neden_pasif && (
                                                             <span style={{ color: '#f59e0b', fontSize: '0.6rem' }}>⚠️ {gorev.neden_pasif}</span>
                                                         )}
@@ -762,39 +762,39 @@ export default function AjanlarMainContainer() {
                     </div>
 
                     {/* Vercel Cron API Arayüzü */}
-                    <div style={{ marginTop: '1.25rem', background: '#f8fafc', borderRadius: 16, padding: '1.25rem', border: '2px solid #e2e8f0' }}>
+                    <div style={{ marginTop: '1.25rem', background: '#0b1d1a', borderRadius: 16, padding: '1.25rem', border: '2px solid #e2e8f0' }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: '1rem' }}>
                             <Clock size={20} color="#3b82f6" />
                             <div>
-                                <div style={{ fontSize: '0.9rem', fontWeight: 800, color: '#0f172a' }}>Zamanlanmış Ajan Görevleri (Cron Jobs)</div>
-                                <div style={{ fontSize: '0.72rem', color: '#64748b' }}>Ajanların belirli saatlerde otomatik uyanıp görev almasını sağlayan sistem uç noktaları (Vercel Cron uyumlu).</div>
+                                <div style={{ fontSize: '0.9rem', fontWeight: 800, color: 'white' }}>Zamanlanmış Ajan Görevleri (Cron Jobs)</div>
+                                <div style={{ fontSize: '0.72rem', color: '#a7f3d0' }}>Ajanların belirli saatlerde otomatik uyanıp görev almasını sağlayan sistem uç noktaları (Vercel Cron uyumlu).</div>
                             </div>
                         </div>
                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1rem' }}>
                             {/* Sabah Cron */}
-                            <div style={{ background: 'white', border: '1px solid #cbd5e1', borderRadius: 10, padding: '12px' }}>
+                            <div style={{ background: '#122b27', border: '1px solid #cbd5e1', borderRadius: 10, padding: '12px' }}>
                                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
                                     <div style={{ fontWeight: 800, color: '#f59e0b', fontSize: '0.8rem' }}>🌅 Sabah Operasyonu (08:00)</div>
-                                    <span style={{ fontSize: '0.65rem', background: '#f1f5f9', color: '#475569', padding: '2px 6px', borderRadius: 4, fontFamily: 'monospace' }}>0 8 * * *</span>
+                                    <span style={{ fontSize: '0.65rem', background: '#173a34', color: '#a7f3d0', padding: '2px 6px', borderRadius: 4, fontFamily: 'monospace' }}>0 8 * * *</span>
                                 </div>
-                                <div style={{ fontSize: '0.7rem', color: '#64748b', marginBottom: 12 }}>Tüm gece üretimini toparlar, dünkü verilerle güne başlama özeti oluşturur. (Endpoint: <code style={{ color: '#3b82f6' }}>/api/cron-ajanlar?gorev=sabah_ozeti</code>)</div>
+                                <div style={{ fontSize: '0.7rem', color: '#a7f3d0', marginBottom: 12 }}>Tüm gece üretimini toparlar, dünkü verilerle güne başlama özeti oluşturur. (Endpoint: <code style={{ color: '#3b82f6' }}>/api/cron-ajanlar?gorev=sabah_ozeti</code>)</div>
                                 <button onClick={() => { telegramBildirim('⏰ Manuel tetikleme: Sabah Cron Job çalıştırıldı.'); goster('Sabah cronu manuel tetiklendi.', 'success'); fetch('/api/cron-ajanlar?gorev=sabah_ozeti', { credentials: 'include' }).then(() => yukle()); }} style={{ width: '100%', padding: '6px', background: '#fffbeb', border: '1px solid #fcd34d', color: '#d97706', borderRadius: 6, fontWeight: 700, cursor: 'pointer', fontSize: '0.75rem' }}>Dürt & Manuel Tetikle</button>
                             </div>
                             {/* Gece Cron */}
-                            <div style={{ background: 'white', border: '1px solid #cbd5e1', borderRadius: 10, padding: '12px' }}>
+                            <div style={{ background: '#122b27', border: '1px solid #cbd5e1', borderRadius: 10, padding: '12px' }}>
                                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
                                     <div style={{ fontWeight: 800, color: '#6366f1', fontSize: '0.8rem' }}>🌌 Gece Yedekleme (03:00)</div>
-                                    <span style={{ fontSize: '0.65rem', background: '#f1f5f9', color: '#475569', padding: '2px 6px', borderRadius: 4, fontFamily: 'monospace' }}>0 3 * * *</span>
+                                    <span style={{ fontSize: '0.65rem', background: '#173a34', color: '#a7f3d0', padding: '2px 6px', borderRadius: 4, fontFamily: 'monospace' }}>0 3 * * *</span>
                                 </div>
-                                <div style={{ fontSize: '0.7rem', color: '#64748b', marginBottom: 12 }}>Günlük tabloları sıkıştırır, eski logları (7+ gün) arşive kaldırır ve bakım yapar. (Endpoint: <code style={{ color: '#3b82f6' }}>/api/cron-ajanlar?gorev=gece_yedekleme_ve_temizlik</code>)</div>
+                                <div style={{ fontSize: '0.7rem', color: '#a7f3d0', marginBottom: 12 }}>Günlük tabloları sıkıştırır, eski logları (7+ gün) arşive kaldırır ve bakım yapar. (Endpoint: <code style={{ color: '#3b82f6' }}>/api/cron-ajanlar?gorev=gece_yedekleme_ve_temizlik</code>)</div>
                                 <button onClick={() => { telegramBildirim('⏰ Manuel tetikleme: Gece Cron Job çalıştırıldı.'); goster('Gece cronu manuel tetiklendi.', 'success'); fetch('/api/cron-ajanlar?gorev=gece_yedekleme_ve_temizlik', { credentials: 'include' }).then(() => yukle()); }} style={{ width: '100%', padding: '6px', background: '#e0e7ff', border: '1px solid #a5b4fc', color: '#4f46e5', borderRadius: 6, fontWeight: 700, cursor: 'pointer', fontSize: '0.75rem' }}>Dürt & Manuel Tetikle</button>
                             </div>
                         </div>
                     </div>
 
                     {/* Özet */}
-                    <div style={{ marginTop: '1.25rem', background: 'white', borderRadius: 16, padding: '1.25rem', border: '2px solid #f1f5f9' }}>
-                        <div style={{ fontSize: '0.75rem', fontWeight: 800, color: '#64748b', textTransform: 'uppercase', marginBottom: '0.75rem' }}>📊 Toplam Görev Özeti</div>
+                    <div style={{ marginTop: '1.25rem', background: '#122b27', borderRadius: 16, padding: '1.25rem', border: '2px solid #1e4a43' }}>
+                        <div style={{ fontSize: '0.75rem', fontWeight: 800, color: '#a7f3d0', textTransform: 'uppercase', marginBottom: '0.75rem' }}>📊 Toplam Görev Özeti</div>
                         <div style={{ display: 'flex', gap: '2rem', flexWrap: 'wrap' }}>
                             {Object.values(konfig).map(ajan => {
                                 const aktif = ajan.gorevler.filter(g => g.aktif).length;
@@ -802,14 +802,14 @@ export default function AjanlarMainContainer() {
                                 return (
                                     <div key={ajan.isim} style={{ textAlign: 'center' }}>
                                         <div style={{ fontSize: '1.2rem' }}>{ajan.ikon}</div>
-                                        <div style={{ fontSize: '0.65rem', fontWeight: 700, color: '#64748b' }}>{ajan.isim}</div>
+                                        <div style={{ fontSize: '0.65rem', fontWeight: 700, color: '#a7f3d0' }}>{ajan.isim}</div>
                                         <div style={{ fontSize: '0.85rem', fontWeight: 900, color: aktif > 0 ? '#10b981' : '#94a3b8' }}>{aktif}/{toplam}</div>
                                     </div>
                                 );
                             })}
                             <div style={{ textAlign: 'center', marginLeft: 'auto' }}>
                                 <div style={{ fontSize: '1.2rem' }}>🎯</div>
-                                <div style={{ fontSize: '0.65rem', fontWeight: 700, color: '#64748b' }}>TOPLAM AKTİF</div>
+                                <div style={{ fontSize: '0.65rem', fontWeight: 700, color: '#a7f3d0' }}>TOPLAM AKTİF</div>
                                 <div style={{ fontSize: '0.85rem', fontWeight: 900, color: '#6366f1' }}>
                                     {Object.values(konfig).reduce((s, a) => s + a.gorevler.filter(g => g.aktif).length, 0)}/
                                     {Object.values(konfig).reduce((s, a) => s + a.gorevler.length, 0)}

@@ -13,17 +13,17 @@
   --danger: #ef4444;
   --warning: #f59e0b;
 
-  /* ─░SKAND─░NAV (A├çIK/FERAH) TEMA SER─░S─░ */
-  --bg-color: #FAFAFA;
-  /* ├çok a├ğ─▒k k─▒r─▒k beyaz / Kar beyaz─▒ */
-  --card-bg: #FFFFFF;
-  /* Tam beyaz kartlar (Derinlik sa─şlamak i├ğin) */
-  --text-main: #1E293B;
-  /* K├Âm├╝r Grisi (Siyaha yak─▒n, g├Âz yormaz) */
-  --text-muted: #64748B;
-  /* Yumu┼şak G├╝m├╝┼ş (Alt metinler) */
-  --border: #E2E8F0;
-  /* ├çok hafif, zarif kenarl─▒k */
+  /* LÜKS KARARGAH (DARK / EMERALD) TEMA SERİSİ */
+  --bg-color: #0d1117;
+  /* GitHub Dark zemin */
+  --card-bg: #122b27;
+  /* Emerald Dark kartlar */
+  --text-main: #ffffff;
+  /* Beyaz Ana Metin */
+  --text-muted: #a7f3d0;
+  /* Soft Emerald Alt Metin */
+  --border: #1e4a43;
+  /* Koyu Emerald Kenarlık */
 }
 
 * {
@@ -49,7 +49,7 @@ body {
   width: 260px;
   /* Modern uygulamalarda biraz daha geniş */
   flex-shrink: 0;
-  background: #0A2A22;
+  background: #0b1d1a;
   /* Orijinal koyu ama siyah olmayan Karargah Yeşili */
   /* Saf siyah yerine okunabilir, derin bir yeşil siyahı */
   border-right: 1px solid rgba(255, 255, 255, 0.05);
@@ -110,13 +110,13 @@ body {
 }
 
 .topbar {
-  background: rgba(255, 255, 255, 0.85);
-  /* Beyaz buzlu cam */
+  background: rgba(13, 17, 23, 0.85);
+  /* Siyah buzlu cam */
   backdrop-filter: blur(16px) saturate(1.2);
   -webkit-backdrop-filter: blur(16px) saturate(1.2);
   padding: 1rem 2rem;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.04);
-  /* ├çok hafif siyah ├ğizgi (s─▒n─▒r) */
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  /* Çok hafif beyaz çizgi */
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -138,8 +138,8 @@ body {
   border: 1px solid var(--border);
   padding: 1.5rem;
   margin-bottom: 1.25rem;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
-  /* A├ğ─▒k zeminde ├ğok b├╝y├╝k yumu┼şak sil├╝et g├Âlge */
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  /* Koyu zeminde biraz daha koyu gölge */
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -246,8 +246,8 @@ body {
   border: 1px solid var(--border);
   border-radius: 6px;
   font-size: 0.875rem;
-  background-color: #1A202C;
-  /* Siyah olmayan, koyu lacivert/gri okunabilir zemin */
+  background-color: #0b1d1a;
+  /* Derin siyah/yeşil okunabilir zemin */
   /* Arka planda okunabilir koyuluk */
   color: #FFFFFF;
   /* Giren metin bembeyaz ve net */
@@ -273,16 +273,16 @@ body {
    ­şÆÄ PREMIUM DESIGN LANGUAGE (UX/UI 2026 TRENDS)
 ÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉ */
 
-/* 1. G├Âlgeler (Soft Shadows) & Cam Efekti (Glassmorphism) */
+/* 1. Gölgeler (Soft Shadows) & Cam Efekti (Glassmorphism) */
 .glass-panel {
-  background: rgba(255, 255, 255, 0.85);
-  /* Beyaz, ayd─▒nl─▒k blur */
+  background: rgba(18, 43, 39, 0.85);
+  /* Emerald Dark, aydınlık blur */
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(0, 0, 0, 0.04);
-  /* Yok denecek kadar az gri ├ğer├ğeve */
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.04);
-  /* ├çok hafif derinlik */
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  /* Yok denecek kadar az gri çerçeve */
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  /* Hafif derinlik */
 }
 
 .premium-card {
@@ -339,12 +339,12 @@ body {
   width: 100%;
   max-width: 450px;
   height: 100vh;
-  background: #0D2825;
+  background: #0b1d1a;
   /* Çok hafif açılmış, siyah olmayan, orijinal Karargah tonu */
   /* Obsidyen siyah iptal edildi */
   border-left: 1px solid rgba(255, 255, 255, 0.05);
   /* Yumuşak bir çerçeve çizgisi */
-  box-shadow: -10px 0 40px rgba(0, 0, 0, 0.3);
+  box-shadow: -10px 0 40px rgba(0, 0, 0, 0.5);
   /* Gölge yumuşatıldı */
   /* Siyah üzerine keskin gölge */
   z-index: 101;
