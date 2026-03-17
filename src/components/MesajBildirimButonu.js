@@ -37,7 +37,7 @@ export default function MesajBildirimButonu() {
                 .select('id', { count: 'exact', head: true })
                 .or(`alici_grup.eq.${kGrup},alici_grup.eq.hepsi`)
                 .is('okundu_at', null)
-                .is('copte', false); // Çöpteki mesajları sayma
+                .eq('copte', false); // ✅ Boolean için .eq() kullanılmalı, .is() null içindir
             setOkunmamis(count || 0);
         } catch { /* sessiz */ }
     }, [kullanici, kGrup]);
@@ -51,7 +51,7 @@ export default function MesajBildirimButonu() {
                 .select('id, konu, oncelik, tip, created_at, gonderen_adi')
                 .or(`alici_grup.eq.${kGrup},alici_grup.eq.hepsi`)
                 .is('okundu_at', null)
-                .is('copte', false) // Çöpteki mesajların detaylarını gösterme
+                .eq('copte', false) // ✅ Boolean için .eq()
                 .order('created_at', { ascending: false })
                 .limit(10);
             const mesajlar = data || [];
@@ -179,7 +179,8 @@ export default function MesajBildirimButonu() {
                     color: 'white', cursor: 'pointer',
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
                     boxShadow: okunmamis > 0 ? '0 4px 18px rgba(239,68,68,.65)' : '0 4px 14px rgba(59,130,246,.4)',
-                    animation: okunmamis > 0 ? 'brzTitres 1.4s ease-in-out infinite' : 'none',
+                    animation: okunmamis > 0 ? 'brzTitres 2s ease-in-out infinite' : 'none',
+                    willChange: 'transform',
                     transition: 'background .3s, box-shadow .3s',
                 }}>
                 <MessageSquare size={20} />
@@ -199,7 +200,7 @@ export default function MesajBildirimButonu() {
             <style>{`
                 @keyframes brzTitres {
                     0%,100% { transform:scale(1); }
-                    50%      { transform:scale(1.1); }
+                    50%      { transform:scale(1.06); }
                 }
                 @keyframes brzSlideUp {
                     from { transform:translateY(8px); opacity:0; }
