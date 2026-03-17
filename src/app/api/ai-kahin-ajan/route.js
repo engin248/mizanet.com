@@ -15,7 +15,7 @@ export async function POST(req) {
             return NextResponse.json({ error: 'GEMINI_API_KEY tanımlı değil.' }, { status: 500 });
         }
 
-        const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
+        const GEMINI_URL = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
 
         // 1. Personel verisi çek
         const { data: pData, error: pError } = await supabaseAdmin
