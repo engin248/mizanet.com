@@ -243,14 +243,25 @@ export default function SiparislerSayfasi() {
             } else if (durum === 'teslim') {
                 // ✅ [KRİTİK DÜZELTME #2] Kasa Entegrasyonu: Teslim edilen siparişin tahsilatını Kasa'ya devret
                 try {
-                    await supabase.from('b2_kasa_hareketleri').insert([{
+                    const kasaPayload = {
                         hareket_tipi: 'tahsilat',
                         odeme_yontemi: mevcutSiparis?.odeme_yontemi || 'nakit',
                         tutar_tl: mevcutSiparis?.toplam_tutar_tl || 0,
                         aciklama: `Otonom Sipariş Tahsilatı (Sipariş No: ${mevcutSiparis?.siparis_no || id})`,
                         musteri_id: mevcutSiparis?.musteri_id || null,
                         onay_durumu: 'onaylandi' // Sistem aktardığı için direkt onaylı
-                    }]);
+                    };
+
+                    if (!navigator.onLine) {
+                        await cevrimeKuyrugaAl('b2_kasa_hareketleri', 'INSERT', kasaPayload);
+                    } else {
+                        await supabase.from('b2_kasa_hareketleri').insert([kasaPayload]);
+                        await supabase.from('b0_sistem_loglari').insert([{
+                            tablo_adi: 'b2_kasa_hareketleri', islem_tipi: 'OTOMATIK_KASA_GIRIS',
+                            kullanici_adi: 'SİSTEM (GAMMA AJAN)',
+                            eski_veri: { siparis_no: mevcutSiparis?.siparis_no || id, tutar_tl: mevcutSiparis?.toplam_tutar_tl || 0 }
+                        }]);
+                    }
                 } catch (e) {
                     console.error('Kasa yazma hatası:', e);
                 }

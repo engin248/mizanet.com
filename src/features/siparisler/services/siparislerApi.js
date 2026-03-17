@@ -6,6 +6,7 @@
  */
 import { supabase } from '@/lib/supabase';
 import { telegramBildirim } from '@/lib/utils';
+import { cevrimeKuyrugaAl } from '@/lib/offlineKuyruk';
 
 // ── Veri Çekme ───────────────────────────────────────────────────────────────
 export async function fetchSiparisler() {
@@ -85,19 +86,28 @@ export async function durumGuncelle(id, durum, ekstraBilgi = {}) {
         // 🚨 EKİP GAMMA: Sipariş ve Kasa Modülü Otomasyonu (Satış Tahsilatı)
         try {
             if (mevcut && mevcut.toplam_tutar_tl > 0) {
-                await supabase.from('b2_kasa_hareketleri').insert([{
-                    islem_tar: new Date().toISOString(),
-                    islem_tipi: 'gelir',
-                    tutar: mevcut.toplam_tutar_tl,
-                    para_birimi: 'TL',
-                    kategori: 'Satış Geliri',
-                    aciklama: `[OTONOM] Satış Tahsilatı - Sipariş No: ${mevcut.siparis_no}`,
-                    onay_durumu: 'taslak', // Finans yöneticisinin onayına düşmesi için taslak
-                    referans_tipi: 'siparis',
-                    referans_id: id
-                }]);
+                const kasaPayload = {
+                    hareket_tipi: 'tahsilat',
+                    odeme_yontemi: 'nakit',
+                    tutar_tl: mevcut.toplam_tutar_tl,
+                    vade_tarihi: null,
+                    aciklama: `[OTONOM] Sipariş Tahsilatı (Kanal: Sipariş API) - Sipariş No: ${mevcut.siparis_no || id}`,
+                    musteri_id: null,
+                    onay_durumu: 'onaylandi' // Otonom olduğu için direkt onaylanabilir
+                };
+
+                if (!navigator.onLine) {
+                    await cevrimeKuyrugaAl('b2_kasa_hareketleri', 'INSERT', kasaPayload);
+                } else {
+                    await supabase.from('b2_kasa_hareketleri').insert([kasaPayload]);
+                }
+
                 // Otonom Sistem Logu
-                await supabase.from('b0_sistem_loglari').insert([{ tablo_adi: 'b2_kasa_hareketleri', islem_tipi: 'OTOMATIK_KASA_GIRIS', kullanici_adi: 'SİSTEM (GAMMA AJAN)', eski_veri: { siparis_no: mevcut.siparis_no, tutar: mevcut.toplam_tutar_tl } }]);
+                await supabase.from('b0_sistem_loglari').insert([{
+                    tablo_adi: 'b2_kasa_hareketleri', islem_tipi: 'OTOMATIK_KASA_GIRIS',
+                    kullanici_adi: 'SİSTEM (GAMMA AJAN)',
+                    eski_veri: { siparis_no: mevcut.siparis_no, tutar_tl: mevcut.toplam_tutar_tl }
+                }]);
             }
         } catch (kasaErr) {
             console.error("Otomatik kasa kaydı atılırken hata oluştu (Sessiz Fallback):", kasaErr);
