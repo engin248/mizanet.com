@@ -26,7 +26,7 @@ async function rakipVerisiKazi(hedefUrl, markaAdi) {
 
     // IP ban yememek için donanım gizleme (Stealth) modunda Headless tarayıcı açılışı
     const browser = await puppeteer.launch({
-        headless: 'new',
+        headless: false,
         args: ['--no-sandbox', '--disable-setuid-sandbox', '--start-maximized']
     });
 

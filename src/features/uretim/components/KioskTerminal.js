@@ -37,10 +37,14 @@ export default function KioskTerminal() {
     };
 
     const handleKesintiHesapla = (fAdet, islemAdet) => {
-        if (!islemAdet || islemAdet <= 0) return 100;
-        const oran = (fAdet / islemAdet) * 100;
-        const kalite = 100 - (oran * 2); // 1 fire %2 ceza gibi (Örnek formül)
-        return kalite < 0 ? 0 : kalite;
+        if (!islemAdet || islemAdet <= 0) return 10;
+        const oran = fAdet / islemAdet;
+        let kalite = 10;
+        if (oran > 0.05) kalite = 8;
+        if (oran > 0.10) kalite = 5;
+        if (oran > 0.20) kalite = 2;
+        if (oran > 0.50) kalite = 1;
+        return kalite;
     };
 
     const barkodOkundu = async (e) => {
@@ -56,7 +60,7 @@ export default function KioskTerminal() {
                 const { data: pData, error: pErr } = await supabase
                     .from('b1_personel')
                     .select('*')
-                    .or(`barkod_no.eq.${kod},id.eq.${kod}`)
+                    .or(`barkod_no.eq.${kod},personel_kodu.eq.${kod}`)
                     .single();
 
                 if (pErr || !pData) {
@@ -96,54 +100,54 @@ export default function KioskTerminal() {
             }
 
             // Yeni İş Başlatma Olayı (Barkod yeni bir operasyona/siparişe ait)
-            // Sistemde Operasyon/Order Barkodu eşleşmesi
             let { data: opData } = await supabase
                 .from('b1_uretim_operasyonlari')
                 .select('id, operasyon_adi, zorluk_derecesi, parca_basi_deger_tl')
                 .eq('id', kod)
                 .single();
 
-            // Eğer sipariş bazlıysa (order_id)
             let { data: ordData } = kod ? await supabase.from('production_orders').select('id, quantity').eq('id', kod).single() : { data: null };
 
-            // OP ve ORDER eşleşemezse fallback Test Datası eklenecek
             if (!opData && !ordData) {
-                goster('Geçersiz iş/sepet barkodu. Test için "TEST-OP" kullanabilirsiniz.', 'error');
+                goster('Geçersiz İş/Sepet Barkodu! Sistemde bulunamadı.', 'error');
                 if (kod === 'TEST-OP') {
-                    // Test Simülasyonu
-                    await isEmriBaslat(null, null, 100);
+                    // Sadece testi kurtarmak için geçici atama (gerçekte kullanılmamalı)
+                    await isEmriBaslat(null, null, 'TEST-OP', 100);
                 }
             } else {
-                await isEmriBaslat(opData?.id, ordData?.id, ordData?.quantity || 1);
+                await isEmriBaslat(opData?.id, ordData?.id, kod, ordData?.quantity || 1);
             }
 
         } catch (err) {
             console.error(err);
-            goster('Barkod okuma hatası: ' + err.message, 'error');
+            goster('Hata: ' + err.message, 'error');
         }
         setBekliyor(false);
     };
 
-    const isEmriBaslat = async (op_id, ord_id, miktar) => {
+    const isEmriBaslat = async (op_id, ord_id, is_barkodu, miktar) => {
         const { data, error } = await supabase
             .from('b1_personel_performans')
             .insert([{
                 personel_id: personel.id,
                 operasyon_id: op_id,
                 order_id: ord_id,
-                islem_miktari: miktar,
+                is_barkodu: is_barkodu,
+                hedef_adet: miktar,
+                uretilen_adet: 0,
+                fire_adet: 0,
                 baslangic_saati: new Date().toISOString()
             }])
             .select()
             .single();
 
         if (error) {
-            goster('İş başlatılırken hata oluştu: ' + error.message, 'error');
+            goster('İş başlatılamadı: ' + error.message, 'error');
             return;
         }
 
         setIslemdekiIs(data);
-        goster(`İş başlatıldı! Süreniz işliyor. İş bitiminde tekrar okutunuz.`, 'success');
+        goster(`İşlem Onaylandı! Zaman saati çalışmaya başladı.`, 'success');
     };
 
     const isiTamamla = async () => {
@@ -153,14 +157,18 @@ export default function KioskTerminal() {
             const sureSaniye = (new Date() - new Date(islemdekiIs.baslangic_saati)) / 1000;
             const primTL = (islemdekiIs.b1_uretim_operasyonlari?.parca_basi_deger_tl || 0) * uretimAdet;
 
+            // Zaman Aşımı (Idle) Kontrolü: 8 saati geçmişse (Örn. unutulmuş iş)
+            const zamanAsimi = sureSaniye > (8 * 3600);
+
             const { error } = await supabase
                 .from('b1_personel_performans')
                 .update({
                     bitis_saati: new Date().toISOString(),
                     fire_adet: fireAdet,
-                    islem_miktari: uretimAdet, // Güncelleme ihtimaline karşı
-                    kalite_puani_yuzde: kalitePuani,
-                    hiza_gore_prim_tl: primTL
+                    uretilen_adet: uretimAdet,
+                    kalite_puani: kalitePuani,
+                    hiza_gore_prim_tl: primTL,
+                    zaman_asimi_durus: zamanAsimi
                 })
                 .eq('id', islemdekiIs.id);
 

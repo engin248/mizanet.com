@@ -2,10 +2,10 @@ import { NextResponse } from 'next/server';
 import { Ratelimit } from '@upstash/ratelimit';
 import { Redis } from '@upstash/redis';
 
-// IP tabanlı kalıcı rate limit (Dakikada maksimum 5 istek / Burst Rate)
+// IP tabanlı kalıcı rate limit (10 Dakikada maksimum 1 istek / Bütçe Kalkanı)
 const ratelimit = new Ratelimit({
     redis: Redis.fromEnv(),
-    limiter: Ratelimit.slidingWindow(5, '1 m'),
+    limiter: Ratelimit.slidingWindow(1, '10 m'), // Zafiyet Kapatıldı: Her IP 10 dakikada sadece 1 araştırma yapabilir
     analytics: true,
 });
 
@@ -16,7 +16,7 @@ export async function POST(request) {
     try {
         const { success } = await ratelimit.limit(`trend-ara_${ip}`);
         if (!success) {
-            return NextResponse.json({ error: 'Çok fazla istek. Sistem bütçe korumasına geçti, 1 dakika bekleyin.' }, { status: 429 });
+            return NextResponse.json({ error: 'Sistem Bütçe Koruması devrede. Spam ve mali kayıp riski (Sorgu başı Fatura) önlendi. Yeni bir arama yapmak için lütfen 10 dakika bekleyiniz.' }, { status: 429 });
         }
     } catch (error) {
         // Redis bağlanamazsa işlemi kesme, logla ve devam et (Fallback)

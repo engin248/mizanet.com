@@ -42,6 +42,7 @@ const NAV_ITEMS = [
     { href: '/gorevler', icon: ClipboardList, labelTR: 'Görev Takibi', labelAR: 'متابعة المهام', badge: 'M15', group: 'yonetim' },
     { href: '/raporlar', icon: PieChart, labelTR: 'Raporlar', labelAR: 'التقارير', badge: 'M16', group: 'yonetim' },
     { href: '/ajanlar', icon: Zap, labelTR: '🤖 Ajan Komuta', labelAR: 'قيادة الوكلاء', badge: 'AI', group: 'sistem' },
+    { href: '/arge_test_paneli', icon: Activity, labelTR: '🧪 Ar-Ge Test Paneli', labelAR: 'لوحة اختبار', badge: 'AI', group: 'sistem' },
     { href: '/denetmen', icon: Bot, labelTR: 'Müfettiş (AI)', labelAR: 'المفتش', group: 'sistem' },
     { href: '/guvenlik', icon: Shield, labelTR: 'Güvenlik', labelAR: 'الأمان', group: 'sistem' },
     { href: '/ayarlar', icon: Settings, labelTR: 'Sistem Ayarları', labelAR: 'الإعدادات', group: 'sistem' },

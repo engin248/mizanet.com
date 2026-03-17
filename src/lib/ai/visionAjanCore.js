@@ -8,7 +8,7 @@
  *         GEMINI_API_KEY yoksa temiz hata mesajı döner (sessiz simülasyon değil).
  *
  * @param {string} resimBase64 - Base64 veya URL formatında kumaş/ürün fotoğrafı
- * @returns {Promise<{onay: boolean, yorum: string, kumasHataOrani: number, kaynak: string}>}
+ * @returns {Promise<{onay: boolean, yorum: string, kumasHataOrani: number, tespit_edilen_hatalar: string[], tavsiye: string, kaynak: string}>}
  */
 export async function videoVeResimDenetle(resimBase64) {
     const GEMINI_API_KEY = process.env.GEMINI_API_KEY?.trim();

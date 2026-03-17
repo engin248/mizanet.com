@@ -1,28 +1,21 @@
-// /api/cikis — Server-side HttpOnly cookie temizleme
-// HttpOnly cookie'ler JavaScript (document.cookie) ile SİLİNEMEZ
-// Bu endpoint server-side Set-Cookie ile expire eder
 import { NextResponse } from 'next/server';
 
 export async function POST() {
-    const response = NextResponse.json({ basarili: true, mesaj: 'Çıkış başarılı.' });
+    try {
+        const response = NextResponse.json({ success: true, message: 'Çıkış başarılı' });
 
-    // Tüm auth cookie'lerini expire et
-    const cookieIsimleri = [
-        'sb47_jwt_token',
-        'sb47_auth_session',
-        'sb47_uretim_pin',
-        'sb47_genel_pin',
-    ];
-
-    for (const isim of cookieIsimleri) {
-        response.cookies.set(isim, '', {
+        // HttpOnly olan JWT token cookie'sini sil
+        response.cookies.set({
+            name: 'sb47_token',
+            value: '',
             httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
-            sameSite: 'strict',
+            expires: new Date(0),
             path: '/',
-            maxAge: 0, // Anında expire
+            sameSite: 'lax',
         });
-    }
 
-    return response;
+        return response;
+    } catch (error) {
+        return NextResponse.json({ error: error.message }, { status: 500 });
+    }
 }

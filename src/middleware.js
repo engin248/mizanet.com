@@ -2,19 +2,34 @@ import { NextResponse } from 'next/server';
 import { Ratelimit } from '@upstash/ratelimit';
 import { Redis } from '@upstash/redis';
 
-// ─── UPSTASH REDIS RATE LIMITER (Vercel Serverless Uyumlu) ─────
+// ─── UPSTASH REDIS RATE LIMITER ─────────────────────────
+// DİKKAT: Vercel Edge Runtime (Middleware) Node.js core modüllerine (fs, unenv) izin vermez.
+// Yukarıdaki "@upstash/ratelimit" kütüphanesi bazen Edge API'yi patlatabiliyor (500 Error).
+// Hata Çözümü: Eğer `redisConfigured` ise Rate Limit uygulayacağız, ancak hata fırlatırsa fallback yapacağız.
 const redisConfigured = !!process.env.UPSTASH_REDIS_REST_URL && !!process.env.UPSTASH_REDIS_REST_TOKEN;
-const redis = redisConfigured ? new Redis({
-    url: process.env.UPSTASH_REDIS_REST_URL,
-    token: process.env.UPSTASH_REDIS_REST_TOKEN,
-}) : null;
 
-// Her IP için 60 saniyede maksimum 60 istek
-const ratelimit = redis ? new Ratelimit({
-    redis: redis,
-    limiter: Ratelimit.slidingWindow(60, '60 s'),
-    analytics: true,
-}) : null;
+let redis = null;
+let ratelimit = null;
+
+try {
+    if (redisConfigured) {
+        redis = new Redis({
+            url: process.env.UPSTASH_REDIS_REST_URL,
+            token: process.env.UPSTASH_REDIS_REST_TOKEN,
+        });
+
+        // Her IP için 60 saniyede maksimum 100 istek (Gevşetildi)
+        ratelimit = new Ratelimit({
+            redis: redis,
+            limiter: Ratelimit.slidingWindow(100, '60 s'),
+            analytics: false, // Edge uyumluluğu için kapatıldı
+            ephemeralCache: new Map(), // Vercel Edge Cache optimizasyonu
+        });
+    }
+} catch (e) {
+    console.warn('[MIDDLEWARE] Upstash Redis initialize edilemedi (Edge Runtime uyarisi). Rate Limiting kapali.');
+    ratelimit = null;
+}
 
 // ─── BOT/CRAWLER İMZALARI ──────────────────────────────────────
 const BOT_IMZALARI = [

@@ -3,24 +3,26 @@
 @tailwind utilities;
 
 :root {
-  --primary: #02624B;
-  /* Koyu Zümrüt (#004D40) ile Açık Yeşil (#047857) arasında bir ton */
-  --primary-light: #047857;
-  /* Daha Açık Zümrüt Yeşili (Hover) */
+  --primary: #10B981;
+  /* Orijinalden daha parlak ve canlı bir Zümrüt Yeşili */
+  --primary-light: #34D399;
   --secondary: #d4af37;
-  /* Klasik Metalik Altın (Butonlar/Vurgu) */
+  /* Metalik Altın vurgular */
   --success: #10b981;
   --danger: #ef4444;
   --warning: #f59e0b;
-  --bg-color: #fcfcf9;
-  /* Çok hafif krem/kemik (Sayfa arka planı) */
-  --card-bg: #ffffff;
-  --text-main: #022c22;
-  /* Neredeyse siyah, çok koyu zümrüt (Ana yazı) */
-  --text-muted: #4b5563;
-  /* Koyu Gri (Alt metinler) */
-  --border: #e5e7eb;
-  /* Daha yumuşak kenarlıklar */
+
+  /* YUMUŞAK OBSİDYEN (Linear App) TEMEL SERİSİ */
+  --bg-color: #111111;
+  /* Mat, tamamen siyah olmayan arka plan */
+  --card-bg: rgba(255, 255, 255, 0.03);
+  /* Cam efektine uygun son derece hafif arka plan */
+  --text-main: #EDEDED;
+  /* Kırık, göz yormayan ana metin beyazı */
+  --text-muted: #888888;
+  /* Nötr, dengeli gri ikincil metin */
+  --border: rgba(255, 255, 255, 0.08);
+  /* Kart ve input sınırları için yumuşak saydam kenarlık */
 }
 
 * {
@@ -43,41 +45,60 @@ body {
 }
 
 .sidebar {
-  width: 250px;
+  width: 260px;
+  /* Modern uygulamalarda biraz daha geniş */
   flex-shrink: 0;
-  background: linear-gradient(180deg, #0a1628 0%, #0c1e35 50%, #0a1a2e 100%);
+  background: #0A0A0A;
+  /* Saf, dipsiz ve mat siyah */
+  border-right: 1px solid rgba(255, 255, 255, 0.05);
+  /* Sadece hissettirilen bir ayırıcı çizgi */
   color: white;
   padding: 1.5rem 1rem;
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  z-index: 10;
 }
 
 .sidebar h1 {
-  font-size: 1.25rem;
+  font-size: 1.15rem;
+  /* Biraz daha zarif, daha az bağıran */
   font-weight: 700;
   margin-bottom: 2rem;
-  color: white;
+  color: #EDEDED;
+  letter-spacing: -0.01em;
+  /* Mac/Vercel tarzı profesyonel sıkıştırma */
 }
 
 .nav-item {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  padding: 0.75rem 1rem;
-  border-radius: 6px;
-  color: rgba(148, 163, 184, 0.8);
+  gap: 0.85rem;
+  padding: 0.65rem 1rem;
+  border-radius: 8px;
+  /* Linear stili biraz daha köşeli yumuşak radyus */
+  color: #888888;
+  /* Nötr, gri */
   text-decoration: none;
-  transition: all 0.3s ease;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   font-weight: 500;
-  border-left: 2px solid transparent;
+  border: 1px solid transparent;
+  /* Gelecekteki çerçeveler için hazırla */
 }
 
-.nav-item:hover,
+.nav-item:hover {
+  background: rgba(255, 255, 255, 0.04);
+  color: #E2E8F0;
+}
+
 .nav-item.active {
-  background: rgba(52, 211, 153, 0.1);
-  color: #6ee7b7;
-  border-left: 2px solid rgba(52, 211, 153, 0.4);
+  background: rgba(255, 255, 255, 0.08);
+  /* Yumuşak beyaz zemin */
+  color: #FFFFFF;
+  /* Göz önünde duran parlak beyaz */
+  font-weight: 600;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  /* Yukarıdan hafif ışık sızması */
 }
 
 .main-content {
@@ -87,14 +108,19 @@ body {
 }
 
 .topbar {
-  background: rgba(10, 22, 40, 0.85);
-  backdrop-filter: blur(16px) saturate(1.3);
-  -webkit-backdrop-filter: blur(16px) saturate(1.3);
+  background: rgba(17, 17, 17, 0.7);
+  /* Obsidyen tabanlı Blur */
+  backdrop-filter: blur(16px) saturate(1.5);
+  -webkit-backdrop-filter: blur(16px) saturate(1.5);
   padding: 1rem 2rem;
-  border-bottom: 1px solid rgba(148, 163, 184, 0.08);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  /* Yumuşak alt çizgi */
   display: flex;
   justify-content: space-between;
   align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 20;
 }
 
 .page-content {
@@ -106,21 +132,27 @@ body {
 /* Utilities */
 .card {
   background: var(--card-bg);
-  border-radius: 8px;
+  border-radius: 12px;
+  /* Daha modern radyus */
   border: 1px solid var(--border);
   padding: 1.5rem;
-  margin-bottom: 1rem;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  margin-bottom: 1.25rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  /* Siyah üzerine hafif gölge derinliği */
+  backdrop-filter: blur(8px);
+  /* Glassmorphism hissi */
+  -webkit-backdrop-filter: blur(8px);
 }
 
 .card-title {
-  font-size: 1.125rem;
+  font-size: 1.05rem;
   font-weight: 600;
   margin-bottom: 1rem;
   color: var(--text-main);
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.6rem;
+  letter-spacing: 0.02em;
 }
 
 .btn {
@@ -237,25 +269,31 @@ body {
 
 /* 1. Gölgeler (Soft Shadows) & Cam Efekti (Glassmorphism) */
 .glass-panel {
-  background: rgba(255, 255, 255, 0.75);
+  background: rgba(255, 255, 255, 0.03);
+  /* Obsidyen karanlığına saf blur */
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  /* Yumuşacık kenarlık */
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  /* Derinliği arka plana gömülür */
 }
 
 .premium-card {
-  background: #ffffff;
+  background: rgba(20, 20, 20, 0.6);
+  /* Linear tarzı card içi matlık */
   border-radius: 12px;
-  border: 1px solid #f1f5f9;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  /* Karanlık üzerine beyaz sır */
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
   padding: 1.5rem;
-  transition: all 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .premium-card:hover {
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
   transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.12);
 }
 
 /* 2. Micro-Animations (Hover Durumları) */

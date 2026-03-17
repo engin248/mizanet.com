@@ -54,6 +54,7 @@ export default function ArgeSayfasi() {
     const [trendler, setTrendler] = useState(([]));
     const [form, setForm] = useState(BOSH_FORM);
     const [formAcik, setFormAcik] = useState(false);
+    const [hafizaUyariGecebilir, setHafizaUyariGecebilir] = useState(false);
     const [loading, setLoading] = useState(false);
     const [mesaj, setMesaj] = useState({ text: '', type: '' });
     const [filtre, setFiltre] = useState('tumu');
@@ -165,6 +166,28 @@ export default function ArgeSayfasi() {
     };
 
     const gercekTrendAra = async () => {
+        // [1. GÜVENLİK KALKANI]: Yetki ve Onay (Kullanıcı Talebi)
+        const { yetkili, mesaj: yetkiMesaj } = await silmeYetkiDogrula(kullanici, isAR ? 'أدخل رقم PIN لبدء تحليل الذكاء الاصطناعي:' : 'Yapay Zeka analizini başlatmak için Yönetici PIN kodunuzu girin (Finansal İşlem):');
+        if (!yetkili) {
+            setAiOnayModalAcik(false);
+            return goster(yetkiMesaj || 'Yetkili PIN girilmediği için işlem engellendi.', 'error');
+        }
+
+        const arastiranAd = kullanici?.ad || 'Yönetici (PIN İle Onaylandı)';
+
+        // [2. ARŞİVLEME]: Kim neyi araştırdı? (Kullanıcı Talebi)
+        try {
+            await supabase.from('b0_sistem_loglari').insert([{
+                tablo_adi: 'b1_arge_trendler',
+                islem_tipi: 'AI_ARASTIRMA',
+                eski_veri: { aranan_kelime: aiSorgu },
+                kullanici_adi: arastiranAd,
+                ek_bilgi: `Perplexity Trend Araştırması Tetiklendi.`
+            }]);
+        } catch (logErr) {
+            console.warn('Araştırma loglanamadı:', logErr);
+        }
+
         setAiOnayModalAcik(false); // Modalı kapat
         setAiAraniyor(true);
         setAiSonuclar(null);
@@ -288,7 +311,7 @@ export default function ArgeSayfasi() {
                     // %60-90 benzerlik → Uyarı (Kullanıcı onaylarsa geçer, yoksa iptal penceresi çalışmalı aslında, ama confirm() kullanıldı şimdilik hızlı geçiş için. İleride modal'a çevrilecek)
                     const devamMı = confirm(`⚠️ Sistem Hafızası Risk Bildirdi:\n${hafizaKontrol.mesaj}\n\nYine de işleme devam etmek istiyor musunuz?`);
                     if (!devamMı) return;
-                    setIslemdeId('hafiza_onaylandi'); // Tekrar aynı süzgece girmesin
+                    setHafizaUyariGecebilir(true); // IslemdeId null olarak kalır, hata yapmaz
                 }
             } catch {
                 // API çağrısı başarısız olsa bile kaydetme işlemi engellenmez
