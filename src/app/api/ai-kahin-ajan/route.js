@@ -1,11 +1,10 @@
 import { NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/lib/supabaseAdmin';
+import { GoogleGenAI } from '@google/genai';
 
 // ═══════════════════════════════════════════════════════════
-//  /api/ai-kahin-ajan
-//  Kâhin AI Ajanı — Personel Kârlılık & Adalet Raporu
-//  Hata Düzeltme: @google/genai v0.7.0 uyumsuzluğu giderildi
-//  Artık tüm sistem ile aynı fetch() yöntemi kullanılıyor
+//  /api/ai-kahin-ajan — Kâhin AI Ajanı
+//  @google/genai v0.7.0 SDK ile düzgün entegrasyon
 // ═══════════════════════════════════════════════════════════
 
 export async function POST(req) {
@@ -15,21 +14,21 @@ export async function POST(req) {
             return NextResponse.json({ error: 'GEMINI_API_KEY tanımlı değil.' }, { status: 500 });
         }
 
-        const GEMINI_URL = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
+        const ai = new GoogleGenAI({ apiKey: GEMINI_API_KEY });
 
-        // 1. Personel verisi çek
+        // 1. Personel verisi çek (b1_personel — sadece var olan kolonlar)
         const { data: pData, error: pError } = await supabaseAdmin
             .from('b1_personel')
             .select('id, ad_soyad, aylik_maliyet_tl')
             .limit(50);
 
         if (pError) {
-            console.error('[Kâhin] Personel sorgu hatası:', pError.message);
-            return NextResponse.json({ error: `Personel verisi okunamadı: ${pError.message}` }, { status: 500 });
+            console.error('[Kahin] Personel sorgu hatasi:', pError.message);
+            return NextResponse.json({ error: `Personel sorgusu hata: ${pError.message}` }, { status: 500 });
         }
 
         if (!pData || pData.length === 0) {
-            return NextResponse.json({ error: 'Aktif personel bulunamadı.' }, { status: 404 });
+            return NextResponse.json({ error: 'Personel tablosu bos.' }, { status: 404 });
         }
 
         // 2. Bu ayın performans verisi çek
@@ -39,77 +38,58 @@ export async function POST(req) {
             .select('personel_id, isletmeye_katilan_deger, kazanilan_prim, uretilen_adet, kalite_puani')
             .gte('created_at', ayBasi);
 
-        // 3. Prompt için veri hazırla
-        let isciAnalizMetni = 'İşte fabrikanın bu ayki üretim verileri ve personel maliyetleri:\n\n';
+        // 3. Prompt için analiz metni oluştur
+        let isciAnalizMetni = 'Fabrikanın bu ayki üretim verileri:\n\n';
 
         for (const p of pData) {
-            const raporlar = (perfData || []).filter(log => log.personel_id === p.id);
+            const raporlar = (perfData || []).filter(l => l.personel_id === p.id);
             const adet = raporlar.reduce((s, r) => s + (Number(r.uretilen_adet) || 0), 0);
+            const deger = raporlar.reduce((s, r) => s + (Number(r.isletmeye_katilan_deger) || 0), 0);
+            const prim = raporlar.reduce((s, r) => s + (Number(r.kazanilan_prim) || 0), 0);
             const kalite = raporlar.length
                 ? raporlar.reduce((s, r) => s + (Number(r.kalite_puani) || 10), 0) / raporlar.length
                 : 10;
-            const deger = raporlar.reduce((s, r) => s + (Number(r.isletmeye_katilan_deger) || 0), 0);
-            const prim = raporlar.reduce((s, r) => s + (Number(r.kazanilan_prim) || 0), 0);
             const maliyet = Number(p.aylik_maliyet_tl) || 0;
 
             isciAnalizMetni += `Personel: ${p.ad_soyad}
-  - Aylık Maliyet: ${maliyet} TL
-  - Ürettiği Parça/İşlem: ${adet} adet
-  - Kalite Puanı (1-10): ${kalite.toFixed(1)}
-  - Firmaya Katma Değer: ${deger} TL
-  - Kazandığı Prim: ${prim} TL\n\n`;
+  - Aylik Maliyet: ${maliyet} TL
+  - Uretilen Adet: ${adet}
+  - Katma Deger: ${deger} TL  
+  - Kalite Puani: ${kalite.toFixed(1)}/10
+  - Kazanilan Prim: ${prim} TL
+  - Amorti: %${maliyet > 0 ? ((deger / maliyet) * 100).toFixed(0) : 0}\n\n`;
         }
 
-        const systemPrompt = `Sen acımasız, net ve tam bir verimlilik makinesi olan Yalın Üretim Yapay Zeka Başdenetçisi (Kâhin Agent) sin.
-Fabrikadaki patrona Türkçe olarak kısa, vurucu ve eyleme geçirilebilir bir "Kârlılık ve Adalet Raporu" sunmakla görevlisin.
+        const prompt = `Sen acımasız ve net bir Yalın Üretim Yapay Zeka Başdenetçisi (Kâhin Agent) sin.
+Fabrika patronuna Türkçe, kısa (max 5 paragraf), eyleme geçirilebilir "Kârlılık ve Adalet Raporu" sun.
+KURALLAR: Maliyet>Deger→Zarar Yazdırıyor. Deger>Maliyet→Liyakat Yıldızı. Kalite<5→Disiplin. MD formatı, agresif kurumsal dil.
 
-KURALLAR:
-1. Maliyet > Katma Değer → "Zarar Yazdırıyor" — eğitim/uyarı öner.
-2. Katma Değer > Maliyet → "Liyakat Yıldızı" — tebrik et.
-3. Kalite Puanı < 5 → Çok üretse bile disiplin uyarısı ver.
-4. Maksimum 5-6 paragraf. MD formatı. Kurumsal, net dil.`;
+VERİLER:
+${isciAnalizMetni}`;
 
-        const fullPrompt = `${systemPrompt}\n\nVERİLER:\n${isciAnalizMetni}`;
-
-        // 4. Gemini API — düz fetch (tüm route'larla tutarlı yöntem)
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 20000);
-
-        const geminiRes = await fetch(GEMINI_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            signal: controller.signal,
-            body: JSON.stringify({
-                contents: [{ parts: [{ text: fullPrompt }] }],
-                generationConfig: { temperature: 0.3, maxOutputTokens: 1500 },
-            }),
+        // 4. Gemini API — @google/genai SDK v0.7.0
+        const response = await ai.models.generateContent({
+            model: 'gemini-1.5-flash',
+            contents: prompt,
         });
-        clearTimeout(timeoutId);
 
-        if (!geminiRes.ok) {
-            const errText = await geminiRes.text();
-            console.error('[Kâhin] Gemini HTTP hatası:', geminiRes.status, errText);
-            return NextResponse.json({ error: `Gemini API hatası: ${geminiRes.status}` }, { status: 500 });
-        }
+        const aiCevap = response.text || 'AI yargic sessiz kaldi.';
 
-        const geminiData = await geminiRes.json();
-        const aiCevap = geminiData?.candidates?.[0]?.content?.parts?.[0]?.text || 'AI yargıç sessiz kaldı.';
-
-        // 5. Log yaz
+        // 5. Ajan log yaz (hata kritik degil)
         try {
             await supabaseAdmin.from('b1_agent_loglari').insert([{
-                ajan_adi: 'Kâhin Ajanı',
+                ajan_adi: 'Kahin Ajani',
                 islem_tipi: 'personel_analiz',
                 kaynak_tablo: 'b1_personel',
                 sonuc: 'basarili',
                 mesaj: `${pData.length} personel analiz edildi.`,
             }]);
-        } catch (_) { /* log hatası kritik değil */ }
+        } catch (_) { }
 
         return NextResponse.json({ success: true, aiCevap, personel_sayisi: pData.length });
 
     } catch (error) {
-        console.error('[Kâhin AI Hatası]', error);
+        console.error('[Kahin AI Hatasi]', error);
         return NextResponse.json({ error: error.message }, { status: 500 });
     }
 }
