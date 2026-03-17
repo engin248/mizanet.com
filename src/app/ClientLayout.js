@@ -180,25 +180,10 @@ function LayoutInner({ children }) {
         window.addEventListener('online', onOnline);
         window.addEventListener('offline', onOffline);
 
-        // KÖKLÜ ÇÖZÜM: Tüm Eski Service Worker ve PWA Zombi Cache'lerini Yok Etme
-        if (typeof window !== 'undefined') {
-            const currentVersion = 'v3.7'; // [GÜNCELLEME]: Canlıdaki zombi SW'leri dökmesi için versiyon artırıldı
-            if (localStorage.getItem('sb47_app_version') !== currentVersion) {
-                localStorage.setItem('sb47_app_version', currentVersion);
-                if ('serviceWorker' in navigator) {
-                    navigator.serviceWorker.getRegistrations().then(function (registrations) {
-                        for (let registration of registrations) {
-                            registration.unregister();
-                        }
-                    }).catch(() => { });
-                }
-                if ('caches' in window) {
-                    caches.keys().then((keyList) => {
-                        return Promise.all(keyList.map((key) => caches.delete(key)));
-                    }).catch(() => { });
-                }
-                setTimeout(() => window.location.reload(), 1500); // 1.5 sn sonra Hard Refresh
-            }
+        // K-16: Gerçek Service Worker Kaydı (Stale-While-Revalidate offline fallback)
+        if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/sw.js', { scope: '/' })
+                .catch(() => { /* SW kaydı sessiz başarısız olabilir */ });
         }
 
         return () => {
