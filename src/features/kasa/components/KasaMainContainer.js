@@ -75,6 +75,7 @@ export default function KasaMainContainer() {
     const [filtreTip, setFiltreTip] = useState('hepsi');
     const [filtreOnay, setFiltreOnay] = useState('hepsi');
     const [islemdeId, setIslemdeId] = useState(/** @type {any} */(null)); // [SPAM ZIRHI]
+    const [kasaSayfa, setKasaSayfa] = useState(50); // K-13 PAGINATION
 
     useEffect(() => {
         let uretimPin = !!sessionStorage.getItem('sb47_uretim_token');
@@ -420,7 +421,7 @@ export default function KasaMainContainer() {
                         <p className="text-slate-400 text-sm">"Yeni Hareket" butonu ile ilk işlemi ekleyin.</p>
                     </div>
                 )}
-                {filtreli.map(h => (
+                {filtreli.slice(0, kasaSayfa).map(h => (
                     <div key={h.id} style={{ borderColor: h.onay_durumu === 'onaylandi' ? '#34d399' : h.onay_durumu === 'iptal' ? '#fca5a5' : '#fcd34d' }} className="bg-[#122b27] border-l-8 border-y border-r border-[#1e4a43] rounded-xl p-4 flex justify-between items-center gap-4 shadow-sm hover:shadow-md transition-shadow">
                         <div className="flex items-center gap-4 flex-1">
                             <div style={{ backgroundColor: (TIP_RENK[h.hareket_tipi] || '#64748b') + '20', color: TIP_RENK[h.hareket_tipi] || '#64748b' }} className="w-12 h-12 rounded-xl flex items-center justify-center text-xl shrink-0 font-black">
@@ -472,6 +473,18 @@ export default function KasaMainContainer() {
                     </div>
                 ))}
             </div>
+            {/* K-13 PAGINATION */}
+            {filtreli.length > kasaSayfa && (
+                <div className="text-center mt-4">
+                    <button
+                        onClick={() => setKasaSayfa(p => p + 50)}
+                        aria-label="Daha fazla kasa hareketi yükle"
+                        className="px-6 py-3 bg-emerald-700 hover:bg-emerald-600 text-white font-black text-sm rounded-xl shadow-lg shadow-emerald-500/20 border-b-4 border-emerald-900 transition-all"
+                    >
+                        ⬇ Daha Fazla Göster ({filtreli.length - kasaSayfa} kaldı)
+                    </button>
+                </div>
+            )}
         </div>
     );
 }

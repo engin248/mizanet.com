@@ -65,8 +65,10 @@ function SidebarInner({ isAR }) {
         const aktif = pathname === item.href;
         return (
             <Link href={item.href} className="nav-item"
+                aria-label={item.labelTR}
+                aria-current={aktif ? 'page' : undefined}
                 style={{ paddingLeft: isAR ? '8px' : '14px', paddingRight: isAR ? '14px' : '8px', opacity: aktif ? 1 : 0.85, minHeight: '36px', marginBottom: '2px' }}>
-                <item.icon size={18} />
+                <item.icon size={18} aria-hidden="true" />
                 <span style={{ flex: 1, fontSize: '1.05rem', fontWeight: 600 }}>{isAR ? item.labelAR : item.labelTR}</span>
                 {item.badge && (
                     <span style={{ fontSize: '0.55rem', padding: '2px 5px', borderRadius: '4px', fontWeight: 700 }}
@@ -96,7 +98,7 @@ function SidebarInner({ isAR }) {
             {/* Ana */}
             {NAV_ITEMS.filter(n => n.group === 'ana').map(item => (
                 gorunur(item.href) && (
-                    <Link key={item.href} href={item.href} className="nav-item">
+                    <Link key={item.href} href={item.href} className="nav-item" aria-label={item.labelTR}>
                         <item.icon size={16} />
                         <span>{isAR ? item.labelAR : item.labelTR}</span>
                     </Link>
@@ -118,7 +120,7 @@ function SidebarInner({ isAR }) {
                             </div>
                             <div style={{ fontSize: '0.6rem', color: '#475569' }}>Aktif oturum</div>
                         </div>
-                        <button onClick={cikisYap} title="Çıkış Yap"
+                        <button onClick={cikisYap} title="Çıkış Yap" aria-label="Sistemden çıkış yap"
                             style={{ background: 'rgba(239,68,68,0.15)', border: '1px solid rgba(239,68,68,0.3)', color: '#f87171', padding: '4px 8px', borderRadius: 6, cursor: 'pointer', fontSize: '0.65rem', fontWeight: 700, display: 'flex', alignItems: 'center', gap: 4 }}>
                             <LogOut size={11} /> Çıkış
                         </button>
@@ -246,7 +248,8 @@ function LayoutInner({ children }) {
                 </div>
 
                 {/* Nav */}
-                <nav style={{ display: 'flex', flexDirection: 'column', gap: '1px', padding: '0 0.625rem', overflowY: 'auto', flex: 1 }}>
+                <nav style={{ display: 'flex', flexDirection: 'column', gap: '1px', padding: '0 0.625rem', overflowY: 'auto', flex: 1 }}
+                    role="navigation" aria-label="Ana Navigasyon">
                     <SidebarInner isAR={isAR} />
                 </nav>
 
@@ -273,7 +276,9 @@ function LayoutInner({ children }) {
                         <button
                             className="hamburger-btn"
                             onClick={() => setSidebarAcik(v => !v)}
-                            aria-label="Menü"
+                            aria-label="Menüyü aç/kapat"
+                            aria-expanded={sidebarAcik}
+                            aria-controls="sidebar"
                         >
                             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                                 <line x1="3" y1="6" x2="21" y2="6" />
