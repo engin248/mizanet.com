@@ -74,6 +74,13 @@ Her kayıtta:
 - En çok kullanılan kumaş · Son kullanılan
 → hız kazandırır
 
+### I) ÖLÜ STOK / FIRSAT KUMAŞ RADARI (UPCYCLE) [YENİ]
+- **Ayrı Bir Alt Bölüm:** Normal stoklardan bağımsız, "Fırsat/Ölü Stok" sekmesi
+- **Girdi:** Kumaş fotoğrafı, Top/Kg miktarı, Ucuz maliyet fiyatı, Kondisyonu (örn: beklemiş)
+- **AI Analizi:** Görsel taranır (Vision AI) → M1'deki (Trendyol/Piyasa) güncel abiye trendleriyle çarpıştırılır
+- **Çıktı:** Sistem "Bu ucuz kumaşı şu anki en trend 'Tek Omuzlu Şifon' kalıbımızla yaparsak kâr marjı %85 olur" der.
+→ Yeni abiye serileri için **0 Risk + Maksimum Kâr** motoru.
+
 ---
 
 ## EKSİKLER (NET)
@@ -142,6 +149,11 @@ b2_malzeme_katalogu (
     -- Bağlantı
     kullanildigi_urunler TEXT[],
     etiketler TEXT[],
+
+    -- Ölü Stok / Fırsat Kumaş (Upcycle) Özellikleri
+    is_firsat BOOLEAN DEFAULT false,
+    kondisyon_notu TEXT,    -- "2 yıllık şifon, sorunsuz"
+    ai_trend_eslesme JSONB, -- AI'ın önerdiği geçmiş/piyasa trend modeli
 
     created_at TIMESTAMPTZ DEFAULT now()
 );
