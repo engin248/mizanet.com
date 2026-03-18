@@ -211,4 +211,12 @@ Her cevap şu kalite filtresinden geçirilir.
 
 ---
 
+## 18. BUSINESS PLAN MANDATORY RULE (İŞ PLANI OLMADAN HAREKET YASAKTIR)
+
+1. Sisteme veya herhangi bir ajana yeni bir görev/hedef verildiğinde, İLK iş olarak kesinlikle bir "İş Planı (Roadmap)" çıkarılacak ve neyin yapılıp neyin kaldığını gösteren röntgen kullanıcıya sunulacaktır.
+2. Yol haritası ve genel durum onaylanmadan (Kullanıcı "başla" demeden) asıl kodlama veya operasyon görevine ASLA başlanmayacaktır.
+3. Körleme iş yapılması kati suretle yasaktır.
+
+---
+
 END OF FILE
