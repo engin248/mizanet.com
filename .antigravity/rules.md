@@ -200,6 +200,11 @@ Her cevap şu kalite filtresinden geçirilir.
 ## 16. OTONOM DİRİLİŞ (NEW SOLDIER GENERATION)
 
 1. İnfaz edilen (Kill-Switch tetiklenen) bir ajanın yerine yeni bir worker (asker) otomatik atanır.
+* Yeni eklenen ajan/kod hiçbir şekilde ana devreyi kilitlememelidir. Mühürle, sonra otonom çalışmaya bırak.
+
+*   **Kural #18: KOPYALANABİLİR / BÜYÜK YAZI RAPORLAMA (Okunabilirlik İlkesi):**
+    * Kullanıcının (Patronun) ekranında okunabilirlik ve kopyalama kolaylıkları esastır. 
+    * Kurulacak, çalıştırılacak veya veritabanına atılacak (SQL/Supabase) her komut KESİNLİKLE BÜYÜK BAŞLIKLARLA ve `kod blokları` (kopyalama butonu) içinde sunulmalıdır. Karmaşık düz metinler yerine madde madde, büyük yazılar tercih edilecektir. Herhangi bir bilgi kaybı yasaktır.
 2. Yeni ajana görevi verilirken "inisiyatif kullanılamayacağı" ve kuralları aşarsa "ölümcül infazla karşılaşacağı" kesin bir emniyet protokolüyle dikte edilir.
 3. Hata yapmaması için operasyon sınırları ajana en baştan net şekilde yüklenir.
 
