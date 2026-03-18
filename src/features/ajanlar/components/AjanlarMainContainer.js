@@ -15,161 +15,50 @@ import AjanOrchestrator from './AjanOrchestrator';
 // AKTİF = true → Ajan bu görevi yapıyor
 // PASİF = false → Modül yok veya gerek yok, kod bekliyor
 const VARSAYILAN_KONFIGUR = {
-    sabah: {
-        isim: 'Sabah Subayı', ikon: '🌅', renk: '#f59e0b',
+    trendyol: {
+        isim: 'Trendyol Gölge Avcısı', ikon: '🛒', renk: '#f97316',
         gorevler: [
-            { id: 'sb_1', ad: 'Sipariş 2 gün teslim alarmı', aktif: false, tablo: 'b2_siparisler', neden_pasif: 'Gerçek sipariş takibi sisteme oturmadı' },
-            { id: 'sb_2', ad: 'Sıfır stok alarmı', aktif: false, tablo: 'b2_urun_katalogu', neden_pasif: 'Stok akışı henüz gerçekçi değil' },
-            { id: 'sb_3', ad: 'Onay bekleyen trend sayısı (sadece bilgi)', aktif: true, tablo: 'b1_arge_trendler', neden_pasif: '' },
-            { id: 'sb_4', ad: 'Üretim kayıt takibi (kim-ne-ne zaman)', aktif: true, tablo: 'production_orders', neden_pasif: '' },
-            { id: 'sb_5', ad: 'Ödenmemiş fatura', aktif: false, tablo: 'b2_kasa_hareketleri', neden_pasif: 'Kasa modülü yok' },
-            { id: 'sb_6', ad: 'Kasa bakiye özeti', aktif: false, tablo: 'b2_kasa_hareketleri', neden_pasif: 'Kasa modülü yok' },
-            { id: 'sb_7', ad: 'Aktif personel sayısı', aktif: true, tablo: 'b1_personel', neden_pasif: '' },
-            { id: 'sb_8', ad: 'Ortak görev tahtası — bekleyen iş emirleri', aktif: true, tablo: 'b1_ajan_gorevler', neden_pasif: '' },
+            { id: 'ty_1', ad: 'Sepete Ekleme Deltası (Hız) Takibi', aktif: true, tablo: 'b1_arge_products', neden_pasif: '' },
+            { id: 'ty_2', ad: 'Yorum Zehri (1-Yıldız Şikayet Oranı) Analizi', aktif: true, tablo: 'b1_arge_products', neden_pasif: '' },
+            { id: 'ty_3', ad: 'Fiyat Baskısı & Rekabet Kan Gölü Tespiti', aktif: true, tablo: 'b1_arge_products', neden_pasif: '' },
+            { id: 'ty_4', ad: 'Favori/Kaydetme Artış Sinyalleri', aktif: true, tablo: 'b1_arge_products', neden_pasif: '' }
         ]
     },
-    aksam: {
-        isim: 'Akşamcı', ikon: '🌆', renk: '#6366f1',
+    tiktok: {
+        isim: 'TikTok Gözcüsü', ikon: '🎵', renk: '#000000',
         gorevler: [
-            { id: 'ak_1', ad: 'Bugün tamamlanan üretim', aktif: true, tablo: 'production_orders', neden_pasif: '' },
-            { id: 'ak_2', ad: 'Yarın teslim edilecek siparişler', aktif: true, tablo: 'b2_siparisler', neden_pasif: '' },
-            { id: 'ak_3', ad: 'Günlük gelir/gider özeti', aktif: true, tablo: 'b1_muhasebe_raporlari', neden_pasif: '' },
-            { id: 'ak_4', ad: 'Yarım kalan üretim işleri', aktif: true, tablo: 'production_orders', neden_pasif: '' },
-            { id: 'ak_5', ad: 'Kapanış logu yaz', aktif: true, tablo: 'b1_agent_loglari', neden_pasif: '' },
+            { id: 'tk_1', ad: 'Videolarda Viral Kopma Hızı', aktif: true, tablo: 'b1_arge_products', neden_pasif: '' },
+            { id: 'tk_2', ad: 'İçerik Klonlanma/Taklit Edilme Çarpanı', aktif: true, tablo: 'b1_arge_products', neden_pasif: '' },
+            { id: 'tk_3', ad: 'Video Süresi ve Tamamlanma Oranı', aktif: true, tablo: 'b1_arge_products', neden_pasif: '' },
+            { id: 'tk_4', ad: '"Sahte Bildirim/Balon Yönelim" Filtresi', aktif: true, tablo: 'b1_arge_products', neden_pasif: '' }
         ]
     },
-    nabiz: {
-        isim: 'Nabız', ikon: '💓', renk: '#ef4444',
+    instagram: {
+        isim: 'Instagram Radar Botu', ikon: '📸', renk: '#e1306c',
         gorevler: [
-            { id: 'nb_1', ad: 'Stok alarm kontrolü', aktif: true, tablo: 'b2_urun_katalogu', neden_pasif: '' },
-            { id: 'nb_2', ad: 'Maliyet aşımı takibi', aktif: true, tablo: 'b1_muhasebe_raporlari', neden_pasif: '' },
-            { id: 'nb_3', ad: 'Diğer ajanlar durdu mu? (müfettişlik)', aktif: true, tablo: 'b1_agent_loglari', neden_pasif: '' },
-            { id: 'nb_4', ad: 'Vadesi geçen ödeme', aktif: false, tablo: 'b2_kasa_hareketleri', neden_pasif: 'Kasa modülü yok' },
-            { id: 'nb_5', ad: 'Yaklaşan stok erken uyarı', aktif: true, tablo: 'b2_urun_katalogu', neden_pasif: '' },
+            { id: 'ig_1', ad: 'Koleksiyona Kaydetme Sıcaklık Skoru', aktif: true, tablo: 'b1_arge_products', neden_pasif: '' },
+            { id: 'ig_2', ad: 'Yönlendirme Linki (Swipe) Tıklamaları', aktif: true, tablo: 'b1_arge_products', neden_pasif: '' },
+            { id: 'ig_3', ad: 'Boutique (Butik) Hesapların Sahiplenme Hızı', aktif: true, tablo: 'b1_arge_products', neden_pasif: '' }
         ]
     },
-    zincir: {
-        isim: 'Zincirci', ikon: '⛓️', renk: '#10b981',
+    facebook: {
+        isim: 'Facebook Demografi Analizörü', ikon: '📘', renk: '#1877f2',
         gorevler: [
-            { id: 'zn_1', ad: 'M1→M2: Trend onaylandı → Kumaş', aktif: true, tablo: 'b1_arge_trendler', neden_pasif: '' },
-            { id: 'zn_2', ad: 'M2→M3: Kumaş seçildi → Kalıp', aktif: true, tablo: 'b1_kumas_arsivi', neden_pasif: '' }, // [K1 FIX] Hayalet tablo adı düzeltildi
-            { id: 'zn_3', ad: 'M3→M4: Kalıp hazır → Modelhane', aktif: true, tablo: 'b1_model_taslaklari', neden_pasif: '' },
-            { id: 'zn_4', ad: 'M4→M5: Numune onaylı → Kesim', aktif: true, tablo: 'b1_modelhane_kayitlari', neden_pasif: '' },
-            { id: 'zn_5', ad: 'M5→M6: Kesim bitti → Üretim', aktif: false, tablo: 'b1_kesim_emirleri', neden_pasif: 'Kesim emirleri tablosu yok' },
-            { id: 'zn_6', ad: 'M6→M7: Üretim bitti → Maliyet', aktif: true, tablo: 'production_orders', neden_pasif: '' },
-            { id: 'zn_7', ad: 'M7→M8: Maliyet onaylı → Muhasebe', aktif: true, tablo: 'b1_maliyet_kayitlari', neden_pasif: '' },
-            { id: 'zn_8', ad: 'Zincir sağlık raporu', aktif: true, tablo: 'b1_agent_loglari', neden_pasif: '' },
+            { id: 'fb_1', ad: 'Organik Büyüme vs Şişirilmiş Reklam Ayrımı', aktif: true, tablo: 'b1_arge_products', neden_pasif: '' },
+            { id: 'fb_2', ad: 'Yaş Kırılımı ve Hedef Kitle Cüzdan Analizi', aktif: true, tablo: 'b1_arge_products', neden_pasif: '' }
         ]
     },
-    finans: {
-        isim: 'Finans Kalkanı', ikon: '🛡️', renk: '#8b5cf6',
+    motor: {
+        isim: 'M1 Merkezi Karar Motoru (Zırh)', ikon: '⚙️', renk: '#10b981',
         gorevler: [
-            { id: 'fn_1', ad: 'Maliyet aşımı %15+', aktif: true, tablo: 'b1_muhasebe_raporlari', neden_pasif: '' },
-            { id: 'fn_2', ad: 'Vadeli alacak takibi', aktif: false, tablo: 'b2_kasa_hareketleri', neden_pasif: 'Modül yok' },
-            { id: 'fn_3', ad: 'Kasa kritik seviye', aktif: false, tablo: 'b2_kasa_hareketleri', neden_pasif: 'Kasa modülü yok' },
-            { id: 'fn_4', ad: 'Gider artışı %20+', aktif: true, tablo: 'b2_kasa_hareketleri', neden_pasif: '' },
-            { id: 'fn_5', ad: 'Kâr marjı %10 altı uyarı', aktif: true, tablo: 'b2_kasa_hareketleri', neden_pasif: '' },
-            { id: 'fn_6', ad: 'Gelecek ödeme hatırlatma', aktif: false, tablo: 'b2_kasa_hareketleri', neden_pasif: 'Ödeme takvimi yok' },
+            { id: 'mt_1', ad: 'Sosyal Sinyal ile Pazar Satışını Üst Üste Oturtma', aktif: true, tablo: 'b1_arge_products', neden_pasif: '' },
+            { id: 'mt_2', ad: 'Kullanıcı Tanımlı Kâr Tavan/Taban Filtrelemesi', aktif: true, tablo: 'b1_arge_products', neden_pasif: '' },
+            { id: 'mt_3', ad: 'Kumaş/Malzeme Tedarik Risk Oranı Hesaplama', aktif: true, tablo: 'b1_kumas_arsivi', neden_pasif: '' },
+            { id: 'mt_4', ad: 'Geçmiş Satış Kayıtlarından Tarihsel Doğrulama', aktif: false, tablo: 'b2_siparisler', neden_pasif: 'Geçmiş ciro datası/veri havuzu henüz boş' }
         ]
-    },
-    kasif: {
-        isim: 'Trend Kâşifi', ikon: '🔍', renk: '#3b82f6',
-        gorevler: [
-            { id: 'tk_1', ad: 'Duplicate trend kontrolü', aktif: true, tablo: 'b1_arge_trendler', neden_pasif: '' },
-            { id: 'tk_2', ad: 'Perplexity AI ile internet araştırması', aktif: true, tablo: 'internet', neden_pasif: '' },
-            { id: 'tk_3', ad: 'Kalite + uzunluk filtresi', aktif: true, tablo: 'dahili', neden_pasif: '' },
-            { id: 'tk_4', ad: 'Ar-Ge tablosuna kaydet (durum: inceleniyor)', aktif: true, tablo: 'b1_arge_trendler', neden_pasif: '' },
-            { id: 'tk_5', ad: 'Görev tamamlama raporu', aktif: true, tablo: 'b1_agent_loglari', neden_pasif: '' },
-        ]
-    },
-    muhasebe: {
-        isim: 'Muhasebe Yazıcı', ikon: '📊', renk: '#0ea5e9',
-        gorevler: [
-            { id: 'mh_1', ad: 'Aylık gelir/gider hesabı', aktif: true, tablo: 'b2_kasa_hareketleri', neden_pasif: '' },
-            { id: 'mh_2', ad: 'Model kârlılık analizi', aktif: true, tablo: 'b1_muhasebe_raporlari', neden_pasif: '' },
-            { id: 'mh_3', ad: 'Tamamlanan üretim özeti', aktif: true, tablo: 'production_orders', neden_pasif: '' },
-            { id: 'mh_4', ad: 'Sipariş teslim oranı', aktif: true, tablo: 'b2_siparisler', neden_pasif: '' },
-            { id: 'mh_5', ad: 'Aktif personel özeti', aktif: true, tablo: 'b1_personel', neden_pasif: '' },
-            { id: 'mh_6', ad: 'Aylık raporu muhasebe tablosuna yaz', aktif: true, tablo: 'b1_muhasebe_raporlari', neden_pasif: '' },
-        ]
-    },
-
-    // ─── MERKEZİ ZEKA ALGORİTMALARI (3 Aktif) ────────────────
-    merkezi_zeka: {
-        isim: 'Merkezi Zeka Kalkanı', ikon: '🧠', renk: '#c026d3',
-        gorevler: [
-            { id: 'mz_1', ad: 'HermAI Gerçeklik Freni — Yapay zeka halüsinasyonlarını geçmiş veriye göre filtreler', aktif: true, tablo: 'b1_arge_trendler + b1_maliyet_kayitlari', neden_pasif: '' },
-            { id: 'mz_2', ad: 'Veri Semizleme — Boş/geçersiz/çöp verilerin veritabanına girmesini engeller', aktif: true, tablo: 'b1_arge_products (yargic.js içinde)', neden_pasif: '' },
-            { id: 'mz_3', ad: 'Zırh ve Spam Kalkanı — Rate Limit, Bot engeli, Supabase RLS ile yetkisiz erişimi keser', aktif: true, tablo: 'API Middleware + Upstash Redis', neden_pasif: '' },
-        ]
-    },
-
-    // ─── YENİ İLAVELER (8 Yeni Algoritma) ────────────────────
-    kor_nokta: {
-        isim: '1. Kör Nokta Fire Radarı', ikon: '🔥', renk: '#f97316',
-        gorevler: [
-            { id: 'kn_1', ad: 'M5→M6 arası fire oranı hesapla (model bazında kumaş harcaması)', aktif: false, tablo: 'b1_kesim_emirleri + production_orders', neden_pasif: 'Geliştirme aşamasında — cron-ajanlar içine eklendi' },
-            { id: 'kn_2', ad: '📷 Vision AI — Kameradan üretim bandı parça sayımı', aktif: true, tablo: '/api/rapor/darbogaz (POST)', neden_pasif: '' },
-            { id: 'kn_3', ad: 'HermAI Gerçeklik Freni ile Vision sonucunu doğrula', aktif: true, tablo: 'b1_agent_loglari', neden_pasif: '' },
-            { id: 'kn_4', ad: 'Düşük verimlilik alarmını sisteme yaz', aktif: true, tablo: 'b1_sistem_uyarilari', neden_pasif: '' },
-        ]
-    },
-    yirtici: {
-        isim: '2. Yırtıcı Fırsat Botu', ikon: '⚡', renk: '#eab308',
-        gorevler: [
-            { id: 'yr_1', ad: 'Trendyol canlı stok verisi çek (oluisci.js)', aktif: true, tablo: 'b1_arge_products (Scraper)', neden_pasif: '' },
-            { id: 'yr_2', ad: 'Elinizde olanla Trendyol\'da biteni eşleştir', aktif: false, tablo: 'b2_urun_katalogu + oluisci.js', neden_pasif: 'Geliştirme aşamasında' },
-            { id: 'yr_3', ad: '"Arz açığı → %15 zam" alarmı Telegram\'a gönder', aktif: false, tablo: 'Telegram API', neden_pasif: 'Geliştirme aşamasında' },
-        ]
-    },
-    darbogaz: {
-        isim: '3. Darboğaz Teşhiscisi', ikon: '⏱️', renk: '#059669',
-        gorevler: [
-            { id: 'db_1', ad: 'M3→M4 geçiş süresi ölç (Kalıp → Modelhane)', aktif: true, tablo: 'b1_model_taslaklari', neden_pasif: '' },
-            { id: 'db_2', ad: 'M4→M5 geçiş süresi ölç (Modelhane → Kesim)', aktif: true, tablo: 'b1_modelhane_kayitlari', neden_pasif: '' },
-            { id: 'db_3', ad: 'M5→M6 geçiş süresi ölç (Kesim → Üretim)', aktif: true, tablo: 'production_orders', neden_pasif: '' },
-            { id: 'db_4', ad: '📷 Vision Gateway — Gemini ile kare analizi kabul et', aktif: true, tablo: '/api/rapor/darbogaz (POST)', neden_pasif: '' },
-            { id: 'db_5', ad: 'Darboğaz tespitinde alarm + log yaz', aktif: true, tablo: 'b1_sistem_uyarilari + b1_agent_loglari', neden_pasif: '' },
-        ]
-    },
-    sabika: {
-        isim: '4. Tedarikçi/Fason Sabıka Kaydı', ikon: '🕵️', renk: '#dc2626',
-        gorevler: [
-            { id: 'sk_1', ad: 'Gecikme oranı hesapla (siparişe vs. teslim)', aktif: false, tablo: 'production_orders (siparis_tarihi)', neden_pasif: 'Geliştirme aşamasında' },
-            { id: 'sk_2', ad: 'Defo/iade oranını eşleştir', aktif: false, tablo: 'İade/Defo logları', neden_pasif: 'Geliştirme aşamasında' },
-            { id: 'sk_3', ad: '"Güven Skoru" karnesi yaz', aktif: false, tablo: 'b1_personel veya fason modülü', neden_pasif: 'Geliştirme aşamasında' },
-        ]
-    },
-    kumbaraci: {
-        isim: '5. Kumbaracı (Akıllı Kümeleme)', ikon: '🧺', renk: '#7c3aed',
-        gorevler: [
-            { id: 'km_1', ad: 'Gelecek haftanın Kalıp+Model metadatalarını çek', aktif: false, tablo: 'b1_model_taslaklari + b1_modelhane_kayitlari', neden_pasif: 'Geliştirme aşamasında' },
-            { id: 'km_2', ad: 'Ortak malzeme ihtiyaçlarını grupla (Düğme, Fermuar vb.)', aktif: false, tablo: 'Dahili Analiz (SQL GROUP BY)', neden_pasif: 'Geliştirme aşamasında' },
-            { id: 'km_3', ad: 'Toptan alım listesi döndür — Sabah Cronu', aktif: false, tablo: 'cron-ajanlar (Sabah)', neden_pasif: 'Geliştirme aşamasında' },
-        ]
-    },
-    hafiza: {
-        isim: '6. Sistem Hafızası Geri Bildirimi', ikon: '🧬', renk: '#0284c7',
-        gorevler: [
-            { id: 'hf_1', ad: 'Form submit anında geçmiş zarar eden modeli sorgula', aktif: false, tablo: 'b1_arge_trendler + b1_maliyet_kayitlari', neden_pasif: 'ArgeMainContainer içine entegre edilecek' },
-            { id: 'hf_2', ad: 'Eşleşen kayıt varsa BLOCK koy + uyar', aktif: false, tablo: 'Frontend Guard (ArgeMainContainer)', neden_pasif: 'Geliştirme aşamasında' },
-        ]
-    },
-    atil: {
-        isim: '7. Atıl Sermaye Uyandırıcısı', ikon: '💤', renk: '#9f1239',
-        gorevler: [
-            { id: 'at_1', ad: '180 günü aşan hareketsiz kumaşları tespit et', aktif: false, tablo: 'b1_kumas_arsiv (son güncelleme tarihi)', neden_pasif: 'Geliştirme aşamasında' },
-            { id: 'at_2', ad: 'Uyarı barını M2 Kumaş panelinde göster', aktif: false, tablo: 'src/features/kumas/', neden_pasif: 'Geliştirme aşamasında' },
-        ]
-    },
-    muneccim: {
-        isim: '8. Mevsimsel Müneccim', ikon: '🔮', renk: '#d97706',
-        gorevler: [
-            { id: 'mn_1', ad: 'Son 3 yılın aynı ayı satış + trend zirvesi SQL analizi', aktif: false, tablo: 'b1_arge_trendler + b2_siparisler (GROUP BY ay)', neden_pasif: 'Geliştirme aşamasında' },
-            { id: 'mn_2', ad: '"Geçen yıl bu ay X fırladı, önceden al!" uyarısı', aktif: false, tablo: 'Karargah Dashboard (Yeni Kart)', neden_pasif: 'Geliştirme aşamasında' },
-        ]
-    },
+    }
 };
+
 
 
 const AJAN_LISTESI = [

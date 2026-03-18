@@ -16,7 +16,7 @@ export const DEPARTMANLAR = [
     { id: 'receteler', ad: 'M6 Üretim Reçetesi (Rotalar)' },
     { id: 'kesim', ad: 'Bant & Montaj' },
     { id: 'kalite', ad: 'Kalite & Süre' },
-    { id: 'kameralar', ad: 'M4 Kamera Takip' },
+    { id: 'kameralar', ad: 'M6 Kamera Takip' },
     { id: 'maliyet', ad: 'Maliyet Girişi' },
     { id: 'devir', ad: 'Mağazaya Sevk' },
     { id: 'takip', ad: 'Canlı Pano' },
@@ -294,11 +294,11 @@ export function useIsEmri(kullanici) {
                 if (o && o.status === 'pending') await durumGuncelle(o.id, 'in_progress');
 
                 // Geçici olarak order'dan bir operasyon id uyduralım veya operasyon olarak kaydedelim
-                // M4 kuralı geregi operasyon_id not null'dir.
+                // M6 kuralı geregi operasyon_id not null'dir.
                 // Bulamadıysa veritabanında "GENEL ÜRETİM" diye sahte operasyon kullanmalıyız ya da boşsa patlarız.
                 let opId = o_op?.id || 'd16fe0d3-13ce-4ba8-9ca0-7cbac16c4f3d'; // Eğer bulamazsa dummy bir şey lazım
 
-                // Gerçek M4 entegrasyonunda okutulan barkod ya order ya da operasyon olacağı için, 
+                // Gerçek M6 entegrasyonunda okutulan barkod ya order ya da operasyon olacağı için, 
                 // eger order okunduysa ona bağlı M4 operasyonunu arar. Biz opsiyonel atlıyoruz.
                 const pyld = {
                     personel_id: aktifPersonel.id,

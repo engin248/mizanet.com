@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
 import { Camera, Activity, ShieldCheck, AlertTriangle, Eye, Server } from 'lucide-react';
 
-export default function M4_KameraSayaci() {
+export default function M6_KameraSayaci() {
     const [olaylar, setOlaylar] = useState(/** @type {any[]} */([]));
     const [stats, setStats] = useState({ basarili: 0, hatali: 0, sonGuncelleme: null });
     const [loading, setLoading] = useState(true);
@@ -58,7 +58,7 @@ export default function M4_KameraSayaci() {
                 <div>
                     <h3 style={{ margin: 0, fontWeight: 900, color: '#0f172a', display: 'flex', alignItems: 'center', gap: 10 }}>
                         <Camera size={24} color="#047857" />
-                        M4 Otonom Edge Kameralar (Canlı)
+                        M6 Otonom Edge Kameralar (Canlı)
                     </h3>
                     <p style={{ margin: '4px 0 0 0', fontSize: '0.85rem', color: '#64748b', fontWeight: 600 }}>
                         Lokal ağdaki kameralardan ve AI Vision (YOLO) modellerinden gelen anlık üretim hattı analizleri sıfır gecikme ile buraya yansır.

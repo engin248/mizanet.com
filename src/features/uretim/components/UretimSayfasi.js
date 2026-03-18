@@ -8,7 +8,7 @@ import { useAuth } from '@/lib/auth';
 import { useLang } from '@/lib/langContext';
 import { useIsEmri, DEPARTMANLAR, DURUS_KODLARI, MALIYET_TIPLERI, ST_RENK, ST_LABEL, getST_RENK, getST_LABEL } from '@/features/uretim/hooks/useIsEmri';
 import { useUretimRecetesi } from '@/features/uretim/hooks/useUretimRecetesi';
-import M4_KameraSayaci from '@/features/uretim/components/M4_KameraSayaci';
+import M6_KameraSayaci from '@/features/uretim/components/M6_KameraSayaci';
 import YetkisizEkran from '@/components/shared/YetkisizEkran';
 import MesajBanner from '@/components/shared/MesajBanner';
 import SayfaBasligi from '@/components/ui/SayfaBasligi';
@@ -54,7 +54,7 @@ export default function UretimSayfasi() {
     const lbl = { display: 'block', fontSize: '0.7rem', fontWeight: 700, color: '#374151', marginBottom: 5, textTransform: 'uppercase' };
 
     if (!yetkiliMi) {
-        return <YetkisizEkran isAR={isAR} mesaj="M5 Üretim Bandı verileri için Üretim PİN girişi zorunludur." />;
+        return <YetkisizEkran isAR={isAR} mesaj="M6 Üretim Bandı verileri için Üretim PİN girişi zorunludur." />;
     }
 
     return (
@@ -442,9 +442,9 @@ export default function UretimSayfasi() {
                 </div>
             )}
 
-            {/* ─── D-D-K: KAMERALAR (M4 LOKAL EDGE) ───────────────────────── */}
+            {/* ─── D-D-K: KAMERALAR (M6 LOKAL EDGE) ───────────────────────── */}
             {dept === 'kameralar' && (
-                <M4_KameraSayaci />
+                <M6_KameraSayaci />
             )}
 
             {/* ─── D-D: MALİYET ───────────────────────────────────────────── */}

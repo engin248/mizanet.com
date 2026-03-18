@@ -179,53 +179,60 @@ export default function KumasMainContainer() {
                                         </div>
                                     </div>
                                 ) : (
-                                    kumasRaporu.map((k, idx) => (
-                                        <div key={idx} className={`p-4 rounded-xl border flex flex-col md:flex-row justify-between gap-4 transition-colors ${k.durum === 'riskli' ? 'border-rose-500/20 bg-rose-500/5' : 'border-[#30363d] bg-[#0d1117] hover:bg-[#0b121a]'
-                                            }`}>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+                                        {kumasRaporu.map((k, idx) => (
+                                            <div key={idx} className={`rounded-xl border flex flex-col overflow-hidden transition-all hover:-translate-y-1 hover:shadow-[0_10px_30px_rgba(0,0,0,0.5)] ${k.durum === 'riskli' ? 'border-rose-500/30' : 'border-[#30363d]'}`}>
 
-                                            {/* Kumaş Kimliği */}
-                                            <div className="flex-1">
-                                                <div className="flex items-center gap-2 mb-1">
-                                                    <span className="text-[9px] font-black uppercase bg-[#21262d] text-emerald-400 px-2 py-0.5 rounded border border-[#30363d]">{k.kodu}</span>
-                                                    {k.durum === 'riskli' && <span className="text-[9px] font-black uppercase bg-rose-500/20 text-rose-400 px-2 py-0.5 rounded border border-rose-500/30">⚠️ TEDARİK RİSKİ</span>}
+                                                {/* GÖRSEL ALANI (ARŞİV) */}
+                                                <div className="h-40 bg-[#0b121a] relative flex items-center justify-center border-b border-[#21262d]">
+                                                    <div className="absolute inset-0 bg-gradient-to-t from-[#0d1117] to-transparent z-10"></div>
+                                                    <span className="text-[10px] text-[#8b949e] font-black tracking-widest uppercase">GÖRSEL EKLENMEDİ</span>
+                                                    {k.durum === 'riskli' && (
+                                                        <div className="absolute top-2 right-2 z-20 bg-rose-500/90 text-white text-[9px] font-black uppercase px-2 py-0.5 rounded shadow-[0_0_10px_rgba(244,63,94,0.5)]">
+                                                            RİSK
+                                                        </div>
+                                                    )}
                                                 </div>
-                                                <h3 className="text-sm font-bold text-white tracking-wide">{k.ad}</h3>
-                                                <p className="text-[11px] text-[#8b949e] mt-1">{k.kompozisyon}</p>
-                                            </div>
 
-                                            {/* Stok ve Maliyet Barları (M7 İle Senkron - Taslak) */}
-                                            <div className="grid grid-cols-2 gap-4 border-l border-[#21262d] pl-4 shrink-0 min-w-[250px]">
-                                                <div className="flex flex-col gap-1">
-                                                    <span className="text-[9px] text-[#8b949e] font-bold uppercase tracking-wider">Maliyet (TL/mt)</span>
-                                                    <span className="text-lg font-mono text-white">₺{k.birimFiyat.toFixed(2)}</span>
-                                                </div>
-                                                <div className="flex flex-col gap-1">
-                                                    <span className="text-[9px] text-[#8b949e] font-bold uppercase tracking-wider">Depo Stok (M11)</span>
-                                                    <span className={`text-lg font-mono font-bold ${k.stok <= k.minStok ? 'text-rose-400' : 'text-emerald-400'}`}>
-                                                        {k.stok} <span className="text-xs">mt</span>
-                                                    </span>
-                                                </div>
-                                                <div className="col-span-2 pt-2 border-t border-[#21262d] flex flex-col gap-1">
-                                                    <span className="text-[9px] text-[#8b949e] font-bold uppercase tracking-wider">Tedarik Zinciri</span>
-                                                    <div className="flex justify-between items-center text-[11px]">
-                                                        <span className={k.alternatifVar ? 'text-[#c9d1d9]' : 'text-rose-400 font-bold'}>{k.tedarikci}</span>
-                                                        <span className="text-amber-400">Temin: {k.riskSuresi}</span>
+                                                <div className={`p-4 flex flex-col flex-1 bg-[#0d1117]`}>
+                                                    <div className="flex items-center gap-2 mb-2">
+                                                        <span className="text-[9px] font-black uppercase bg-[#21262d] text-emerald-400 px-2 py-0.5 rounded border border-[#30363d]">{k.kodu}</span>
+                                                    </div>
+                                                    <h3 className="text-sm font-bold text-white tracking-wide">{k.ad}</h3>
+                                                    <p className="text-[10px] text-[#8b949e] mt-1 mb-4 border-l-2 border-[#30363d] pl-2">{k.kompozisyon}</p>
+
+                                                    <div className="grid grid-cols-2 gap-3 mb-4 bg-[#161b22] p-3 rounded-lg border border-[#21262d]">
+                                                        <div className="flex flex-col gap-1 border-r border-[#30363d]">
+                                                            <span className="text-[9px] text-[#8b949e] font-bold uppercase tracking-wider">Maliyet</span>
+                                                            <span className="text-lg font-mono text-white">₺{k.birimFiyat.toFixed(2)}<span className="text-[10px] text-gray-500">/mt</span></span>
+                                                        </div>
+                                                        <div className="flex flex-col gap-1 pl-2">
+                                                            <span className="text-[9px] text-[#8b949e] font-bold uppercase tracking-wider">M11 Stok</span>
+                                                            <span className={`text-lg font-mono font-bold ${k.stok <= k.minStok ? 'text-rose-400' : 'text-emerald-400'}`}>
+                                                                {k.stok}<span className="text-[10px] text-gray-500">mt</span>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+
+                                                    <div className="flex justify-between items-center text-[10px] font-bold uppercase tracking-widest border-t border-[#30363d] pt-3 mb-4">
+                                                        <span className="text-[#8b949e]">Alternatif:</span>
+                                                        <span className={k.alternatifVar ? 'text-[#c9d1d9]' : 'text-rose-400'}>{k.tedarikci}</span>
+                                                    </div>
+
+                                                    <div className="flex gap-2 mt-auto">
+                                                        <button className="flex-1 text-[10px] font-bold text-[#c9d1d9] bg-[#21262d] hover:bg-[#30363d] py-2.5 rounded-lg transition-colors flex items-center justify-center gap-1 uppercase tracking-widest border border-[#30363d]">
+                                                            <Eye size={14} /> KARTELA
+                                                        </button>
+                                                        <Link href="/kalip" className="flex-1">
+                                                            <button className="w-full text-[10px] font-black text-emerald-400 bg-emerald-500/10 hover:bg-emerald-500/20 py-2.5 rounded-lg transition-colors border border-emerald-500/30 shadow-[0_0_15px_rgba(16,185,129,0.1)] uppercase tracking-widest flex items-center justify-center gap-1">
+                                                                M3'E AT
+                                                            </button>
+                                                        </Link>
                                                     </div>
                                                 </div>
                                             </div>
-
-                                            {/* Aksiyon Barı */}
-                                            <div className="flex flex-col justify-end gap-2 shrink-0 border-l border-[#21262d] pl-4">
-                                                <button className="text-[10px] font-bold text-[#c9d1d9] hover:text-white bg-[#21262d] hover:bg-[#30363d] px-4 py-2 rounded-lg transition-colors flex items-center justify-center gap-1">
-                                                    <Eye size={14} /> DETAY
-                                                </button>
-                                                <Link href="/kalip" className="text-[10px] font-bold text-center text-emerald-400 hover:text-emerald-300 bg-emerald-500/10 hover:bg-emerald-500/20 px-4 py-2 rounded-lg transition-colors border border-emerald-500/20 border-b-emerald-500/50 flex items-center justify-center gap-1">
-                                                    REÇETEYE EKLE M3 <ChevronRight size={14} />
-                                                </Link>
-                                            </div>
-                                        </div>
-                                    ))
-                                )}
+                                        ))}
+                                    </div>
                             </div>
                         </div>
 

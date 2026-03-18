@@ -62,7 +62,7 @@ export default function MesajBildirimButonu() {
             const kritik = mesajlar.filter(m => m.oncelik === 'kritik' || m.oncelik === 'acil');
             if (kritik.length > 0) { setAlarmMesajlar(kritik); setAlarmAcik(true); }
         } catch { /* sessiz */ }
-    }, [kullaniciId, kGrup, sonMesajlar]);
+    }, [kullaniciId, kGrup]); // 🔴 DİKKAT: sonMesajlar listeden ÇIKARILDI (Sonsuz Renderı kırmak için)
 
     // İlk yükleme
     useEffect(() => {

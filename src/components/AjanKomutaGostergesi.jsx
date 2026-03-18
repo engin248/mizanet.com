@@ -167,7 +167,64 @@ export default function AjanKomutaGostergesi() {
 
                             {/* Görev Verme Butonu */}
                             <button
-                                onClick={() => alert(`${ajan.ad} (${ajan.konum}) için atanacak yeni otonom görev penceresi açılıyor...`)}
+                                onClick={async () => {
+                                    const Swal = (await import('sweetalert2')).default;
+                                    const { value: formValues } = await Swal.fire({
+                                        title: `${ajan.ad} Komuta Merkezi`,
+                                        html: `
+                                            <div style="text-align: left; font-size: 14px;">
+                                                <p style="color: #64748b; margin-bottom: 15px;">Botun hedef rotasını ve toplayacağı veri sınırını belirleyin.</p>
+                                                
+                                                <label style="font-weight: bold; font-size: 13px;">Hedef Kategori / Anahtar Kelime:</label>
+                                                <input id="swal-hedef" class="swal2-input" placeholder="Örn: kadin-giyim-c82 veya Yırtmaçlı Pantolon" style="width: 85%; max-width: 100%; margin-top: 5px; font-size: 14px;">
+                                                
+                                                <label style="font-weight: bold; font-size: 13px; margin-top: 15px; display: block;">Maksimum Tarama Sayfası:</label>
+                                                <input id="swal-limit" type="number" class="swal2-input" value="1" min="1" max="10" style="width: 85%; max-width: 100%; margin-top: 5px; font-size: 14px;">
+                                            </div>
+                                        `,
+                                        focusConfirm: false,
+                                        showCancelButton: true,
+                                        confirmButtonText: '⚡ Operasyonu Başlat',
+                                        cancelButtonText: 'İptal',
+                                        confirmButtonColor: '#10b981',
+                                        background: '#0f172a',
+                                        color: '#f8fafc',
+                                        preConfirm: () => {
+                                            const v1 = (/** @type {HTMLInputElement} */ (document.getElementById('swal-hedef')))?.value;
+                                            const v2 = (/** @type {HTMLInputElement} */ (document.getElementById('swal-limit')))?.value;
+                                            if (!v1) {
+                                                Swal.showValidationMessage('Hedef veya Kategori boş bırakılamaz!');
+                                            }
+                                            return { hedef: v1, sayfa: v2, ajanId: ajan.id };
+                                        }
+                                    });
+
+                                    if (formValues) {
+                                        // 1. Simülasyon: Kullanıcıya başlatıldığına dair log yazalım (b1_agent_loglari)
+                                        const { error } = await supabase.from('b1_agent_loglari').insert([{
+                                            ajan_adi: ajan.ad,
+                                            islem_tipi: 'Otonom Görev Ataması',
+                                            mesaj: `Karargahtan manuel emre uyuluyor. Hedef: ${formValues.hedef}, Derinlik: ${formValues.sayfa} syf.`,
+                                            sonuc: 'bekliyor',
+                                            created_at: new Date().toISOString()
+                                        }]);
+
+                                        if (!error) {
+                                            Swal.fire({
+                                                icon: 'success',
+                                                title: 'Emir İletildi!',
+                                                text: `${ajan.ad} hedefe doğru ilerliyor. Sonuçlar Karargah ekranına düşecektir.`,
+                                                background: '#0f172a',
+                                                color: '#10b981',
+                                                timer: 3000,
+                                                showConfirmButton: false
+                                            });
+
+                                            // NOT: Backend API'miz (Next.js route vb.) olsaydı burada fetch atıp botu server üzerinden ayaklandırırdık. 
+                                            // Ancak Terminalden (VPS / Local) de çalışabildiği için log bırakmak ekibi uyaracaktır.
+                                        }
+                                    }
+                                }}
                                 className="w-full py-2.5 flex items-center justify-center gap-2 text-[10px] uppercase tracking-widest font-bold bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 hover:text-emerald-300 border border-emerald-500/30 rounded-lg transition-all"
                             >
                                 <Play size={11} className="fill-emerald-400" /> Görev Ver

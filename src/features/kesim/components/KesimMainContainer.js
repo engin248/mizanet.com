@@ -66,7 +66,7 @@ export default function KesimMainContainer() {
         setLoading(true);
         try {
             const p1 = supabase.from('b1_kesim_operasyonlari').select('*, b1_model_taslaklari(model_kodu, model_adi)').order('created_at', { ascending: false }).limit(200);
-            const p2 = supabase.from('b1_model_taslaklari').select('id, model_kodu, model_adi').limit(500);
+            const p2 = supabase.from('b1_model_taslaklari').select('id, model_kodu, model_adi').eq('durum', 'uretime_hazir').limit(500);
             const res = await Promise.race([Promise.allSettled([p1, p2]), timeoutPromise()]);
             const [kesimRes, modelRes] = res;
             if (kesimRes.status === 'fulfilled' && kesimRes.value.data) setKesimler(kesimRes.value.data);
@@ -143,10 +143,10 @@ export default function KesimMainContainer() {
         window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
-    // ─── M3 → M4 VERİ KÖPRÜSÜ ───────────────────────────────────────────────────
+    // ─── M5 → M6 VERİ KÖPRÜSÜ ───────────────────────────────────────────────────
     const isEmriOlustur = async (k) => {
         if (islemdeId) return goster('Lütfen önceki işlemin bitmesini bekleyin.', 'error');
-        if (k.durum !== 'tamamlandi') return goster('Sadece tamamlanan kesimler M4\'e aktarılabilir!', 'error');
+        if (k.durum !== 'tamamlandi') return goster('Sadece tamamlanan kesimler Üretim Bandına (M6) aktarılabilir!', 'error');
         if (!confirm(`"${k.b1_model_taslaklari?.model_kodu}" için Üretim İş Emri oluşturulsun mu?\nAdet: ${k.kesilen_net_adet}`)) return;
         setLoading(true);
         setIslemdeId('emr_' + k.id);
@@ -209,8 +209,8 @@ export default function KesimMainContainer() {
                 }
             }
 
-            goster(`✅ M4 Üretim İş Emri oluşturuldu! ${k.b1_model_taslaklari?.model_kodu} — ${k.kesilen_net_adet} adet`);
-            telegramBildirim(`🔗 M3→M4 KÖPRÜ\nKesimden Üretime: ${k.b1_model_taslaklari?.model_kodu}\nAdet: ${k.kesilen_net_adet}\nİş emri "Bekliyor" olarak açıldı.`);
+            goster(`✅ M6 Üretim İş Emri oluşturuldu! ${k.b1_model_taslaklari?.model_kodu} — ${k.kesilen_net_adet} adet`);
+            telegramBildirim(`🔗 M5→M6 KÖPRÜ\nKesimden Üretime: ${k.b1_model_taslaklari?.model_kodu}\nAdet: ${k.kesilen_net_adet}\nİş emri "Bekliyor" olarak açıldı.`);
         } catch (error) { goster('İş emri hatası: ' + error.message, 'error'); }
         setLoading(false);
         setIslemdeId(null);
@@ -224,9 +224,9 @@ export default function KesimMainContainer() {
             await supabase.from('b1_kesim_operasyonlari').update({ durum: yeniDurum }).eq('id', id);
             yukle();
             if (yeniDurum === 'tamamlandi') {
-                telegramBildirim(`✂️ KESİM TAMAMLANDI\nModel: ${model_kodu} için kesim işlemi tamamlandı. Üretim Bandına (M4) sevke hazır.`);
+                telegramBildirim(`✂️ KESİM TAMAMLANDI\nModel: ${model_kodu} için kesim işlemi tamamlandı. Üretim Bandına (M6) sevke hazır.`);
 
-                // 💥 KASAP OPERASYONU: Kumaş M2 Stoktan Otomatik Düşülecek! (M3->M2 Veri Zırhı)
+                // 💥 KASAP OPERASYONU: Kumaş M2 Stoktan Otomatik Düşülecek! (M5->M2 Veri Zırhı)
                 try {
                     const { data: kData } = await supabase.from('b1_kesim_operasyonlari').select('kumas_topu_no, kullanilan_kumas_mt').eq('id', id).single();
                     if (kData && kData.kumas_topu_no && parseFloat(kData.kullanilan_kumas_mt) > 0) {
@@ -237,7 +237,7 @@ export default function KesimMainContainer() {
                         if (kumas) {
                             const yeniStok = Math.max(0, parseFloat(kumas.stok_mt || 0) - dusulecek);
                             await supabase.from('b1_kumas_arsivi').update({ stok_mt: yeniStok }).eq('id', kumas.id);
-                            telegramBildirim(`📉 M3 KESİM STOK DÜŞÜMÜ\nKumaş Kodu: ${kumasKodu}\nDüşülen: ${dusulecek} mt\nKalan Stok: ${yeniStok} mt`);
+                            telegramBildirim(`📉 M5 KESİM STOK DÜŞÜMÜ\nKumaş Kodu: ${kumasKodu}\nDüşülen: ${dusulecek} mt\nKalan Stok: ${yeniStok} mt`);
                         }
                     }
                 } catch (stokHata) {
@@ -259,7 +259,7 @@ export default function KesimMainContainer() {
         try {
             try {
                 await supabase.from('b0_sistem_loglari').insert([{
-                    tablo_adi: 'b1_kesim_operasyonlari', islem_tipi: 'ARŞİVLEME', kullanici_adi: 'Saha Yetkilisi M3',
+                    tablo_adi: 'b1_kesim_operasyonlari', islem_tipi: 'ARŞİVLEME', kullanici_adi: 'Saha Yetkilisi M5',
                     eski_veri: { durum: 'Soft Delete / Arşive alındı.', model_kodu: m_kodu, id: id }
                 }]);
             } catch (e) { }
@@ -294,7 +294,7 @@ export default function KesimMainContainer() {
         return (
             <div style={{ padding: '4rem', textAlign: 'center', background: '#fef2f2', border: '2px solid #fecaca', borderRadius: '16px', margin: '2rem' }}>
                 <ShieldAlert size={56} color="#ef4444" style={{ margin: '0 auto 1.5rem' }} />
-                <h2 style={{ color: '#b91c1c', fontSize: '1.4rem', fontWeight: 900, textTransform: 'uppercase' }}>{isAR ? 'تم حظر الدخول غير المصرح به' : 'YETKİSİZ GİRİŞ ENGELLENDİ (M3)'}</h2>
+                <h2 style={{ color: '#b91c1c', fontSize: '1.4rem', fontWeight: 900, textTransform: 'uppercase' }}>{isAR ? 'تم حظر الدخول غير المصرح به' : 'YETKİSİZ GİRİŞ ENGELLENDİ (M5)'}</h2>
                 <p style={{ color: '#7f1d1d', fontWeight: 600, marginTop: 12 }}>Kesimhane verileri gizlidir. Üretim PİN kodu girmeniz gerekmektedir.</p>
             </div>
         );
@@ -311,10 +311,10 @@ export default function KesimMainContainer() {
                     </div>
                     <div>
                         <h1 style={{ fontSize: '1.5rem', fontWeight: 900, color: 'white', margin: 0 }}>
-                            {isAR ? 'غرفة القص والعمليات الوسيطة' : 'Kesim & Ara İşçilik'}
+                            {isAR ? 'غرفة القص والعمليات الوسيطة' : 'M5 Kesimhane'}
                         </h1>
                         <p style={{ fontSize: '0.8rem', color: '#a7f3d0', margin: '2px 0 0', fontWeight: 600 }}>
-                            {isAR ? 'وحدة العمليات M3' : 'Hassas kesim, pastal işlemleri ve üretim bandı hazırlığı (M3)'}
+                            {isAR ? 'وحدة العمليات M5' : 'Hassas kesim, pastal işlemleri ve üretim bandı hazırlığı (M5)'}
                         </p>
                     </div>
                 </div>
@@ -325,7 +325,7 @@ export default function KesimMainContainer() {
                     </button>
                     <Link href="/uretim" style={{ textDecoration: 'none' }}>
                         <button style={{ display: 'flex', alignItems: 'center', gap: 8, background: '#d97706', color: 'white', border: 'none', padding: '12px 24px', borderRadius: 12, fontWeight: 800, cursor: 'pointer', fontSize: '0.9rem', boxShadow: '0 4px 14px rgba(217,119,6,0.35)' }}>
-                            ⚙️ Üretim Bandı (M4)
+                            ⚙️ Üretim Bandı (M6)
                         </button>
                     </Link>
                 </div>
@@ -544,7 +544,7 @@ export default function KesimMainContainer() {
                                 {k.durum === 'kesimde' && (
                                     <button onClick={() => durumGuncelle(k.id, 'tamamlandi', k.b1_model_taslaklari?.model_kodu)} disabled={islemdeId === 'durum_' + k.id}
                                         style={{ width: '100%', padding: '10px', background: islemdeId === 'durum_' + k.id ? '#9ca3af' : '#10b981', color: 'white', border: 'none', borderRadius: 10, fontWeight: 900, cursor: islemdeId === 'durum_' + k.id ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
-                                        <CheckCircle2 size={16} /> Kesimi Tamamla (M4 İlet)
+                                        <CheckCircle2 size={16} /> Kesimi Tamamla (M6 İlet)
                                     </button>
                                 )}
                                 {k.durum === 'tamamlandi' && (
@@ -554,7 +554,7 @@ export default function KesimMainContainer() {
                                         </div>
                                         <button onClick={() => isEmriOlustur(k)} disabled={islemdeId === 'emr_' + k.id}
                                             style={{ width: '100%', padding: '9px', background: islemdeId === 'emr_' + k.id ? '#9ca3af' : 'linear-gradient(135deg,#d97706,#92400e)', color: 'white', border: 'none', borderRadius: 8, fontWeight: 900, cursor: islemdeId === 'emr_' + k.id ? 'not-allowed' : 'pointer', fontSize: '0.82rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, boxShadow: '0 4px 14px rgba(217,119,6,0.35)' }}>
-                                            🔗 M4 Üretim İş Emri Oluştur
+                                            🔗 M6 Üretim İş Emri Oluştur
                                         </button>
                                     </div>
                                 )}
@@ -565,7 +565,7 @@ export default function KesimMainContainer() {
             </div>
 
             {/* BARKOD MODALI */}
-            <SilBastanModal acik={barkodAcik} onClose={() => setBarkodAcik(false)} title="🖨️ Kesim (M3) Barkodu Çıkart">
+            <SilBastanModal acik={barkodAcik} onClose={() => setBarkodAcik(false)} title="🖨️ Kesim (M5) Barkodu Çıkart">
                 {seciliKesim && (
                     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem', background: '#122b27', padding: '2rem', borderRadius: '12px' }}>
                         <FizikselQRBarkod
@@ -574,7 +574,7 @@ export default function KesimMainContainer() {
                             aciklama={`${seciliKesim.kesilen_net_adet} Adet • Pastal: ${seciliKesim.pastal_kat_sayisi}${seciliKesim.kesimci_adi ? ' • ' + seciliKesim.kesimci_adi : ''}`}
                         />
                         <p style={{ margin: 0, fontSize: '0.75rem', color: '#a7f3d0', textAlign: 'center', fontWeight: 600 }}>
-                            Bu barkod, kesim paketlerinin (meto) üzerine yapıştırılıp Üretim Bandına (M4) yollanır.<br />
+                            Bu barkod, kesim paketlerinin (meto) üzerine yapıştırılıp Üretim Bandına (M6) yollanır.<br />
                             Bant şefi kameraya okuttuğunda otomatik olarak üretime başlar.
                         </p>
                     </div>

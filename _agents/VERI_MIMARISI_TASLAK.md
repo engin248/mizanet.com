@@ -22,26 +22,32 @@ Tek noktadan veri yeterli değil.
 ## EKSEN 1: TREND (Ne üretilecek?)
 
 ### Platform: TRENDYOL
-Her ürün sayfasında okunacak kriterler:
+Her ürün sayfasında DOĞRUDAN OKUNACAK, AYIKLANACAK VE ANALİZ EDİLECEK kriterler (Özet Çıkarılmadan, Ham Veriyle Hüküm Verilecek):
 ```
 1. Ürün adı
 2. Marka / satıcı
 3. Fiyat (güncel)
 4. İndirim oranı
-5. Değerlendirme puanı (1-5)
-6. Yorum sayısı
-7. Satış adedi ("X kez satıldı")
-8. Favori / beğeni sayısı
+5. Değerlendirme puanı (Örn: 4.8 Yıldız)
+6. Gelişmiş Yorum Analizi (SADECE SAYI DEĞİL):
+   a. Toplam Yorum Sayısı
+   b. Fotoğraflı Yorum Sayısı (Müşteri cidden ürünü göstermek istemiş mi?)
+   c. 5 Yıldızlı Yorum Oranı (Genel memnuniyet)
+   d. 1 ve 2 Yıldızlı Yorum Teması ("Kırmızı renk soluk geldi", "Kalıbı dar" vb. şikayetlerin anahtar kelimeleri)
+7. Satış adedi ("X kez satıldı" rozeti)
+8. Favoriye ekleme / Beğeni sayısı (Sepette bekletme iştahı)
 9. Ana kategori + alt kategori
 10. Kumaş / materyal içeriği
-11. Renk seçenek sayısı
-12. Beden seçenekleri + stok durumu
-13. Kargo süresi
-14. Trend etiketi ("Trendyol Bu Ürünü Seviyor" vs)
-15. Benzer ürün sayısı (rekabet analizi)
+11. Renkler Arası Performans (Önemli!):
+    a. Piyasada en çok hangi rengi favoriye alınmış?
+    b. Yorumlarda spesifik bir rengin hatası/başarısı konuşuluyor mu? ("Siyahı harika ama kırmızısı iç gösteriyor" gibi veriler)
+12. Beden seçenekleri + tükenen bedenler (En kârlı/giden beden tahmini)
+13. Kargo hızı (Hızlı tüketim ürünü satıcısı mı?)
+14. Trend etiketi ("Trendyol Bu Ürünü Seviyor" rozeti)
+15. Benzer ürün sayısı (Rekabet havuzu geniş mi?)
 16. Ürün fotoğrafı (URL)
-17. Ürün açıklaması (ilk 300 karakter)
-18. İade oranı / politikası
+17. Ürün açıklaması (İlk 300 karakter)
+18. İade politikasındaki gizli ibareler
 ```
 **❓ Eksik veya yanlış kriter var mı?**
 

@@ -1,25 +1,24 @@
 'use client';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import {
     TrendingUp, Plus, CheckCircle2, XCircle, Clock, AlertTriangle,
-    Bot, ChevronRight, Search, BarChart3, Tag, Eye, Lock, Camera,
-    Network, Cpu, Database, Zap, Layers, RefreshCcw, Activity
+    Bot, Search, BarChart3, Tag, Layers, Zap, Activity, Network, ShieldAlert
 } from 'lucide-react';
-import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
 import { useAuth } from '@/lib/auth';
-import { debounce } from 'lodash';
-import { cevrimeKuyrugaAl } from '@/lib/offlineKuyruk';
 
 export default function ArgeMainContainer() {
-    // YETKI KONTROLU
     const { kullanici, yukleniyor } = useAuth();
     const [yetkiliMi, setYetkiliMi] = useState(false);
 
-    // STATE LER
-    const [sekmeler] = useState(['Canlı İstihbarat (AI)', 'İncelenen Trendler', 'Onaylı/Üretime Gidenler', 'Reddedilen/Riskli']);
-    const [aktifSekme, setAktifSekme] = useState(0);
-    const [trendler, setTrendler] = useState([]);
+    // Tab List
+    const [sekmeler] = useState(['Canlı Akış (Ajan Taraması)', 'Karar Bekleyenler', 'Üretim Onaylı (M2)', 'İptal Edilenler']);
+    const [aktifSekme, setAktifSekme] = useState(1); // Default Karar Bekleyenler
+
+    // Datas
+    /** @type {[any[], import('react').Dispatch<import('react').SetStateAction<any[]>>]} */
+    const [products, setProducts] = useState([]);
+    /** @type {[any[], import('react').Dispatch<import('react').SetStateAction<any[]>>]} */
     const [agentLoglari, setAgentLoglari] = useState([]);
     const [loading, setLoading] = useState(true);
 
@@ -36,283 +35,248 @@ export default function ArgeMainContainer() {
         const verileriCek = async () => {
             setLoading(true);
             try {
-                // Supabase'den trend verilerini çek
-                const { data: trendData, error: trendHata } = await supabase
-                    .from('b1_arge_trendler')
+                // b1_arge_products tablosundan tüm sinyalleri çek
+                const { data: prodData, error: prodHata } = await supabase
+                    .from('b1_arge_products')
                     .select('*')
                     .order('created_at', { ascending: false })
                     .limit(50);
+                if (!prodHata && prodData) setProducts(prodData);
 
-                if (!trendHata && trendData) setTrendler(trendData);
-
-                // Supabase'den logları çek
+                // Ajan Logları
                 const { data: logData, error: logHata } = await supabase
                     .from('b1_agent_loglari')
-                    .select('id, ajan_adi, islem_tipi, mesaj, created_at, sonuc')
-                    .eq('ajan_adi', 'Trend Kâşifi')
+                    .select('*')
                     .order('created_at', { ascending: false })
-                    .limit(5);
-
+                    .limit(10);
                 if (!logHata && logData) setAgentLoglari(logData);
 
             } catch (err) {
-                console.error("Veri çekme hatası:", err);
+                console.error("M1 Veri çekme hatası:", err);
             }
             setLoading(false);
         };
 
         verileriCek();
 
-        // GERCEK ZAMANLI ABONELIKLER
-        const handleTrendChanges = debounce((payload) => {
-            if (payload.eventType === 'INSERT') {
-                setTrendler(prev => [payload.new, ...prev]);
-            } else if (payload.eventType === 'UPDATE') {
-                setTrendler(prev => prev.map(t => t.id === payload.new.id ? payload.new : t));
-            } else if (payload.eventType === 'DELETE') {
-                setTrendler(prev => prev.filter(t => t.id !== payload.old.id));
-            }
-        }, 1000);
+        const kanalProd = supabase.channel('m1-arge-products-realtime')
+            .on('postgres_changes', { event: '*', schema: 'public', table: 'b1_arge_products' }, payload => {
+                if (payload.eventType === 'INSERT') setProducts(p => [payload.new, ...p]);
+                else if (payload.eventType === 'UPDATE') setProducts(p => p.map(t => t.id === payload.new.id ? payload.new : t));
+                else if (payload.eventType === 'DELETE') setProducts(p => p.filter(t => t.id !== payload.old.id));
+            }).subscribe();
 
-        const kanal = supabase.channel('m1-arge-gercek-zamanli')
-            .on('postgres_changes', { event: '*', schema: 'public', table: 'b1_arge_trendler' }, handleTrendChanges)
-            .subscribe();
-
-        const handleLogChanges = debounce((payload) => {
-            if (payload.new && payload.new.ajan_adi === 'Trend Kâşifi') {
-                setAgentLoglari(prev => [payload.new, ...prev].slice(0, 5));
-            }
-        }, 1000);
-
-        const kanalLog = supabase.channel('m1-arge-log-gercek-zamanli')
-            .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'b1_agent_loglari' }, handleLogChanges)
-            .subscribe();
-
-        return () => {
-            handleTrendChanges.cancel();
-            handleLogChanges.cancel();
-            supabase.removeChannel(kanal);
-            supabase.removeChannel(kanalLog);
-        }
+        return () => supabase.removeChannel(kanalProd);
     }, [kullanici]);
 
-    // Trend Onay / İptal Aksiyonu
-    const durumGuncelle = async (id, yeniDurum) => {
+    // Karar Mekanizması
+    const kararVer = async (id, yeniDurum) => {
         try {
             const { error } = await supabase
-                .from('b1_arge_trendler')
-                .update({ durum: yeniDurum })
+                .from('b1_arge_products')
+                .update({ status: yeniDurum })
                 .eq('id', id);
 
-            if (!error && yeniDurum === 'onaylandi') {
-                const onaylayanAd = kullanici?.ad || 'Atölye Lideri (PIN)';
+            if (!error && (yeniDurum === 'uretim_onay' || yeniDurum === 'red')) {
+                const islem = yeniDurum === 'uretim_onay' ? 'KARAR: ÜRETİME ALINDI' : 'KARAR: İPTAL (%30 MARJ/RİSK)';
                 await supabase.from('b1_agent_loglari').insert([{
-                    ajan_adi: 'Trend Kâşifi',
-                    islem_tipi: 'Trend Onaylandı',
-                    mesaj: `Trend Onaylandı! Onaylayan: ${onaylayanAd}`,
-                    sonuc: 'basarili',
-                    created_at: new Date().toISOString()
+                    ajan_adi: 'M1 Karar Motoru (Manuel)',
+                    islem_tipi: islem,
+                    mesaj: `Koordinatör kararı uygulandı. Ürün referans ID: ${id}`,
+                    sonuc: yeniDurum === 'uretim_onay' ? 'basarili' : 'uyari'
                 }]);
             }
-        } catch (err) {
-            console.error(err);
-        }
+        } catch (err) { console.error(err); }
     };
 
+    if (yukleniyor || loading) return <div className="p-12 text-center text-indigo-400 font-bold tracking-widest animate-pulse">İSTİHBARAT AĞINA BAĞLANILIYOR...</div>;
+    if (!yetkiliMi) return (
+        <div className="p-12 text-center bg-rose-950/20 rounded-2xl m-8 shadow-2xl">
+            <ShieldAlert size={48} className="mx-auto mb-4 text-rose-500" />
+            <h2 className="text-xl font-black text-rose-500 uppercase tracking-widest">GİZLİ KARARGAH VERİSİ</h2>
+        </div>
+    );
 
-    if (yukleniyor || loading) {
-        return <div className="p-12 text-center text-indigo-400 font-bold tracking-widest animate-pulse">SUPABASE BAĞLANTISI KURULUYOR...</div>;
-    }
-
-    if (!yetkiliMi) {
-        return (
-            <div className="p-12 text-center bg-rose-950/20 border-2 border-rose-900/50 rounded-2xl m-8 shadow-2xl">
-                <Lock size={48} className="mx-auto mb-4 text-rose-500" />
-                <h2 className="text-xl font-black text-rose-500 uppercase tracking-widest">YETKİSİZ GİRİŞ ENGELLENDİ</h2>
-                <p className="text-rose-300 font-bold mt-2">M1 Ar-Ge Verileri THE ORDER PİN yetkisi gerektirir.</p>
-            </div>
-        );
-    }
-
-    // Aktif Sekmeye Göre Filtre
-    // 0: Hepsi (Canlı İstihbarat)
-    // 1: İncelenen (inceleniyor)
-    // 2: Onaylı (onaylandi)
-    // 3: İptal (iptal)
-    let gosterilenTrendler = trendler;
-    if (aktifSekme === 1) gosterilenTrendler = trendler.filter(t => t.durum === 'inceleniyor');
-    if (aktifSekme === 2) gosterilenTrendler = trendler.filter(t => t.durum === 'onaylandi');
-    if (aktifSekme === 3) gosterilenTrendler = trendler.filter(t => t.durum === 'iptal');
-
-    // Analitik Metrikler
-    const incelenenSayisi = trendler.filter(t => t.durum === 'inceleniyor').length;
-    const onaylananSayisi = trendler.filter(t => t.durum === 'onaylandi').length;
-    const iptalSayisi = trendler.filter(t => t.durum === 'iptal').length;
+    // Listeleme Filtreleri
+    const gosterilenProducts = products.filter(p => {
+        if (aktifSekme === 0) return true; // Canlı akış (hepsi)
+        if (aktifSekme === 1) return p.status === 'inceleniyor' || !p.status;
+        if (aktifSekme === 2) return p.status === 'uretim_onay';
+        if (aktifSekme === 3) return p.status === 'red' || p.status === 'iptal';
+        return true;
+    });
 
     return (
         <div className="min-h-screen font-sans bg-[#0d1117] text-white">
-            <div className="max-w-[1600px] mx-auto px-6 lg:px-10 py-6" style={{ animation: 'fadeUp 0.4s ease-out' }}>
+            <div className="max-w-[1600px] mx-auto px-6 py-6" style={{ animation: 'fadeUp 0.4s ease-out' }}>
 
-                {/* 1. BAŞLIK VE AI DURUMU */}
-                <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4 border-b border-[#21262d] pb-6">
+                {/* HEAD: CANLI TREND AKIŞI */}
+                <div className="flex flex-col md:flex-row justify-between items-center mb-6 gap-4 border-b border-[#21262d] pb-6">
                     <div className="flex items-center gap-4">
-                        <div className="w-12 h-12 bg-gradient-to-br from-indigo-600 to-indigo-900 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-500/20 border border-indigo-500/30">
-                            <Search size={24} className="text-indigo-50" />
+                        <div className="w-12 h-12 bg-gradient-to-br from-emerald-500 to-emerald-900 rounded-xl flex items-center justify-center shadow-[0_0_15px_rgba(16,185,129,0.3)]">
+                            <Activity size={24} className="text-emerald-50" />
                         </div>
                         <div>
-                            <h1 className="text-2xl font-black text-white tracking-tight m-0 uppercase flex items-center gap-3">
-                                M1: Ar-Ge ve İstihbarat Merkezi
+                            <h1 className="text-2xl font-black text-white tracking-tight uppercase flex items-center gap-3">
+                                M1: GÖLGE İSTİHBARAT VE KARAR CENDERESİ
                             </h1>
-                            <p className="text-xs font-bold text-indigo-300 mt-1 uppercase tracking-wider">
-                                Aşama 1: Sinyal Yakalama & Eleme (CANLI VERİ AKIŞI ETKİN)
+                            <p className="text-[11px] font-mono text-emerald-400 mt-1 uppercase tracking-widest">
+                                93 Kriterlik Radar Aktif. Sosyal Sinyaller Dinleniyor.
                             </p>
                         </div>
                     </div>
-                    <div className="flex items-center gap-4">
-                        <span className="bg-[#122b27] text-emerald-400 border border-[#1e4a43] px-4 py-2 rounded-lg text-xs font-bold flex items-center gap-2">
-                            <Bot size={14} /> Supabase Realtime: AKTİF
-                        </span>
-                    </div>
                 </div>
 
-                {/* 2. ENTEGRE KARAR MOTORU KPI'LARI */}
-                <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
-                    {[
-                        { label: 'Toplam Taranan Trend', val: trendler.length.toString(), desc: 'Supabase b1_arge_trendler', color: 'text-blue-400', icon: Activity },
-                        { label: 'İncelenen Modeller', val: incelenenSayisi.toString(), desc: 'Onay Bekliyor', color: 'text-amber-400', icon: TrendingUp },
-                        { label: 'ÜRETİM KARARI', val: onaylananSayisi.toString(), desc: 'Kesinleşen Model', color: 'text-emerald-400', icon: CheckCircle2 },
-                        { label: 'Yüksek Risk (İptal)', val: iptalSayisi.toString(), desc: 'Kalite/Risk Sebebiyle', color: 'text-rose-400', icon: AlertTriangle }
-                    ].map((s, i) => {
-                        const Icon = s.icon;
-                        return (
-                            <div key={i} className="bg-[#161b22] border border-[#21262d] rounded-xl p-4 flex flex-col justify-between shadow-md">
-                                <div className="flex justify-between items-start mb-2">
-                                    <span className={`text-[10px] font-bold uppercase tracking-wider ${s.color}`}>{s.label}</span>
-                                    <Icon size={14} className={s.color} />
-                                </div>
+                <div className="grid grid-cols-1 xl:grid-cols-4 gap-6">
+
+                    {/* SOL BÖLGE: ŞEF LOG VE CANLI RADAR (A & H BLOKLARI) */}
+                    <div className="xl:col-span-1 space-y-6">
+                        {/* A BLOK: KPI */}
+                        <div className="bg-[#161b22] border border-[#21262d] rounded-xl p-5">
+                            <h3 className="text-[10px] font-black text-[#8b949e] tracking-widest uppercase mb-4">Ajan Saha Özeti</h3>
+                            <div className="space-y-4">
                                 <div>
-                                    <div className="text-2xl font-black text-white">{s.val}</div>
-                                    <div className="text-[10px] text-[#8b949e] font-semibold mt-1">{s.desc}</div>
+                                    <div className="text-[10px] text-gray-500">Son 24 Saatte Taranan</div>
+                                    <div className="text-2xl font-black text-white">{products.length} <span className="text-xs text-blue-400">Ürün</span></div>
+                                </div>
+                                <div className="h-px bg-[#21262d]"></div>
+                                <div>
+                                    <div className="text-[10px] text-gray-500">M1 Zırhından Geçen (Bingo)</div>
+                                    <div className="text-2xl font-black text-emerald-400">{products.filter(p => p.satar_satmaz_skoru >= 85).length} <span className="text-xs text-emerald-600">Fırsat</span></div>
                                 </div>
                             </div>
-                        )
-                    })}
-                </div>
-
-                {/* 3. İKİLİ PANE (SOL: CANLI TARAMA, SAĞ: YAPAY ZEKA FİLTRESİ) */}
-                <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 mb-6">
-
-                    {/* SOL PANEL (CANLI AJAN AKIŞI) */}
-                    <div className="xl:col-span-1 bg-[#161b22] border border-[#21262d] rounded-xl flex flex-col h-[600px]">
-                        <div className="p-4 border-b border-[#21262d] flex justify-between items-center">
-                            <h2 className="text-xs font-bold text-[#c9d1d9] uppercase tracking-widest flex items-center gap-2">
-                                <Network size={14} className="text-indigo-400" /> Ajan Logları (Supabase)
-                            </h2>
-                            <span className="flex w-2 h-2">
-                                <span className="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-emerald-400 opacity-75"></span>
-                                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-                            </span>
-                        </div>
-                        <div className="flex-1 overflow-y-auto p-4 space-y-3 styled-scroll">
-                            {agentLoglari.length === 0 && <p className="text-[#8b949e] text-xs text-center">Log bekleniyor...</p>}
-                            {agentLoglari.map((log) => (
-                                <div key={log.id} className="text-[11px] bg-[#0d1117] border border-[#30363d] p-3 rounded-lg text-[#8b949e]">
-                                    <div className="flex justify-between mb-1">
-                                        <span className="text-blue-400 font-mono">[{log.islem_tipi}]</span>
-                                        <span className="text-[9px] opacity-70">{new Date(log.created_at).toLocaleTimeString('tr-TR')}</span>
-                                    </div>
-                                    <span className="text-white font-medium">{log.mesaj}</span>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-
-                    {/* SAĞ PANEL (KARAR SÜRECİ & SEKMELER) */}
-                    <div className="xl:col-span-2 flex flex-col">
-                        <div className="flex gap-2 mb-4 overflow-x-auto pb-2">
-                            {sekmeler.map((s, i) => (
-                                <button key={i} onClick={() => setAktifSekme(i)} className={`px-4 py-2 rounded-lg text-xs font-bold transition-colors whitespace-nowrap ${aktifSekme === i ? 'bg-indigo-600/20 text-indigo-400 border border-indigo-500/50' : 'bg-[#161b22] text-[#8b949e] border border-[#21262d] hover:text-white'
-                                    }`}>
-                                    {s} {aktifSekme === i && `(${gosterilenTrendler.length})`}
-                                </button>
-                            ))}
                         </div>
 
-                        <div className="bg-[#161b22] border border-[#21262d] rounded-xl flex-1 p-4 overflow-y-auto h-[600px]">
-                            {gosterilenTrendler.length === 0 && <p className="text-center text-[#8b949e] mt-20">Bu sekmede kayıt bulunamadı.</p>}
-
-                            <div className="space-y-3">
-                                {gosterilenTrendler.map((t) => (
-                                    <div key={t.id} className={`p-4 rounded-xl border flex flex-col gap-3 transition-colors ${t.durum === 'onaylandi' ? 'border-emerald-500/20 bg-emerald-500/5' :
-                                        t.durum === 'iptal' ? 'border-rose-500/20 bg-rose-500/5' :
-                                            'border-[#30363d] bg-[#0d1117] hover:bg-[#0b121a]'
-                                        }`}>
-
-                                        {/* Üst Kısım: Başlık & Durum */}
-                                        <div className="flex justify-between items-start">
-                                            <div>
-                                                <div className="flex items-center gap-2 mb-1">
-                                                    <span className="text-[9px] font-black uppercase bg-[#21262d] text-[#c9d1d9] px-2 py-0.5 rounded">{t.platform}</span>
-                                                    {(t.durum === 'onaylandi') && <span className="text-[9px] font-black uppercase bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded border border-emerald-500/30">M2 KUMAŞ ONAYI BEKLİYOR</span>}
-                                                </div>
-                                                <h3 className="text-sm font-bold text-white">{t.baslik}</h3>
-                                            </div>
-                                            <div className="text-right">
-                                                <div className={`text-xs font-black uppercase px-3 py-1 rounded border ${t.durum === 'onaylandi' ? 'text-emerald-400 border-emerald-500/50 bg-emerald-500/10' :
-                                                    t.durum === 'iptal' ? 'text-rose-400 border-rose-500/50 bg-rose-500/10' :
-                                                        'text-amber-400 border-amber-500/50 bg-amber-500/10'
-                                                    }`}>
-                                                    {t.durum}
-                                                </div>
-                                            </div>
+                        {/* H BLOK: AJAN LOG */}
+                        <div className="bg-[#161b22] border border-[#21262d] rounded-xl flex flex-col h-[400px]">
+                            <div className="p-4 border-b border-[#21262d]">
+                                <h2 className="text-[10px] font-black tracking-widest text-[#c9d1d9] uppercase flex items-center gap-2">
+                                    <Network size={14} className="text-blue-500" /> M1 MOTOR LOGLARI
+                                </h2>
+                            </div>
+                            <div className="flex-1 overflow-y-auto p-4 space-y-3 styled-scroll">
+                                {agentLoglari.map((log) => (
+                                    <div key={log.id} className="text-[10px] bg-[#0d1117] border border-[#30363d] p-3 rounded-lg text-[#8b949e]">
+                                        <div className="flex justify-between mb-2">
+                                            <span className="text-blue-400 font-mono font-bold">[{log.islem_tipi}]</span>
+                                            <span className="text-[9px] opacity-70">{new Date(log.created_at).toLocaleTimeString('tr-TR')}</span>
                                         </div>
-
-                                        {/* Alt Kısım: Veriler */}
-                                        <div className="grid grid-cols-2 md:grid-cols-4 gap-2 border-t border-[#21262d] pt-3">
-                                            <div className="flex flex-col gap-1">
-                                                <span className="text-[9px] text-[#8b949e] font-bold uppercase tracking-wider">Kategori</span>
-                                                <span className="text-[11px] font-mono text-white">{t.kategori}</span>
-                                            </div>
-                                            <div className="flex flex-col gap-1">
-                                                <span className="text-[9px] text-[#8b949e] font-bold uppercase tracking-wider">Hedef Kitle</span>
-                                                <span className="text-[11px] font-mono font-bold text-emerald-400">{t.hedef_kitle}</span>
-                                            </div>
-                                            <div className="flex flex-col gap-1">
-                                                <span className="text-[9px] text-[#8b949e] font-bold uppercase tracking-wider">Talep Skoru</span>
-                                                <span className="text-[11px] font-mono text-indigo-400 font-bold">{t.talep_skoru} / 10</span>
-                                            </div>
-                                            <div className="flex flex-col gap-1">
-                                                <span className="text-[9px] text-[#8b949e] font-bold uppercase tracking-wider">Platform</span>
-                                                <span className="text-[11px] font-mono text-white">{t.platform}</span>
-                                            </div>
-                                        </div>
-
-                                        {/* Aksiyon Barı */}
-                                        <div className="flex justify-between items-center mt-1">
-                                            <div className="text-[9px] text-[#8b949e] italic max-w-[60%] truncate">
-                                                Ekleme: {new Date(t.created_at).toLocaleDateString('tr-TR')}
-                                            </div>
-                                            <div className="flex gap-2">
-                                                {t.durum === 'inceleniyor' && (
-                                                    <>
-                                                        <button onClick={() => durumGuncelle(t.id, 'iptal')} className="text-[10px] font-bold text-rose-400 hover:text-rose-300 bg-rose-500/10 hover:bg-rose-500/20 px-3 py-1.5 rounded transition-colors">İPTAL ET</button>
-                                                        <button onClick={() => durumGuncelle(t.id, 'onaylandi')} className="text-[10px] font-bold text-emerald-400 hover:text-emerald-300 bg-emerald-500/10 hover:bg-emerald-500/20 px-3 py-1.5 rounded transition-colors flex items-center gap-1">
-                                                            <CheckCircle2 size={12} /> ONAYLA (M2)
-                                                        </button>
-                                                    </>
-                                                )}
-                                                {t.durum === 'onaylandi' && (
-                                                    <Link href="/kumas" className="text-[10px] font-bold text-indigo-400 hover:text-indigo-300 bg-indigo-500/10 hover:bg-indigo-500/20 px-3 py-1.5 rounded transition-colors flex items-center gap-1">
-                                                        İLERLE: M2 KUMAŞ SEÇİMİ <ChevronRight size={12} />
-                                                    </Link>
-                                                )}
-                                            </div>
-                                        </div>
+                                        <div className="text-white">{log.mesaj}</div>
                                     </div>
                                 ))}
                             </div>
                         </div>
+                    </div>
 
+                    {/* SAĞ BÖLGE: KARAR PANELİ (D, E, F, G BLOKLARI) */}
+                    <div className="xl:col-span-3">
+                        {/* Sekmeler */}
+                        <div className="flex gap-2 mb-4">
+                            {sekmeler.map((s, i) => (
+                                <button key={i} onClick={() => setAktifSekme(i)} className={`px-5 py-2.5 rounded-lg text-xs font-black tracking-wider transition-colors uppercase ${aktifSekme === i ? 'bg-emerald-600/20 text-emerald-400 border border-emerald-500/50' : 'bg-[#161b22] text-[#8b949e] border border-[#21262d] hover:text-white'
+                                    }`}>
+                                    {s}
+                                </button>
+                            ))}
+                        </div>
+
+                        {/* ANALİZ LİSTESİ */}
+                        <div className="space-y-4">
+                            {gosterilenProducts.length === 0 && (
+                                <div className="text-center py-20 text-[#8b949e]">Bu radar filtrelemesinde ürün bulunamadı.</div>
+                            )}
+
+                            {gosterilenProducts.map(p => {
+                                const skor = p.satar_satmaz_skoru || 0;
+                                let riskRenk = 'emerald';
+                                let tavsiye = 'ÜRETİME GİR (BİNGO)';
+                                if (skor < 50) { riskRenk = 'rose'; tavsiye = 'İPTAL / ÇÖP'; }
+                                else if (skor < 70) { riskRenk = 'amber'; tavsiye = 'RİSKLİ / BEKLE'; }
+                                else if (skor < 85) { riskRenk = 'blue'; tavsiye = 'POTANSİYEL (TAKİP)'; }
+
+                                return (
+                                    <div key={p.id} className={`bg-[#161b22] border-l-4 border-[#30363d] rounded-r-xl p-5 hover:bg-[#1a2029] transition-all
+                                        ${skor >= 85 ? 'border-l-emerald-500 shadow-[0_0_20px_rgba(16,185,129,0.05)]' :
+                                            skor < 50 ? 'border-l-rose-500' : 'border-l-blue-500'}`}>
+
+                                        <div className="flex justify-between items-start mb-4">
+                                            <div>
+                                                {/* E BLOK: ERKEN TESPİT ETİKETİ */}
+                                                {(p.viral_izlenme_hizi > 50000 && p.satici_sayisi < 5) && (
+                                                    <span className="inline-block bg-purple-500/20 text-purple-400 border border-purple-500/50 px-2 py-0.5 rounded text-[9px] font-black tracking-widest uppercase mb-2">
+                                                        ⚡ ERKEN TREND TESPİTİ (REKABET DÜŞÜK)
+                                                    </span>
+                                                )}
+                                                <h3 className="text-lg font-bold text-white mb-1">{p.title || 'İsimsiz Sinyal'}</h3>
+                                                <a href={p.product_url} target="_blank" className="text-xs text-blue-400 hover:underline">Kaynak Linkine Git ↗</a>
+                                            </div>
+
+                                            {/* D BLOK: OTOMATİK SKOR PANELİ */}
+                                            <div className="text-right">
+                                                <div className="text-[10px] text-[#8b949e] font-bold uppercase tracking-widest mb-1">M1 Karar Skoru</div>
+                                                <div className={`text-3xl font-black text-${riskRenk}-400`}>
+                                                    %{skor}
+                                                </div>
+                                                <div className={`text-[9px] font-black tracking-widest uppercase text-${riskRenk}-400 mt-1`}>
+                                                    {tavsiye}
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {/* C BLOK: SOSYAL + PAZAR YERİ EŞLEŞME METRİKLERİ */}
+                                        <div className="grid grid-cols-2 lg:grid-cols-5 gap-3 bg-[#0d1117] rounded-lg p-3 border border-[#30363d]">
+                                            <div className="flex flex-col">
+                                                <span className="text-[9px] text-gray-500 font-bold uppercase">Sepet Deltası (Talep)</span>
+                                                <span className="text-sm font-mono text-emerald-400 font-bold">+{p.sepet_deltasi || 0}</span>
+                                            </div>
+                                            <div className="flex flex-col">
+                                                <span className="text-[9px] text-gray-500 font-bold uppercase">Yorum İvmesi</span>
+                                                <span className="text-sm font-mono text-blue-400 font-bold">+{p.yorum_deltasi || 0}</span>
+                                            </div>
+                                            <div className="flex flex-col">
+                                                <span className="text-[9px] text-gray-500 font-bold uppercase">Viral Kopma Hızı</span>
+                                                <span className="text-sm font-mono text-purple-400 font-bold">{p.viral_izlenme_hizi || 0} /G</span>
+                                            </div>
+                                            <div className="flex flex-col">
+                                                <span className="text-[9px] text-gray-500 font-bold uppercase">Rakip Satıcı</span>
+                                                <span className="text-sm font-mono text-amber-400 font-bold">{p.satici_sayisi || 0} Kişi</span>
+                                            </div>
+                                            <div className="flex flex-col border-l border-[#30363d] pl-3">
+                                                <span className="text-[9px] text-gray-500 font-bold uppercase">Yorum Zehri / Risk</span>
+                                                <span className={`text-xs font-black uppercase mt-0.5 ${p.iade_risk_sinyali?.includes('YÜKSEK') ? 'text-rose-500' : 'text-emerald-500'}`}>
+                                                    {p.iade_risk_sinyali || 'TEMİZ'}
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                        {/* G BLOK: KARAR PANELİ (ÖLÜMCÜL NOKTA) */}
+                                        <div className="mt-4 flex flex-col md:flex-row justify-between items-center bg-[#161b22] border-t border-[#30363d] pt-4">
+                                            <div className="text-[10px] text-gray-500 mb-3 md:mb-0">
+                                                Ajan Raporu Düştü: {new Date(p.created_at).toLocaleString('tr-TR')}
+                                            </div>
+
+                                            <div className="flex gap-2 w-full md:w-auto">
+                                                {/* İPTAL ET */}
+                                                <button onClick={() => kararVer(p.id, 'iptal')} className="flex-1 md:flex-none px-4 py-2 rounded border border-rose-500/50 bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 text-[10px] font-black tracking-widest uppercase transition-all">
+                                                    ÇÖPE AT (İPTAL)
+                                                </button>
+
+                                                {/* BEKLET */}
+                                                <button onClick={() => kararVer(p.id, 'inceleniyor')} className="flex-1 md:flex-none px-4 py-2 rounded border border-amber-500/50 bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 text-[10px] font-black tracking-widest uppercase transition-all">
+                                                    RADARDA BEKLET
+                                                </button>
+
+                                                {/* ÜRETİME SOK */}
+                                                <button onClick={() => kararVer(p.id, 'uretim_onay')} className="flex-1 md:flex-none px-6 py-2 rounded border border-emerald-500 bg-emerald-600 hover:bg-emerald-500 text-white text-[10px] font-black tracking-widest uppercase shadow-[0_0_15px_rgba(16,185,129,0.4)] transition-all flex items-center justify-center gap-2">
+                                                    <CheckCircle2 size={14} /> ÜRETİME ZEVK ET (M2)
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                )
+                            })}
+                        </div>
                     </div>
                 </div>
 
@@ -320,3 +284,4 @@ export default function ArgeMainContainer() {
         </div>
     );
 }
+
