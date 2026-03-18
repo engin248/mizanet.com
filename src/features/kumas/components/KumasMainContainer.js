@@ -11,7 +11,7 @@ import { useKumas } from '@/features/kumas/hooks/useKumas';
 export default function KumasMainContainer() {
     const { kullanici } = useAuth();
     const {
-        yetkiliMi, sekme, setSekme, kumaslar, m1Talepleri,
+        yetkiliMi, sekme, setSekme, kumaslar, m1Talepleri, firsatlar,
         loading, m3eAktar
     } = useKumas(kullanici);
 
@@ -142,35 +142,40 @@ export default function KumasMainContainer() {
                                         <p className="text-sm text-amber-200/70 mb-6">Depoda bekleyen, hareketsiz kumaşlarınızı (Ölü Stok) sisteme yükleyin. M1 Trend İstihbarat motoru ile eşleşen güncel modelleri bulup, doğrudan M3 Modelhaneye üretim tavsiyesi ve marj analizi sunalım.</p>
 
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-left">
-                                            {/* Sahte Fırsat 1 */}
-                                            <div className="bg-[#0b121a] border border-[#21262d] rounded-xl p-4 flex gap-4">
-                                                <div className="w-20 h-20 bg-[#161b22] rounded-lg border border-[#30363d] shrink-0 overflow-hidden flex items-center justify-center">
-                                                    <span className="text-[10px] text-[#8b949e]">FOTOĞRAF</span>
+                                            {firsatlar && firsatlar.length > 0 ? (
+                                                firsatlar.map((f, i) => {
+                                                    const aiVeri = f.ai_trend_eslesme || {};
+                                                    return (
+                                                        <div key={i} className="bg-[#0b121a] border border-[#21262d] rounded-xl p-4 flex gap-4">
+                                                            <div className="w-20 h-20 bg-[#161b22] rounded-lg border border-[#30363d] shrink-0 overflow-hidden flex items-center justify-center relative">
+                                                                {f.fotograf_urls && f.fotograf_urls[0] ? (
+                                                                    <img src={f.fotograf_urls[0]} alt="Kumas" className="w-full h-full object-cover opacity-80" />
+                                                                ) : (
+                                                                    <span className="text-[10px] text-[#8b949e]">FOTOĞRAF</span>
+                                                                )}
+                                                            </div>
+                                                            <div className="flex-1">
+                                                                <div className="flex justify-between items-start">
+                                                                    <h4 className="font-bold text-white text-sm">{f.ad} {f.kondisyon_notu ? `(${f.kondisyon_notu})` : ''}</h4>
+                                                                    <span className="text-[10px] bg-emerald-500/20 text-emerald-400 font-bold px-2 py-0.5 rounded">
+                                                                        %{aiVeri.beklenen_marj_yuzdesi || 65} TAHMİNİ MARJ
+                                                                    </span>
+                                                                </div>
+                                                                <p className="text-[11px] text-[#8b949e] mt-1 mb-2">
+                                                                    M1 Trend Eşleşmesi: {aiVeri.model_tavsiyesi || "Sistem eşleşme arıyor..."}. Stok: {f.stok_miktar} {f.stok_birimi}
+                                                                </p>
+                                                                <button className="text-[10px] font-bold text-black bg-amber-500 hover:bg-amber-400 px-3 py-1.5 rounded-md transition-colors w-full">
+                                                                    MODEL UYARLA VE M3'E YOLLA
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    );
+                                                })
+                                            ) : (
+                                                <div className="col-span-1 border border-dashed border-amber-500/30 p-4 text-center rounded-xl text-amber-500/50">
+                                                    Şu an için "is_firsat = true" olarak M2 veritabanına eklenmiş kayıt bulunmuyor.
                                                 </div>
-                                                <div className="flex-1">
-                                                    <div className="flex justify-between items-start">
-                                                        <h4 className="font-bold text-white text-sm">Bordo Kadife Şifon (180 Günlük Zayiat)</h4>
-                                                        <span className="text-[10px] bg-emerald-500/20 text-emerald-400 font-bold px-2 py-0.5 rounded">%85 TAHMİNİ MARJ</span>
-                                                    </div>
-                                                    <p className="text-[11px] text-[#8b949e] mt-1 mb-2">M1 Trend Eşleşmesi: "Yırtmaçlı Göğüs Dekolteli Abiye" trendi şu an Instagram'da revaçta. Bu kumaş yapısı bu kalıba tam uygun.</p>
-                                                    <button className="text-[10px] font-bold text-black bg-amber-500 hover:bg-amber-400 px-3 py-1.5 rounded-md transition-colors w-full">MODEL UYARLA VE M3'E YOLLA</button>
-                                                </div>
-                                            </div>
-
-                                            {/* Sahte Fırsat 2 */}
-                                            <div className="bg-[#0b121a] border border-[#21262d] rounded-xl p-4 flex gap-4">
-                                                <div className="w-20 h-20 bg-[#161b22] rounded-lg border border-[#30363d] shrink-0 overflow-hidden flex items-center justify-center">
-                                                    <span className="text-[10px] text-[#8b949e]">FOTOĞRAF</span>
-                                                </div>
-                                                <div className="flex-1">
-                                                    <div className="flex justify-between items-start">
-                                                        <h4 className="font-bold text-white text-sm">Zümrüt Yeşili Saten (Hurda)</h4>
-                                                        <span className="text-[10px] bg-emerald-500/20 text-emerald-400 font-bold px-2 py-0.5 rounded">%60 TAHMİNİ MARJ</span>
-                                                    </div>
-                                                    <p className="text-[11px] text-[#8b949e] mt-1 mb-2">M1 Trend Eşleşmesi: Satenden "Tül Detaylı Mini Abiye" yapımı için yeterli metraj (80 MT) mevcut.</p>
-                                                    <button className="text-[10px] font-bold text-black bg-amber-500 hover:bg-amber-400 px-3 py-1.5 rounded-md transition-colors w-full">MODEL UYARLA VE M3'E YOLLA</button>
-                                                </div>
-                                            </div>
+                                            )}
                                         </div>
                                     </div>
                                 ) : (
