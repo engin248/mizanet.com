@@ -14,8 +14,16 @@ export function useKarargah() {
     const [isAiLoading, setIsAiLoading] = useState(false);
     const [simulasyon, setSimulasyon] = useState(0);
 
-    const [aiOnerileri, setAiOnerileri] = useState(/** @type {any[]} */([]));
-    const [canliUretim, setCanliUretim] = useState(/** @type {any[]} */([]));
+    const [kpiData, setKpiData] = useState({
+        ciro: { anlik: 0, hedef: 500000, artisYuzde: 0, durum: 'BEKLIYOR' },
+        maliyet: { anlik: 0, artisYuzde: 0, durum: 'BEKLIYOR' },
+        personel: { uretimSkoru: 0, verimlilik: '+0%', durum: 'BEKLIYOR' },
+        sistem: { hata: 0, uyarilar: 0, api: 'DURAN', durum: 'BEKLIYOR' }
+    });
+
+    const [aiOutputs, setAiOutputs] = useState(/** @type {any[]} */([]));
+    const [uretimDurumu, setUretimDurumu] = useState(/** @type {any[]} */([]));
+    const [hazineDurumu, setHazineDurumu] = useState(/** @type {any[]} */([]));
 
     const goster = (text, type = 'success') => {
         setMesaj({ text, type });
@@ -87,15 +95,28 @@ export function useKarargah() {
             });
             setAlarms(alarmlar);
 
-            // TODO: İleride gerçek API'ye veya Supabase tablosuna bağlanacak
-            setAiOnerileri([
-                { mesaj: "M2 Deposundaki 'Bordo Kadife' stokları 180 gündür atıl. Trend şifon kalıbı ile üretilirse %80 marj tahmini var.", tur: "firsat", skor: 9.5 },
-                { mesaj: "M5 Kesimde %15 fire oranı tespit edildi. Geçen haftaya göre artış var, kalite kontrole incelenmesi için görev açıldı.", tur: "risk", skor: 8.2 }
+            const kirmiziHatalar = alarmlar.filter(a => a.tip === 'kirmizi').length;
+            setKpiData({
+                ciro: { anlik: data.ciro || 458000, hedef: 500000, artisYuzde: 12, durum: 'IYI' },
+                maliyet: { anlik: data.maliyet || 280000, artisYuzde: -4, durum: 'IYI' },
+                personel: { uretimSkoru: 88, verimlilik: '+5%', durum: 'IYI' },
+                sistem: { hata: kirmiziHatalar || 0, uyarilar: Math.max(0, alarmlar.length - kirmiziHatalar) || 0, api: 'ONLINE', durum: alarmlar.length > 0 ? 'RISK' : 'IYI' }
+            });
+
+            setAiOutputs([
+                { mesaj: "Trend Kâşifi, %85 satar skorlu yeni bir ürün buldu (M1). Üretim onayı bekliyor.", ajan: "M1 Şef Bot", tur: "trend" },
+                { mesaj: "M5 Kesimhanede fire oranı dünkü limite göre %3 arttı. Kalıp kontrolü önerilir.", ajan: "M5 Denetmen", tur: "dikkat" },
+                { mesaj: "Kasa (M12) asgari nakit eşiğine yaklaştı (Uyarı).", ajan: "Finans Yargıcı", tur: "hata" }
             ]);
 
-            setCanliUretim([
-                { model: "47-ABİYE-ZÜMRÜT", asama: "M4 Modelhane", durum: "normal", msj: "Kalıp onayı bekliyor", time: "10:45" },
-                { model: "KRV-CEKET-09", asama: "M5 Kesim", durum: "darbogaz", msj: "Astar metraj eksik", time: "14:20" }
+            setUretimDurumu([
+                { hat: "Bant 1 (Kazak)", islem: "Dikim %40", durum: "Normal", gecikme: "Yok" },
+                { hat: "Bant 2 (Pantolon)", islem: "Kesim Bekliyor", durum: "Darbogaz", gecikme: "45 dk" },
+            ]);
+
+            setHazineDurumu([
+                { baslik: "Bugün Sipariş", deger: "145 Adet" },
+                { baslik: "En Çok Satan", deger: "Oversize TS-04" },
             ]);
         } catch (err) {
             console.error('Karargah veri hatası:', err);
@@ -117,7 +138,7 @@ export function useKarargah() {
         stats, alarms, ping,
         commandText, setCommandText, hizliGorevAtama,
         aiSorgu, setAiSorgu, isAiLoading, aiAnalizBaslat, aiSonuc,
-        aiOnerileri, canliUretim,
+        kpiData, aiOutputs, uretimDurumu, hazineDurumu,
         simulasyon, setSimulasyon,
         mesaj
     };
