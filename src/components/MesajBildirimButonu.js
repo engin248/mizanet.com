@@ -27,10 +27,11 @@ export default function MesajBildirimButonu() {
     const kanalRef = useRef(null);
 
     const kGrup = kullanici?.modul || kullanici?.grup || 'genel';
+    const kullaniciId = kullanici?.id;
 
     // Sadece SAYI — head:true ile 0 bant genişliği
     const sayiGetir = useCallback(async () => {
-        if (!kullanici) return;
+        if (!kullaniciId) return;
         try {
             const { count } = await supabase
                 .from('b1_ic_mesajlar')
@@ -40,11 +41,11 @@ export default function MesajBildirimButonu() {
                 .eq('copte', false); // ✅ Boolean için .eq() kullanılmalı, .is() null içindir
             setOkunmamis(count || 0);
         } catch { /* sessiz */ }
-    }, [kullanici, kGrup]);
+    }, [kullaniciId, kGrup]);
 
     // Detay — yalnızca popup açılınca (lazy)
     const detayGetir = useCallback(async () => {
-        if (!kullanici) return;
+        if (!kullaniciId) return;
         try {
             const { data } = await supabase
                 .from('b1_ic_mesajlar')
@@ -55,25 +56,29 @@ export default function MesajBildirimButonu() {
                 .order('created_at', { ascending: false })
                 .limit(10);
             const mesajlar = data || [];
-            setSonMesajlar(mesajlar);
+            if (JSON.stringify(mesajlar) !== JSON.stringify(sonMesajlar)) {
+                setSonMesajlar(mesajlar);
+            }
             const kritik = mesajlar.filter(m => m.oncelik === 'kritik' || m.oncelik === 'acil');
             if (kritik.length > 0) { setAlarmMesajlar(kritik); setAlarmAcik(true); }
         } catch { /* sessiz */ }
-    }, [kullanici, kGrup]);
+    }, [kullaniciId, kGrup, sonMesajlar]);
 
     // İlk yükleme
-    useEffect(() => { sayiGetir(); }, [sayiGetir]);
+    useEffect(() => {
+        if (kullaniciId) sayiGetir();
+    }, [kullaniciId, sayiGetir]);
 
     // Realtime — WebSocket, HTTP quota tüketmez
     useEffect(() => {
-        if (!kullanici) return;
+        if (!kullaniciId) return;
         const kanal = supabase.channel(`mbtn-${kGrup}`)
             .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'b1_ic_mesajlar' },
                 () => sayiGetir())
             .subscribe();
         kanalRef.current = kanal;
         return () => supabase.removeChannel(kanal);
-    }, [kullanici, kGrup, sayiGetir]);
+    }, [kullaniciId, kGrup, sayiGetir]);
 
     // Popup açılınca detay getir
     useEffect(() => { if (popupAcik) detayGetir(); }, [popupAcik, detayGetir]);
