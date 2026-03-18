@@ -196,6 +196,19 @@ Her cevap şu kalite filtresinden geçirilir.
 4. Mantıksal bütünlük
 5. Gereksiz içerik kontrolü
 
+## 16. REINCARNATION AND ZERO-INITIATIVE (YENİ ASKER VE SIFIR İNİSİYATİF)
+
+1. Hata yapan veya kontrolden çıkan bir ajanın "kellesi alındığında (imha edildiğinde)", sistem görevi çöpe atmaz. 
+2. Görevi devralacak olan "Yeni Asker (Yeni Bot Instance)" üretilir (Redis Retry mekanizması).
+3. Yeni askere görevi verilirken: "Kendi başına inisiyatif alman yasaktır. Alırsan ölürsün. Hata yapmamak için UYGULAMAN GEREKEN TEK ADIMLAR ŞUNLARDIR" şeklinde katı ve yönlendirici kriterler (Prompt kalkanı) dayatılır. Asker ne yapacağını bilerek doğar.
+
+
+## 17. GIT PUSH PROTOCOL (KAYDETMEDEN YENİSİNE GEÇMEK YASAKTIR)
+
+1. Geliştirici veya Sistem Mimarı (Antigravity vb. AI'lar), kendi görev planını uygulayıp bitirdiğinde, bir sonraki göreve (Aşamaya) ASLA doğrudan geçiş yapamaz.
+2. İşlemler bittikten ve "Onay (Vize)" alındıktan sonra, yeni görev kabul edilmeden ÖNCE kesinlikle `git push` işlemi gerçekleştirilecek ve sistem buluta mühürlenecektir.
+3. Yenisine başlarken eskisini kaydetmek EVRENSEL sistem kuralıdır.
+
 ---
 
 END OF FILE

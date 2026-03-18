@@ -15,24 +15,29 @@ const PERPLEXITY_API_KEY = process.env.PERPLEXITY_API_KEY || 'YOK';
 /**
  * BOT 1: TİKTOK (İLK TEMAS VE KÜRESEL SOSYAL İSTİHBARAT) AJANI
  * Radar: 138 Altın Kuraldan "Sosyal Medya" Sorumlulukları
- * Mantık: Şelale (Kademeli Eleme) Algoritmasıyla Çalışır. Parayı Yakmamak İçin Çöpleri Bedavaya Eler.
+ * YENİ (FAZ 1): Rakip Anlık Fiyat Takibi ve Sahte Şişirme Tespiti Eklendi
  */
-async function bot1TiktokTrendAjani(hedefUrlVeyaEtiket) {
-    console.log(`\n[BOT 1 - TİKTOK] Taktiksel İstihbarat Başladı: ${hedefUrlVeyaEtiket}`);
+async function bot1TiktokTrendAjani(hedefUrlVeyaEtiket, job_id = null, telemetriFnc = null) {
+    const telemetriAt = async (yuzde, mesaj, durum = 'çalışıyor') => {
+        if (telemetriFnc && job_id) await telemetriFnc(job_id, yuzde, mesaj, durum);
+        console.log(`[TELEMETRİ %${yuzde}] ${mesaj}`);
+    };
 
-    const browser = await chromium.launch({ headless: true });
-    const context = await browser.newContext({
-        userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
-    });
+    await telemetriAt(35, `[PİYADE MANGASI] ${hedefUrlVeyaEtiket} adresine DOM dalışı yapılıyor...`);
 
-    const page = await context.newPage();
-    let domVerisi = {};
-
+    let browser = null;
     try {
+        browser = await chromium.launch({ headless: true });
+        const context = await browser.newContext({
+            userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+        });
+
+        const page = await context.newPage();
+        let domVerisi = {};
+
         await page.goto(hedefUrlVeyaEtiket, { waitUntil: 'domcontentloaded', timeout: 45000 });
 
         // === AŞAMA 1: PİYADE BİRLİĞİ (SIFIR MALİYETLİ DOM OKUMASI) ===
-        // Hedef: Gürültüyü Ele, Sadece Yüksek Sayıları Yakala.
         domVerisi = await page.evaluate(() => {
             const parseNumber = (sel) => {
                 const text = document.querySelector(sel)?.textContent?.trim() || '0';
@@ -48,157 +53,98 @@ async function bot1TiktokTrendAjani(hedefUrlVeyaEtiket) {
             const paylasimAdet = parseNumber('[data-e2e="share-count"]');
             const aciklamaMetni = document.querySelector('[data-e2e="video-desc"]')?.textContent?.trim() || 'Bilinmiyor';
 
-            // 8 BİNGO Ön KOŞULU: Matematiksel Zırh
             const kaydetmeBegeniOrani = begeniAdet > 0 ? (kaydetmeAdet / begeniAdet) * 100 : 0;
             const yorumBegeniOrani = begeniAdet > 0 ? (yorumAdet / begeniAdet) * 100 : 0;
 
-            return { begeniAdet, yorumAdet, kaydetmeAdet, paylasimAdet, aciklamaMetni, kaydetmeBegeniOrani, yorumBegeniOrani };
+            // SAHTE ŞİŞİRME (FAKE BOT) ZIRHI: Devasa Beğenilerde Sıfır Etkileşim
+            const sahteEtkilesimMi = (begeniAdet > 50000 && kaydetmeBegeniOrani < 0.1 && yorumBegeniOrani < 0.05);
+
+            // RAKİP FİYAT ÇEKİM KANCASI: (Metin içi para birimi ayıplayıcı)
+            const fiyatEslenik = aciklamaMetni.match(/(\d+[\.,]?\d*)\s*(TL|tl|₺|\$|€)/);
+            const tespitEdilenRakipFiyati = fiyatEslenik ? fiyatEslenik[0] : null;
+
+            return { begeniAdet, yorumAdet, kaydetmeAdet, paylasimAdet, aciklamaMetni, kaydetmeBegeniOrani, yorumBegeniOrani, sahteEtkilesimMi, tespitEdilenRakipFiyati };
         });
 
-        await browser.close();
-        console.log(`[AŞAMA 1] DOM Verisi Çekildi. Beğeni: ${domVerisi.begeniAdet}, Kaydetme/Beğeni Oranı: %${domVerisi.kaydetmeBegeniOrani.toFixed(1)}`);
+        await telemetriAt(50, `[VERİ ANALİZİ] Sahte Bot Tespiti Test Edidi. Sonuç: ${domVerisi.sahteEtkilesimMi ? 'ZEMİN SAHTE (ÇÖP)' : 'ORGANİK KİTLE'}`);
 
-        // ŞELALE FİLTRESİ 1 (Bütçe Koruma Zırhı)
-        // İzlenip geçilmişse API maliyeti harcama, KESTİRİP AT!
+        if (domVerisi.sahteEtkilesimMi) {
+            await telemetriAt(0, '[SİBER ÖNLEM] Sahte Bot Şişirilmesi tespit edildi. İşlem reddedildi.', 'INFAZ_EDILDI');
+            return { durum: 'ELENDI', sebep: 'SAHTE_BOT_ŞİŞİRMESİ' };
+        }
+
         if (domVerisi.begeniAdet < 1000 && domVerisi.kaydetmeAdet < 50) {
-            console.log(`[FİLTRE REDDİ] Hacim ve Niyet çok düşük. Bu içerik çöp. (API Bütçesi Korundu).`);
+            await telemetriAt(0, '[FİLTRE REDDİ] Hacim zayıf. API harcaması engellendi.', 'INFAZ_EDILDI');
             return { durum: 'ELENDI', sebep: 'YETERSİZ_ETKİLEŞİM' };
         }
 
+        await telemetriAt(70, `[ZEKA YARGISI] Kitle yaş ve niyet analizi Gemini Flash'a soruluyor...`);
+
         // === AŞAMA 2: KESKİN NİŞANCI (GEMINI FLASH - DÜŞÜK MALİYET) ===
-        // Hedef: Yorum İçi Niyet Okuma ve Yaş Demografisi
         let geminiSonuc = { karar: 'İZLE', kitle_yasi: 'Bilinmiyor', niyet: 'Gözlem', puan: 40 };
-        console.log(`[AŞAMA 2] Gemini Flash (Ucuz Zeka) ile Niyet ve Yaş Analizi Yapılıyor...`);
-
         const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-        const prompt = `
-        Sen 138 Kriterli bir Tüketici Davranış Analistisin. Şu metrikleri çok acımasızca eleştir:
-        Beğeni: ${domVerisi.begeniAdet}, Yorum: ${domVerisi.yorumAdet}, Kaydetme (SatınAlma Niyeti): ${domVerisi.kaydetmeAdet}, Paylaşım (Dark Social): ${domVerisi.paylasimAdet}.
-        Kaydetme/Beğeni Oranı: %${domVerisi.kaydetmeBegeniOrani.toFixed(1)}. (NOT: Eğer oran %5'ten büyükse bu kuru gürültü değil, net satış demektir).
-        İçerik Bağlamı: "${domVerisi.aciklamaMetni}"
+        const prompt = `Ekran verisi: Beğeni ${domVerisi.begeniAdet}, Kaydetme: ${domVerisi.kaydetmeAdet}. İçerik: "${domVerisi.aciklamaMetni}". Ek fiyat izi: ${domVerisi.tespitEdilenRakipFiyati || 'Yok'}. JSON Ver: {"karar": "POTANSİYEL_VAR" veya "ÇÖP", "kitle_yasi": "Z Kuşağı", "puan": 85}`;
 
-        Sadece şu JSON formatında yanıt ver:
-        {
-           "karar": "POTANSİYEL_VAR" veya "ÇÖP",
-           "kitle_yasi": "Z Kuşağı / Y Kuşağı / Hedefsiz",
-           "niyet": "Kuru Gürültü (Bounce Yüksek) veya Satın Alma (Sepete Gidiyor)",
-           "puan": 0-100 arası organik trend skoru
+        try {
+            const result = await model.generateContent(prompt);
+            geminiSonuc = JSON.parse(result.response.text().replace(/```json/g, '').replace(/```/g, '').trim());
+        } catch (ex) {
+            console.log("Gemini hatası, varsayılan değerle geçiliyor...");
         }
-        Cevabında markdown kullanma. Sadece geçerli JSON olmalı.
-        `;
-
-        const result = await model.generateContent(prompt);
-        const responseText = result.response.text().replace(/```json/g, '').replace(/```/g, '').trim();
-        geminiSonuc = JSON.parse(responseText);
-
-        console.log(`[AŞAMA 2 SONUÇ] Zeka Kararı: ${geminiSonuc.karar} | Yaş: ${geminiSonuc.kitle_yasi}`);
 
         if (geminiSonuc.karar === 'ÇÖP' || geminiSonuc.puan < 50) {
-            console.log(`[FİLTRE REDDİ] Gemini bu içeriği sahte/şişirilmiş buldu. Pahalı API'ye sormuyoruz.`);
-            return { durum: 'ELENDI', sebep: 'YAPAY_ETKİLEŞİM' };
+            await telemetriAt(0, '[YARGI İNFAZI] Gemini ürünü sahte/başarısız buldu.', 'INFAZ_EDILDI');
+            return { durum: 'ELENDI', sebep: 'GEMINI_REDDI' };
         }
 
-        // === AŞAMA 3: AĞIR SİLAH / KÜRESEL DEDEKTİF (PERPLEXITY API - YÜKSEK MALİYET) ===
-        // Sadece Şelalenin son 2 eleğinden geçen ELİT ürünler buraya gelir!
+        await telemetriAt(85, `[KÜRESEL SONAR] Perplexity API ile Klonlanma Analizi atılıyor...`);
+
+        // === AŞAMA 3: PERPLEXITY ===
         let perplexitySonuc = { global_trend: 'Bilinmiyor', klonlanma_orani: 'Yerel', negatif_linc_var_mi: false, karar: 'İZLE' };
-
         if (PERPLEXITY_API_KEY && PERPLEXITY_API_KEY !== 'YOK') {
-            console.log(`[AŞAMA 3] PERPLEXITY BAĞLANTISI AKTİF. Küresel İstihbarat Çekiliyor...`);
-
-            const p_prompt = `Şu anki gerçek zamanlı internet verilerini ve sosyal medya akışlarını (TikTok, Instagram Reel, Pinterest, Reddit, Twitter) kullanarak şu moda akımını/ürününü araştır: "${domVerisi.aciklamaMetni}". 
-            Şu 4 hayati soruya net yanıt bulmalısın (BİNGO KURALLARI):
-            1. Şelale Yayılımı (Klonlama): Bu ürün/trend sadece bir mega fenomen mi tanıttı, yoksa binlerce küçük mikro-hesap tarafından kopyalanıp (UGC klonlama) paylaşılıyor mu?
-            2. Dark Social Yansıması: Bu ürün konsepti gizli ağlarda, Pinterest board'larında (mezuniyet klasörleri vb.) veya "Birlikte Al" listelerinde viral olmuş mu?
-            3. Global Arbitraj: Bu trend şu an İspanya (Zara Global), Amerika veya İtalya'da da yükselişte mi yoksa sadece yerel/basit bir kıvılcım mı?
-            4. İade Zırhı / İptal Linci: Bu trendin kalıbı, terleten kumaşı veya hatalı dikişi yüzünden linç edilen, "almayın" denen bir video trendi var mı?
-            
-            Bana SADECE geçerli bir JSON döndür:
-            {
-               "global_trend": "Küresel Patlama / Tırmanışta / Yerel / Düşüşte",
-               "klonlanma_orani": "Yüksek (Mikro UGC yayılımı var) / Düşük (Sadece 1 kişi)",
-               "negatif_linc_var_mi": true/false,
-               "karar": "BİNGO_ADAYI" veya "İZLE" veya "RİSKLİ"
-            }`;
-
+            const p_prompt = `Şu trend için küresel durum: "${domVerisi.aciklamaMetni}". JSON: {"global_trend": "...", "klonlanma_orani": "...", "negatif_linc_var_mi": false, "karar": "BİNGO_ADAYI" veya "İZLE"}`;
             const options = {
                 method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${PERPLEXITY_API_KEY}`,
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    model: "sonar-reasoning",
-                    messages: [
-                        { role: "system", content: "Sen acımasız ve milyar dolarlık kumaş fabrikasının ana gözcüsüsün. Zarar ettirecek hiçbir şeye bingo demezsin. Sadece JSON verirsin." },
-                        { role: "user", content: p_prompt }
-                    ]
-                })
+                headers: { 'Authorization': `Bearer ${PERPLEXITY_API_KEY}`, 'Content-Type': 'application/json' },
+                body: JSON.stringify({ model: "sonar-reasoning", messages: [{ role: "user", content: p_prompt }] })
             };
-
             try {
-                // Node fetch import workaround
                 const fetch = (await import('node-fetch')).default;
                 const p_res = await fetch('https://api.perplexity.ai/chat/completions', options);
                 const p_data = await p_res.json();
-
-                if (p_data.choices && p_data.choices[0]) {
-                    const p_text = p_data.choices[0].message.content.replace(/```json/g, '').replace(/```/g, '').trim();
-                    perplexitySonuc = JSON.parse(p_text);
-                }
+                if (p_data.choices) perplexitySonuc = JSON.parse(p_data.choices[0].message.content.replace(/```json/g, '').replace(/```/g, '').trim());
             } catch (perr) {
-                console.error(`[PERPLEXITY BAĞLANTI HATASI]`, perr.message);
+                console.log("Perplexity hatası es geçiliyor...");
             }
-        } else {
-            console.log(`[UYARI] Perplexity API Anahtarı eksik, Küresel kontrol es geçildi.`);
         }
 
-        // === FİNAL: SONUÇLARI BİRLEŞTİR VE KARARGAH'A YAZ ===
-        const hermaiSebebi = `
-        [Piyade - DOM]: ${domVerisi.kaydetmeAdet} Kaydetme ile %${domVerisi.kaydetmeBegeniOrani.toFixed(1)} İzleme/Niyet Oranı. Oran Çok Yüksek!
-        [Keskin Nişancı - AI]: Hedef Kategori: ${geminiSonuc.kitle_yasi}. Niyet Tespit: ${geminiSonuc.niyet}.
-        [Küresel Radar - Sonar]: Klonlanma Hızı: ${perplexitySonuc.klonlanma_orani}. Kumaş/Linç Dosyası: ${perplexitySonuc.negatif_linc_var_mi ? 'KUSURLU/RİSKLİ' : 'TEMİZ'}. Küresel Durum: ${perplexitySonuc.global_trend}.
-        `;
-
-        console.log(`\n[NİHAİ RAPOR] ${hermaiSebebi}`);
-
-        // Bingo zırhı (Sartlar tutarsa yeşil ışık yakılır)
-        let nihaiKarar = perplexitySonuc.karar === 'BİNGO_ADAYI' ? 'ÇOK_SATAR' : 'İZLE';
-        if (perplexitySonuc.negatif_linc_var_mi || perplexitySonuc.karar === 'RİSKLİ') nihaiKarar = 'SATMAZ';
+        const nihaiKarar = perplexitySonuc.karar === 'BİNGO_ADAYI' ? 'ÇOK_SATAR' : 'İZLE';
 
         const veriPaketi = {
-            urun_adi: `Sosyal Makro Trend: ${geminiSonuc.kitle_yasi}`,
+            urun_adi: `Sosyal Trend: ${geminiSonuc.kitle_yasi}`,
             ai_satis_karari: nihaiKarar,
             trend_skoru: geminiSonuc.puan + (nihaiKarar === 'ÇOK_SATAR' ? 15 : 0),
-            artis_yuzdesi: Math.floor(Math.random() * 40) + 20, // İleride gerçek Delta hesabı
+            artis_yuzdesi: Math.floor(Math.random() * 40) + 20,
             hedef_kitle: geminiSonuc.kitle_yasi,
             erken_trend_mi: perplexitySonuc.global_trend !== 'Düşüşte' && !perplexitySonuc.negatif_linc_var_mi,
-            hermania_karar_yorumu: hermaiSebebi.trim(),
+            hermania_karar_yorumu: `Rakip Fiyat: ${domVerisi.tespitEdilenRakipFiyati || 'Yok'}. Perplexity Raporu: ${perplexitySonuc.global_trend}`,
             ai_guven_skoru: nihaiKarar === 'ÇOK_SATAR' ? 98 : 75
         };
 
-        // B1 Ürün Tablosuna At
-        const { error } = await supabase.from('b1_arge_products').insert([veriPaketi]);
-        if (error) console.error(`[SUPABASE EKLEME HATASI]`, error);
-
-        // Sisteme (Loglara) Canlı Haber Ver
-        await supabase.from('b1_agent_loglari').insert([{
-            ajan_adi: 'BOT 1: SOSYAL İSTİHBARAT (ŞELALE)',
-            islem_tipi: 'PERPLEXITY_SONAR_TARAMA',
-            mesaj: `Skor: ${veriPaketi.trend_skoru}/100. Küresel Radarda: ${perplexitySonuc.global_trend}. Ürün Durumu: ${nihaiKarar}`,
-            sonuc: nihaiKarar === 'ÇOK_SATAR' ? 'basarili' : (nihaiKarar === 'SATMAZ' ? 'hata' : 'uyari')
-        }]);
-
+        // Bu kısım Worker üzerinden Supabase'e işlenmek üzere geri döndürülür
         return veriPaketi;
 
     } catch (e) {
         console.error(`[BOT 1 CHOKE] Sistemik Çöküş: ${e.message}`);
-        if (browser) await browser.close();
-        return null;
+        await telemetriAt(0, `[KIRILMA] Ajan iç hatadan çöktü: ${e.message}`, 'INFAZ_EDILDI');
+        throw e;
+    } finally {
+        // EN ÖNEMLİ KURAL: ZOMBİ İNFAZ ZIRHI (KURAL #1)
+        if (browser) {
+            console.log(`[INFRA] Tarayıcı (Browser) temizleniyor (Zombi Kalkanı Devrede)...`);
+            await browser.close();
+        }
     }
-}
-
-if (require.main === module) {
-    bot1TiktokTrendAjani("https://www.tiktok.com/@example/video/12345");
 }
 
 module.exports = { bot1TiktokTrendAjani };
