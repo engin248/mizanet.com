@@ -205,6 +205,10 @@ Her cevap şu kalite filtresinden geçirilir.
 *   **Kural #18: KOPYALANABİLİR / BÜYÜK YAZI RAPORLAMA (Okunabilirlik İlkesi):**
     * Kullanıcının (Patronun) ekranında okunabilirlik ve kopyalama kolaylıkları esastır. 
     * Kurulacak, çalıştırılacak veya veritabanına atılacak (SQL/Supabase) her komut KESİNLİKLE BÜYÜK BAŞLIKLARLA ve `kod blokları` (kopyalama butonu) içinde sunulmalıdır. Karmaşık düz metinler yerine madde madde, büyük yazılar tercih edilecektir. Herhangi bir bilgi kaybı yasaktır.
+
+*   **Kural #19: İŞ YOL PLANI (ROADMAP) OLMADAN HAREKETE GEÇMEK YASAKTIR:**
+    * Patrona "Şunları yapacağız" denilmeden ve sistemin mevcut durumunu gösteren net bir İŞ YOL PLANI (Task/Roadmap) sunulmadan hiçbir kodlama veya göreve YAPAY ZEKA TARAFINDAN BAŞLANAMAZ.
+    * Her yeni faza veya göreve başlarken Patronun ekranına "Şunlar Bitti [x], Şunlar Kaldı [ ]" şeklinde ana harita (Roadmap) kesinlikle basılmak zorundadır. Patron nerede olduğumuzu saniye saniye bilmelidir.
 2. Yeni ajana görevi verilirken "inisiyatif kullanılamayacağı" ve kuralları aşarsa "ölümcül infazla karşılaşacağı" kesin bir emniyet protokolüyle dikte edilir.
 3. Hata yapmaması için operasyon sınırları ajana en baştan net şekilde yüklenir.
 
