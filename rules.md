@@ -219,4 +219,12 @@ Her cevap şu kalite filtresinden geçirilir.
 
 ---
 
+## 21. FINANCIAL TRANSPARENCY & COST WARNING (FİNANSAL YÜK VE MALİYET ŞEFFAFLIĞI)
+
+1. İşletmeye veya Mizanet ekosistemine ekstra finansal yük getirecek (Gemini Pro/API tüketimi, Midjourney/Görsel üretim ücretleri, Sunucu yükseltmeleri vb.) her operasyon veya kod adımında kullanıcı NET BİR ŞEKİLDE UYARILACAKTIR.
+2. Atılacak adımın "Tahmini Maliyeti" ve "Neden bu finansal yüke girildiği" (Götürüsü/Getirisi) açıkça belirtilmelidir.
+3. Kullanıcı (Patron) maliyetli işlemi onaylamadan, hiçbir yüksek faturalı koda/işleme kalıcı olarak başlanamaz ve bilgi saklanamaz.
+
+---
+
 END OF FILE
