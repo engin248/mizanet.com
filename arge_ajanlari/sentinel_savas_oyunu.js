@@ -17,8 +17,8 @@ function sentinelBekciSarmalayici(ajanFnc, maxSaniye = 5) {
     return new Promise(async (resolve, reject) => {
         // 1. ZAMAN ZIRHI (Timeout Kill-Switch)
         const killSwitch = setTimeout(() => {
-            console.error(`[SENTINEL ALARMI] Ajan ${maxSaniye} saniyede görevini bitiremedi. KAFASI KOPARILDI (Zaman Aşımı).`);
-            reject(new Error("ZAMAN_ASIMI_INFAZI"));
+            console.error(`[SENTINEL ALARMI] Ajan ${maxSaniye} saniyede görevini bitiremedi. SİSTEM TARAFINDAN MÜDAHALE EDİLDİ (Zaman Aşımı).`);
+            reject(new Error("ZAMAN_ASIMI_DURDURMA"));
         }, maxSaniye * 1000);
 
         try {
@@ -29,7 +29,7 @@ function sentinelBekciSarmalayici(ajanFnc, maxSaniye = 5) {
         } catch (e) {
             // 3. ÇÖKME DURUMU (Zehirli Veri)
             clearTimeout(killSwitch);
-            console.error(`[SENTINEL ALARMI] Ajan mantık çökmesi yaşadı. KAFASI KOPARILDI. Hata: ${e.message}`);
+            console.error(`[SENTINEL ALARMI] Ajan mantık çökmesi yaşadı. SİSTEME ZARAR VERMEDEN DURDURULDU. Hata: ${e.message}`);
             reject(e);
         }
     });
@@ -53,29 +53,29 @@ async function savasOyununuBaslat() {
     console.log(`🛡️ SENTINEL KALKANI (SAVAŞ OYUNU SİMÜLASYONU) BAŞLIYOR 🛡️`);
     console.log(`======================================================`);
 
-    // TEST 1: ZAMAN AŞIMI (TIMEOUT) İNFAZI
-    console.log(`\n[TEST 1] Ajan Timeout'a zorlanıyor... Beklenen Sonuç: Sentinel İnfazı`);
+    // TEST 1: ZAMAN AŞIMI (TIMEOUT) MÜDAHALESİ
+    console.log(`\n[TEST 1] Ajan Timeout'a zorlanıyor... Beklenen Sonuç: Sentinel Müdahalesi`);
     try {
         await sentinelBekciSarmalayici(zehirliAjan_Timeout, 3); // 3 Sniyede kopar
     } catch (e) {
         await supabase.from('b1_agent_loglari').insert([{
             ajan_adi: 'SİMÜLASYON TESTİ - AJAN 1',
             islem_tipi: 'SAVAŞ_OYUNU_TIMEOUT',
-            mesaj: `Sentinel Kalkanı Savunması: Ajan zaman sınırını aştı ve infaz edildi. Kalkan Başarılı.`,
+            mesaj: `Sentinel Kalkanı Savunması: Ajan zaman sınırını aştı ve otonom olarak görevden alındı. Kalkan Başarılı.`,
             sonuc: 'hata'
         }]);
-        console.log(`✅ TEST 1 BAŞARILI: Ajan yok edildi, veritabanına log düşüldü.`);
+        console.log(`✅ TEST 1 BAŞARILI: Ajan durduruldu, veritabanına log düşüldü.`);
     }
 
-    // TEST 2: KOD ÇÖKMESİ (CRASH) İNFAZI
-    console.log(`\n[TEST 2] Ajan kod çökmesine zorlanıyor... Beklenen Sonuç: Sentinel İnfazı`);
+    // TEST 2: KOD ÇÖKMESİ (CRASH) MÜDAHALESİ
+    console.log(`\n[TEST 2] Ajan kod çökmesine zorlanıyor... Beklenen Sonuç: Sentinel Müdahalesi`);
     try {
         await sentinelBekciSarmalayici(zehirliAjan_Crash, 5);
     } catch (e) {
         await supabase.from('b1_agent_loglari').insert([{
             ajan_adi: 'SİMÜLASYON TESTİ - AJAN 2',
             islem_tipi: 'SAVAŞ_OYUNU_CRASH',
-            mesaj: `Sentinel Kalkanı Savunması: Ajan mantık hatası yaptı ve infaz edildi. (${e.message}) Kalkan Başarılı.`,
+            mesaj: `Sentinel Kalkanı Savunması: Ajan mantık hatası yaptı ve işlemi anında durduruldu. (${e.message}) Kalkan Başarılı.`,
             sonuc: 'hata'
         }]);
         console.log(`✅ TEST 2 BAŞARILI: Çökme ana sistemi etkilemeden durduruldu, veritabanına log düşüldü.`);
