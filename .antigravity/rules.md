@@ -197,6 +197,20 @@ Her cevap şu kalite filtresinden geçirilir.
 4. Mantıksal bütünlük
 5. Gereksiz içerik kontrolü
 
+## 16. OTONOM DİRİLİŞ (NEW SOLDIER GENERATION)
+
+1. İnfaz edilen (Kill-Switch tetiklenen) bir ajanın yerine yeni bir worker (asker) otomatik atanır.
+2. Yeni ajana görevi verilirken "inisiyatif kullanılamayacağı" ve kuralları aşarsa "ölümcül infazla karşılaşacağı" kesin bir emniyet protokolüyle dikte edilir.
+3. Hata yapmaması için operasyon sınırları ajana en baştan net şekilde yüklenir.
+
+---
+
+## 17. GÜVENLİ MÜHÜRLEME (PUSH-BEFORE-START PRINCIPLE)
+
+1. Bir modül/görev tamamlanıp onaylandığında, yeni bir göreve (emre) geçilmeden önce sistem DURUR.
+2. Tamamlanan kodlar mutlaka versiyon kontrolüne (Git Push) kaydedilir ve mühürlenir.
+3. Eskisi mühürlenip (save/push) sağlama alınmadan, YENİ göreve kesinlikle başlanmaz.
+
 ---
 
 END OF FILE
