@@ -22,6 +22,7 @@ export function KarargahMainContainer() {
         stats, alarms, ping,
         commandText, setCommandText, hizliGorevAtama,
         aiSorgu, setAiSorgu, isAiLoading, aiAnalizBaslat, aiSonuc,
+        aiOnerileri, canliUretim,
         simulasyon, setSimulasyon,
         mesaj
     } = useKarargah();

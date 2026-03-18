@@ -4,7 +4,7 @@ import { supabase } from '@/lib/supabase';
 import { komutSchema } from '../schemas/komutSchema';
 
 export function useKarargah() {
-    const [stats, setStats] = useState({ ciro: 0, maliyet: 0, personel: 0, fire: 0, yukleniyor: true });
+    const [stats, setStats] = useState({ ciro: 0, ciroArtis: 0, maliyet: 0, personel: 0, fire: 0, yukleniyor: true });
     const [alarms, setAlarms] = useState(/** @type {any[]} */([]));
     const [mesaj, setMesaj] = useState({ text: '', type: '' });
     const [ping, setPing] = useState(/** @type {number|null} */(null));
@@ -13,6 +13,9 @@ export function useKarargah() {
     const [aiSorgu, setAiSorgu] = useState('');
     const [isAiLoading, setIsAiLoading] = useState(false);
     const [simulasyon, setSimulasyon] = useState(0);
+
+    const [aiOnerileri, setAiOnerileri] = useState(/** @type {any[]} */([]));
+    const [canliUretim, setCanliUretim] = useState(/** @type {any[]} */([]));
 
     const goster = (text, type = 'success') => {
         setMesaj({ text, type });
@@ -76,12 +79,24 @@ export function useKarargah() {
             setPing(Math.round(performance.now() - t0));
             setStats({
                 ciro: data.ciro || 0,
+                ciroArtis: 0,
                 maliyet: data.maliyet || 0,
                 personel: data.personel || 0,
                 fire: 0,
                 yukleniyor: false
             });
             setAlarms(alarmlar);
+
+            // TODO: İleride gerçek API'ye veya Supabase tablosuna bağlanacak
+            setAiOnerileri([
+                { mesaj: "M2 Deposundaki 'Bordo Kadife' stokları 180 gündür atıl. Trend şifon kalıbı ile üretilirse %80 marj tahmini var.", tur: "firsat", skor: 9.5 },
+                { mesaj: "M5 Kesimde %15 fire oranı tespit edildi. Geçen haftaya göre artış var, kalite kontrole incelenmesi için görev açıldı.", tur: "risk", skor: 8.2 }
+            ]);
+
+            setCanliUretim([
+                { model: "47-ABİYE-ZÜMRÜT", asama: "M4 Modelhane", durum: "normal", msj: "Kalıp onayı bekliyor", time: "10:45" },
+                { model: "KRV-CEKET-09", asama: "M5 Kesim", durum: "darbogaz", msj: "Astar metraj eksik", time: "14:20" }
+            ]);
         } catch (err) {
             console.error('Karargah veri hatası:', err);
             setStats(prev => ({ ...prev, yukleniyor: false }));
@@ -102,6 +117,7 @@ export function useKarargah() {
         stats, alarms, ping,
         commandText, setCommandText, hizliGorevAtama,
         aiSorgu, setAiSorgu, isAiLoading, aiAnalizBaslat, aiSonuc,
+        aiOnerileri, canliUretim,
         simulasyon, setSimulasyon,
         mesaj
     };
