@@ -51,9 +51,9 @@ function ErkenGirBadge() {
 
 // ─── Ana Panel ─────────────────────────────────────────────────
 export default function ArgeIstihbaratPanel() {
-    const [strateji, setStrateji] = useState(/** @type {any[]} */([]));   // b1_arge_strategy
-    const [trendler, setTrendler] = useState(/** @type {any[]} */([]));   // b1_arge_trendler
-    const [ajanLog, setAjanLog] = useState(/** @type {any[]} */([]));     // b1_agent_loglari
+    const [strateji, setStrateji] = useState(/** @type {any[]} */([]));   // ESKİ: b1_arge_strategy, YENİ: b1_arge_products
+    const [trendler, setTrendler] = useState(/** @type {any[]} */([]));
+    const [ajanLog, setAjanLog] = useState(/** @type {any[]} */([]));
     const [loading, setLoading] = useState(true);
     const [serpSorgu, setSerpSorgu] = useState('');
     const [serpYukleniyor, setSerpYukleniyor] = useState(false);
@@ -61,15 +61,17 @@ export default function ArgeIstihbaratPanel() {
     const [deepSorgu, setDeepSorgu] = useState('');
     const [deepYukleniyor, setDeepYukleniyor] = useState(false);
     const [deepSonuc, setDeepSonuc] = useState(/** @type {any} */(null));
-    const [aktifTab, setAktifTab] = useState('karar'); // karar | erken | log | google | deepseek
+    const [orstKosuYukleniyor, setOrstKosuYukleniyor] = useState(false);
+    const [manuelHedef, setManuelHedef] = useState(''); // EKLENDİ: Patronun özel hedefi
+    const [aktifTab, setAktifTab] = useState('vitrin'); // vitrin | karar | erken | log | google | deepseek
 
     const verileriCek = useCallback(async () => {
         setLoading(true);
         try {
             const [stratejiRes, trendRes, logRes] = await Promise.allSettled([
-                supabase.from('b1_arge_strategy')
-                    .select('id, product_name, opportunity_score, nizam_decision, risk_level, supply_risk, estimated_profit, outsource_cost, agent_note, created_at')
-                    .order('opportunity_score', { ascending: false })
+                supabase.from('b1_arge_products')
+                    .select('id, urun_adi, trend_skoru, artis_yuzdesi, ai_satis_karari, rekabet_durumu, erken_trend_mi, hermania_karar_yorumu, ai_guven_skoru, created_at')
+                    .order('trend_skoru', { ascending: false })
                     .limit(20),
                 supabase.from('b1_arge_trendler')
                     .select('id, baslik, platform, kategori, talep_skoru, zorluk_derecesi, durum, created_at')
@@ -101,7 +103,7 @@ export default function ArgeIstihbaratPanel() {
         verileriCek();
         // Realtime dinleme
         const kanal = supabase.channel('arge-istihbarat-panel')
-            .on('postgres_changes', { event: '*', schema: 'public', table: 'b1_arge_strategy' }, verileriCek)
+            .on('postgres_changes', { event: '*', schema: 'public', table: 'b1_arge_products' }, verileriCek)
             .on('postgres_changes', { event: '*', schema: 'public', table: 'b1_arge_trendler' }, verileriCek)
             .subscribe();
         return () => { supabase.removeChannel(kanal); };
@@ -154,13 +156,32 @@ export default function ArgeIstihbaratPanel() {
     );
 
     // ─── Toplam Skorlar ───────────────────────────────────────
-    const uretimKarari = strateji.filter(s => s.nizam_decision === 'ÜRETİM').length;
-    const testKarari = strateji.filter(s => s.nizam_decision === 'TEST ÜRETİMİ (Numune)').length;
-    const izleKarari = strateji.filter(s => s.nizam_decision === 'İZLEME').length;
-    const redKarari = strateji.filter(s => s.nizam_decision === 'REDDET').length;
+    const uretimKarari = strateji.filter(s => s.ai_satis_karari === 'ÇOK_SATAR').length;
+    const testKarari = strateji.filter(s => s.ai_satis_karari === 'İZLE').length;
+    const izleKarari = 0;
+    const redKarari = strateji.filter(s => s.ai_satis_karari === 'SATMAZ').length;
     const ortalamaSkor = strateji.length > 0
-        ? Math.round(strateji.reduce((a, b) => a + (b.opportunity_score || 0), 0) / strateji.length)
+        ? Math.round(strateji.reduce((a, b) => a + (b.trend_skoru || 0), 0) / strateji.length)
         : 0;
+
+    const ajanlariSahayaSur = async () => {
+        setOrstKosuYukleniyor(true);
+        try {
+            await fetch('/api/beyaz-saha', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    ajanTipi: 'MANUEL_HEDEF',
+                    hedefParametre: manuelHedef.trim() || 'GENEL SAHA TARAMASI'
+                })
+            });
+            setTimeout(verileriCek, 2000); // Verileri güncelle
+            setManuelHedef(''); // Hedefi temizle
+        } catch (e) {
+            console.error(e);
+        }
+        setOrstKosuYukleniyor(false);
+    };
 
     const tabStyle = (tab) => ({
         padding: '8px 16px',
@@ -212,18 +233,45 @@ export default function ArgeIstihbaratPanel() {
                             </p>
                         </div>
                     </div>
-                    <button
-                        onClick={verileriCek}
-                        disabled={loading}
-                        style={{
-                            background: 'rgba(16,185,129,0.1)', border: '1px solid rgba(16,185,129,0.3)',
-                            color: '#34d399', padding: '6px 14px', borderRadius: '8px', cursor: 'pointer',
-                            display: 'flex', alignItems: 'center', gap: 6, fontSize: '0.75rem', fontWeight: 700,
-                        }}
-                    >
-                        <RefreshCw size={14} style={{ animation: loading ? 'spin 1s linear infinite' : 'none' }} />
-                        Yenile
-                    </button>
+                    <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
+                        <input
+                            type="text"
+                            placeholder="Ajanlara Özel Komut Ver (Örn: Ayrobin İkili Takım)"
+                            value={manuelHedef}
+                            onChange={(e) => setManuelHedef(e.target.value)}
+                            style={{
+                                background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(124,58,237,0.3)',
+                                color: '#e2e8f0', padding: '6px 14px', borderRadius: '8px',
+                                fontSize: '0.75rem', outline: 'none', width: '250px'
+                            }}
+                        />
+                        <button
+                            onClick={ajanlariSahayaSur}
+                            disabled={orstKosuYukleniyor}
+                            style={{
+                                background: 'linear-gradient(135deg, #7c3aed, #4f46e5)', border: 'none',
+                                color: 'white', padding: '6px 14px', borderRadius: '8px', cursor: 'pointer',
+                                display: 'flex', alignItems: 'center', gap: 6, fontSize: '0.75rem', fontWeight: 800,
+                                boxShadow: '0 4px 15px rgba(124,58,237,0.3)',
+                            }}
+                        >
+                            <Target size={14} />
+                            {orstKosuYukleniyor ? 'SAHADA...' : 'BEYAZ AJANLARI UYANDIR'}
+                        </button>
+
+                        <button
+                            onClick={verileriCek}
+                            disabled={loading}
+                            style={{
+                                background: 'rgba(16,185,129,0.1)', border: '1px solid rgba(16,185,129,0.3)',
+                                color: '#34d399', padding: '6px 14px', borderRadius: '8px', cursor: 'pointer',
+                                display: 'flex', alignItems: 'center', gap: 6, fontSize: '0.75rem', fontWeight: 700,
+                            }}
+                        >
+                            <RefreshCw size={14} style={{ animation: loading ? 'spin 1s linear infinite' : 'none' }} />
+                            Yenile
+                        </button>
+                    </div>
                 </div>
 
                 {/* Kart sayaçları */}
@@ -248,9 +296,13 @@ export default function ArgeIstihbaratPanel() {
 
             {/* SEKMELER */}
             <div style={{ padding: '0.75rem 1.25rem', borderBottom: '1px solid rgba(255,255,255,0.06)', display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+                <button style={tabStyle('vitrin')} onClick={() => setAktifTab('vitrin')}>
+                    <ShoppingBag size={12} style={{ marginRight: 4, display: 'inline' }} />
+                    Canlı Trend Vitrini (Satar/Satmaz)
+                </button>
                 <button style={tabStyle('karar')} onClick={() => setAktifTab('karar')}>
                     <Target size={12} style={{ marginRight: 4, display: 'inline' }} />
-                    Karar Paneli
+                    Stratejik Kararlar
                 </button>
                 <button style={tabStyle('erken')} onClick={() => setAktifTab('erken')}>
                     <Flame size={12} style={{ marginRight: 4, display: 'inline' }} />
@@ -273,26 +325,26 @@ export default function ArgeIstihbaratPanel() {
             {/* İÇERİK */}
             <div style={{ padding: '1rem 1.25rem', minHeight: 200 }}>
 
-                {/* ── G BLOĞU: Karar Paneli ─────────────────────────── */}
-                {aktifTab === 'karar' && (
+                {/* ── YENİ: VİTRİN (SATAR/SATMAZ) PANELI BLOĞU ───────────────── */}
+                {aktifTab === 'vitrin' && (
                     <div>
                         {loading ? (
                             <div style={{ color: '#64748b', textAlign: 'center', padding: '2rem', fontSize: '0.8rem' }}>
                                 <RefreshCw size={20} style={{ animation: 'spin 1s linear infinite', margin: '0 auto 8px', display: 'block' }} />
-                                Strateji verileri yükleniyor...
+                                Canlı Akış yükleniyor...
                             </div>
                         ) : strateji.length === 0 ? (
                             <div style={{ color: '#64748b', textAlign: 'center', padding: '2rem' }}>
-                                <Target size={32} style={{ margin: '0 auto 8px', display: 'block', opacity: 0.3 }} />
-                                <p style={{ fontSize: '0.8rem', margin: 0 }}>Henüz karar verisi yok.</p>
+                                <Flame size={32} style={{ margin: '0 auto 8px', display: 'block', opacity: 0.3 }} />
+                                <p style={{ fontSize: '0.8rem', margin: 0 }}>Sahadan henüz SATAR/SATMAZ verisi dönmedi.</p>
                                 <p style={{ fontSize: '0.7rem', margin: '4px 0 0', opacity: 0.6 }}>
-                                    Yargıç Ajanı çalıştırıldığında veriler buraya gelir.
+                                    Ajanları UYANDIR butonuna basarak tarama başlatın.
                                 </p>
                             </div>
                         ) : (
                             <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                                 {strateji.map(s => {
-                                    const renkler = skorRenkAl(s.opportunity_score || 0);
+                                    const renkler = skorRenkAl(s.trend_skoru || 0);
                                     return (
                                         <div key={s.id} style={{
                                             background: renkler.bg,
@@ -307,50 +359,64 @@ export default function ArgeIstihbaratPanel() {
                                         }}>
                                             <div style={{ flex: 1, minWidth: 200 }}>
                                                 <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
-                                                    <KararEtiketi karar={s.nizam_decision} />
-                                                    <span style={{ color: renkler.text, fontWeight: 700, fontSize: '0.8rem' }}>
-                                                        {s.product_name}
+                                                    {s.ai_satis_karari === 'ÇOK_SATAR' ? (
+                                                        <span style={{ background: '#10b981', color: '#fff', padding: '3px 10px', borderRadius: '8px', fontSize: '0.7rem', fontWeight: 900 }}>🔥 ÇOK SATAR</span>
+                                                    ) : s.ai_satis_karari === 'SATMAZ' ? (
+                                                        <span style={{ background: '#ef4444', color: '#fff', padding: '3px 10px', borderRadius: '8px', fontSize: '0.7rem', fontWeight: 900 }}>🧊 SATMAZ</span>
+                                                    ) : (
+                                                        <span style={{ background: '#f59e0b', color: '#fff', padding: '3px 10px', borderRadius: '8px', fontSize: '0.7rem', fontWeight: 900 }}>👁 İZLE</span>
+                                                    )}
+                                                    <span style={{ color: renkler.text, fontWeight: 900, fontSize: '0.9rem', textTransform: 'uppercase' }}>
+                                                        {s.urun_adi}
                                                     </span>
+                                                    {s.erken_trend_mi && <ErkenGirBadge />}
                                                 </div>
-                                                {s.agent_note && (
-                                                    <p style={{ color: '#94a3b8', fontSize: '0.7rem', margin: 0 }}>
-                                                        {s.agent_note}
+                                                {s.hermania_karar_yorumu && (
+                                                    <p style={{ color: '#94a3b8', fontSize: '0.75rem', margin: '6px 0 0', borderLeft: '2px solid rgba(255,255,255,0.1)', paddingLeft: '8px', lineHeight: 1.4 }}>
+                                                        <strong>[İstihbarat Raporu]:</strong> {s.hermania_karar_yorumu}
                                                     </p>
                                                 )}
-                                                {s.supply_risk && (
-                                                    <p style={{ color: '#ef4444', fontSize: '0.65rem', margin: '2px 0 0', display: 'flex', alignItems: 'center', gap: 4 }}>
-                                                        <AlertTriangle size={10} /> {s.supply_risk}
-                                                    </p>
+
+                                                {/* PATRONUN ÇEVİK ÜRETİM EMRİ (Kartela/Kalıp Bağlantısı) */}
+                                                {s.ai_satis_karari === 'ÇOK_SATAR' && (
+                                                    <div style={{ marginTop: '12px', display: 'flex', gap: '8px' }}>
+                                                        <button
+                                                            onClick={() => {
+                                                                if (confirm(`"${s.urun_adi}" için M2 Kumaş Kartelası açılıp üretim (M3) için kalıphaneye sevk edilsin mi? (Depodaki stok aranmaksızın piyasadan numune kartelası eşleşmesi aranacak)`)) {
+                                                                    alert('PATRON EMRİ ALINDI! Ürün Kalıphaneye ve Numune Kumaş Alımına Düştü.');
+                                                                }
+                                                            }}
+                                                            style={{
+                                                                background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+                                                                color: '#fff', border: 'none', padding: '6px 12px', borderRadius: '6px',
+                                                                fontSize: '0.75rem', fontWeight: 800, cursor: 'pointer',
+                                                                display: 'flex', alignItems: 'center', gap: '4px',
+                                                                boxShadow: '0 4px 10px rgba(16,185,129,0.3)',
+                                                                letterSpacing: '0.03em'
+                                                            }}
+                                                        >
+                                                            <ShoppingBag size={14} />
+                                                            M2 KARTELAYLA EŞLEŞTİR & ÜRETİME (M3) BAŞLA
+                                                        </button>
+                                                    </div>
                                                 )}
                                             </div>
-                                            <div style={{ display: 'flex', gap: 12, alignItems: 'center', flexShrink: 0 }}>
-                                                {/* Fırsat skoru */}
+                                            <div style={{ display: 'flex', gap: 16, alignItems: 'center', flexShrink: 0 }}>
+                                                <div style={{ textAlign: 'center' }}>
+                                                    <div style={{ fontSize: '1.25rem', fontWeight: 900, fontFamily: 'monospace', color: '#38bdf8' }}>
+                                                        +{s.artis_yuzdesi}%
+                                                    </div>
+                                                    <div style={{ fontSize: '0.55rem', color: '#64748b', fontWeight: 700, textTransform: 'uppercase' }}>Hız İvmesi</div>
+                                                </div>
                                                 <div style={{ textAlign: 'center' }}>
                                                     <div style={{
-                                                        fontSize: '1.25rem', fontWeight: 900, fontFamily: 'monospace',
+                                                        fontSize: '1.5rem', fontWeight: 900, fontFamily: 'monospace',
                                                         color: renkler.badge,
-                                                        filter: `drop-shadow(0 0 6px ${renkler.badge}60)`,
+                                                        filter: `drop-shadow(0 0 8px ${renkler.badge}60)`,
                                                     }}>
-                                                        {Math.round(s.opportunity_score || 0)}
+                                                        {Math.round(s.trend_skoru || 0)}
                                                     </div>
-                                                    <div style={{ fontSize: '0.55rem', color: '#64748b', fontWeight: 700, textTransform: 'uppercase' }}>SKOR</div>
-                                                </div>
-                                                {/* Kar tahmini */}
-                                                {s.estimated_profit > 0 && (
-                                                    <div style={{ textAlign: 'center' }}>
-                                                        <div style={{ fontSize: '0.85rem', fontWeight: 900, color: '#a7f3d0', fontFamily: 'monospace' }}>
-                                                            {(s.estimated_profit / 100).toFixed(0)}₺
-                                                        </div>
-                                                        <div style={{ fontSize: '0.55rem', color: '#64748b', fontWeight: 700, textTransform: 'uppercase' }}>Tahmini Kâr</div>
-                                                    </div>
-                                                )}
-                                                {/* Risk etiketi */}
-                                                <div style={{
-                                                    padding: '3px 8px', borderRadius: '6px', fontSize: '0.6rem', fontWeight: 800,
-                                                    background: s.risk_level === 'Yüksek' ? 'rgba(239,68,68,0.15)' : s.risk_level === 'Orta' ? 'rgba(245,158,11,0.15)' : 'rgba(16,185,129,0.15)',
-                                                    color: s.risk_level === 'Yüksek' ? '#fca5a5' : s.risk_level === 'Orta' ? '#fde68a' : '#a7f3d0',
-                                                }}>
-                                                    {s.risk_level || 'Orta'} Risk
+                                                    <div style={{ fontSize: '0.55rem', color: '#64748b', fontWeight: 700, textTransform: 'uppercase' }}>Trend Skor</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -358,6 +424,13 @@ export default function ArgeIstihbaratPanel() {
                                 })}
                             </div>
                         )}
+                    </div>
+                )}
+
+                {/* ── G BLOĞU: Karar Paneli (Eski Strateji Görünümü İptal -> Yeni Vitrin Üzerinden) ─────────────────────────── */}
+                {aktifTab === 'karar' && (
+                    <div style={{ color: '#64748b', textAlign: 'center', padding: '2rem', fontSize: '0.8rem' }}>
+                        Kararlar artık <strong>Satar / Satmaz Canlı Trend Vitrini</strong> üzerinden takip edilmektedir. Karargah Matrisi Güncellendi.
                     </div>
                 )}
 

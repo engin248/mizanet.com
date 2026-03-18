@@ -23,7 +23,7 @@ export default function GuvenlikMainContainer() {
     const [yetkiState, setYetkiState] = useState({ uretim: '', genel: '' });
     const [pinDegistir, setPinDegistir] = useState({ grup: 'uretim', eskiPin: '', yeniPin: '', yeniPin2: '' });
     const [hataliGirisler, setHataliGirisler] = useState({}); // GVN-02: { grup: count }
-    const [islemdeId, setIslemdeId] = useState(null); // [SPAM ZIRHI]
+    const [islemdeId, setIslemdeId] = useState(null); // ÇİFT TIKLAMA KORUMASI
 
     useEffect(() => {
         try {

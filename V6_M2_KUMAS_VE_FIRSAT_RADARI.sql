@@ -58,7 +58,7 @@ BEGIN
    NEW.updated_at = NOW();
    RETURN NEW;
 END;
-$$ LANGUAGE plpgsql;
+$$ LANGUAGE plpgsql SET search_path = public;
 
 DROP TRIGGER IF EXISTS tr_b2_malzeme_modtime ON public.b2_malzeme_katalogu;
 

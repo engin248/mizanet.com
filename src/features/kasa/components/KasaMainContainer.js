@@ -49,7 +49,7 @@ const BOSH_FORM = {
     aciklama: '',
     vade_tarihi: '',
     musteri_id: '',
-    personel_id: '', // [M13-M7 KÖPRÜSÜ ZIRHI]
+    personel_id: '', // [M13-M7 KÖPRÜSÜ KONTROLÜ]
 };
 
 const TIP_RENK = {
@@ -67,14 +67,14 @@ export default function KasaMainContainer() {
     const [yetkiliMi, setYetkiliMi] = useState(false);
     const [hareketler, setHareketler] = useState(/** @type {any[]} */([]));
     const [musteriler, setMusteriler] = useState(/** @type {any[]} */([]));
-    const [personeller, setPersoneller] = useState(/** @type {any[]} */([])); // [M13-M7 KÖPRÜSÜ ZIRHI]
+    const [personeller, setPersoneller] = useState(/** @type {any[]} */([])); // [M13-M7 KÖPRÜSÜ KONTROLÜ]
     const [form, setForm] = useState(BOSH_FORM);
     const [formAcik, setFormAcik] = useState(false);
     const [loading, setLoading] = useState(false);
     const [mesaj, setMesaj] = useState({ text: '', type: '' });
     const [filtreTip, setFiltreTip] = useState('hepsi');
     const [filtreOnay, setFiltreOnay] = useState('hepsi');
-    const [islemdeId, setIslemdeId] = useState(/** @type {any} */(null)); // [SPAM ZIRHI]
+    const [islemdeId, setIslemdeId] = useState(/** @type {any} */(null)); // ÇİFT TIKLAMA KORUMASI
     const [kasaSayfa, setKasaSayfa] = useState(50); // K-13 PAGINATION
 
     useEffect(() => {
@@ -85,7 +85,7 @@ export default function KasaMainContainer() {
         let kanal;
         const baslatKanal = () => {
             if (isYetkili && !document.hidden) {
-                // [AI ZIRHI]: Realtime WebSocket (Visibility Optimizasyonu)
+                // SİSTEM OPTİMİZASYONU: Realtime WebSocket (Visibility Optimizasyonu)
                 kanal = supabase.channel('kasa-gercek-zamanli-optimize')
                     .on('postgres_changes', { event: '*', schema: 'public', table: 'b2_kasa_hareketleri' }, yukle)
                     .subscribe();
@@ -112,7 +112,7 @@ export default function KasaMainContainer() {
     const yukle = async () => {
         setLoading(true);
         try {
-            // [AI ZIRHI]: 10sn timeout DDoS kalkanı (Kriter Q)
+            // SİSTEM OPTİMİZASYONU: 10sn timeout DDoS kalkanı (Kriter Q)
             const timeout = new Promise((_, r) => setTimeout(() => r(new Error('Bağlantı zaman aşımı (10sn)')), 10000));
             const [harRes, musRes, perRes] = await Promise.race([
                 Promise.allSettled([
@@ -149,7 +149,7 @@ export default function KasaMainContainer() {
             onay_durumu: 'bekliyor',
         };
 
-        // [AI ZIRHI]: Offline Modu (Kriter J)
+        // SİSTEM OPTİMİZASYONU: Offline Modu (Kriter J)
         if (!navigator.onLine) {
             await cevrimeKuyrugaAl('b2_kasa_hareketleri', 'INSERT', veri);
             goster('⚡ Çevrimdışı: Kasa işlemi kuyruğa alındı.');
@@ -197,7 +197,7 @@ export default function KasaMainContainer() {
             setIslemdeId(null); return goster('🔒 DİJİTAL ADALET KİLİDİ: Banka güvenlik regülasyonları gereği Onaylanmış Kasa hareketleri ASLA SİLİNEMEZ!', 'error');
         }
 
-        // [AI ZIRHI]: B0 Kara Kutu silme logu (Kriter 25)
+        // SİSTEM OPTİMİZASYONU: B0 Kara Kutu silme logu (Kriter 25)
         try {
             await supabase.from('b0_sistem_loglari').insert([{
                 tablo_adi: 'b2_kasa_hareketleri', islem_tipi: 'SILME',
@@ -224,7 +224,7 @@ export default function KasaMainContainer() {
 
     const bekleyen = hareketler.filter(h => h.onay_durumu === 'bekliyor').reduce((s, h) => s + parseFloat(h.tutar_tl || 0), 0);
 
-    // [EKONOMİK KÖR NOKTA ZIRHI]: Bakiye hesaplamasında 'avans' ve 'diger' çıkışları (ödemeler) da kasadan düşmelidir. Yoksa fiziki kasa ile sistem uyuşmaz.
+    // [EKONOMİK KÖR NOKTA KONTROLÜ]: Bakiye hesaplamasında 'avans' ve 'diger' çıkışları (ödemeler) da kasadan düşmelidir. Yoksa fiziki kasa ile sistem uyuşmaz.
     const cikislar = hareketler.filter(h => ['iade_odeme', 'avans', 'diger'].includes(h.hareket_tipi) && h.onay_durumu === 'onaylandi').reduce((s, h) => s + parseFloat(h.tutar_tl || 0), 0);
     const netBakiye = tahsilat - cikislar;
 

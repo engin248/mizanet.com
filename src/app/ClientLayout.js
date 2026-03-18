@@ -43,7 +43,7 @@ const NAV_ITEMS = [
 
     // SİSTEM
     { href: '/ajanlar', icon: Zap, labelTR: '🤖 AI Komuta Merkezi', labelAR: 'قيادة الوكلاء', group: 'sistem' },
-    { href: '/arge_test_paneli', icon: Activity, labelTR: '🧪 Test Paneli (API)', labelAR: 'لوحة اختبار', group: 'sistem' },
+
     { href: '/denetmen', icon: Bot, labelTR: 'Müfettiş & Öğrenme', labelAR: 'المفتش', group: 'sistem' },
     { href: '/guvenlik', icon: Shield, labelTR: 'Güvenlik & Loglar', labelAR: 'الأمان', group: 'sistem' },
     { href: '/ayarlar', icon: Settings, labelTR: 'Sistem Ayarları', labelAR: 'الإعدادات', group: 'sistem' },

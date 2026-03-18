@@ -55,7 +55,7 @@ export default function SiparislerSayfasi() {
     const [kargoModal, setKargoModal] = useState(/** @type {any} */(null));
     const [kargoNo, setKargoNo] = useState('');
     const [aramaMetni, setAramaMetni] = useState('');
-    const [islemdeId, setIslemdeId] = useState(/** @type {any} */(null)); // [SPAM ZIRHI]
+    const [islemdeId, setIslemdeId] = useState(/** @type {any} */(null)); // ÇİFT TIKLAMA KORUMASI
     // [K-13 PAGINATION]: Sayfa tabanlı yükleme — 10K+ kayıtta çöküşü önler
     const [sayfaNo, setSayfaNo] = useState(0);
     const [dahaFazlaVar, setDahaFazlaVar] = useState(true);
@@ -80,7 +80,7 @@ export default function SiparislerSayfasi() {
                     .subscribe();
                 isSubscribed = true;
             } else if (document.visibilityState === 'hidden' && kanal) {
-                // [SIFIR MALİYET ZIRHI]: Sekme arkaplana düşünce websocket kopartılır (fatura engeli)
+                // [SIFIR MALİYET KONTROLÜ]: Sekme arkaplana düşünce websocket kopartılır (fatura engeli)
                 supabase.removeChannel(kanal);
                 kanal = null;
                 isSubscribed = false;
@@ -160,7 +160,7 @@ export default function SiparislerSayfasi() {
         if (kalemler.some(k => !k.urun_id)) return goster('Tüm kalemlerin ürünü seçilmeli!', 'error');
         if (kalemler.some(k => !k.adet || parseInt(k.adet) < 1)) return goster('Tüm kalemlerin adeti 1\'den büyük olmalı!', 'error');
 
-        // [M9 ZIRHI]: %10 Üzeri İskonto Kalkanı
+        // [M9 KONTROLÜ]: %10 Üzeri İskonto Kalkanı
         const enYuksekIskonto = Math.max(...kalemler.map(k => parseFloat(k.iskonto_pct) || 0));
         if (enYuksekIskonto > 10 && !yetkiliMi) {
             return goster('🚨 GÜVENLİK İHLALİ: %10 üzerinde iskonto vermek için KASA/YÖNETİCİ yetkisi zorunludur!', 'error');

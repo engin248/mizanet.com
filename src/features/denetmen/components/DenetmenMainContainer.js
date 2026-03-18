@@ -57,7 +57,7 @@ export default function DenetmenMainContainer() {
 
         let kanal;
         if (erisebilir) {
-            // [AI ZIRHI]: Realtime Websocket (Kriter 20 & 34)
+            // SİSTEM OPTİMİZASYONU: Realtime Websocket (Kriter 20 & 34)
             kanal = supabase.channel('islem-gercek-zamanli-ai')
                 .on('postgres_changes', { event: '*', schema: 'public' }, () => { yukle(); })
                 .subscribe();

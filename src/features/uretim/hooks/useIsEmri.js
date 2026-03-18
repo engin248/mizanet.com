@@ -66,7 +66,7 @@ export function useIsEmri(kullanici) {
     const [duzenleId, setDuzenleId] = useState(null);
     const [barkodOkutulanIsId, setBarkodOkutulanIsId] = useState('');
     const [seciliSiparisler, setSeciliSiparisler] = useState([]);
-    const [islemdeId, setIslemdeId] = useState(null); // [SPAM ZIRHI]
+    const [islemdeId, setIslemdeId] = useState(null); // ÇİFT TIKLAMA KORUMASI
 
     // [YENİ] Çift Barkod ve Performans State'leri
     const [aktifPersonel, setAktifPersonel] = useState(null);
@@ -515,7 +515,7 @@ export function useIsEmri(kullanici) {
         kronometer, sure, maliyetForm, setMaliyetForm, maliyetFormAcik, setMaliyetFormAcik,
         aramaMetni, setAramaMetni, filtreDurum, setFiltreDurum, duzenleId,
         barkodOkutulanIsId, setBarkodOkutulanIsId, seciliSiparisler, barkodInputRef,
-        islemdeId, setIslemdeId, // [SPAM ZIRHI]
+        islemdeId, setIslemdeId, // ÇİFT TIKLAMA KORUMASI
         aktifPersonel, setAktifPersonel, aktifOperasyonlar, isReworkMod, setIsReworkMod, // [ÇİFT BARKOD + REWORK]
         // Fonksiyonlar
         yukle, durumGuncelle, baslat, duraklat, durdur, formatSure, ciftBarkodOtonomIslem,

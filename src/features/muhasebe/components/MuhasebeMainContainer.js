@@ -23,7 +23,7 @@ export default function MuhasebeMainContainer() {
     const [aramaMetni, setAramaMetni] = useState('');
     const [duzenleModal, setDuzenleModal] = useState(/** @type {any} */(null)); // { id, zayiat_adet, hedeflenen_maliyet_tl, notlar }
     const [duzenleForm, setDuzenleForm] = useState(/** @type {any} */({ zayiat_adet: '', hedeflenen_maliyet_tl: '', notlar: '', ek_maliyet_tl: '' }));
-    const [islemdeId, setIslemdeId] = useState(/** @type {any} */(null)); // [SPAM ZIRHI]
+    const [islemdeId, setIslemdeId] = useState(/** @type {any} */(null)); // ÇİFT TIKLAMA KORUMASI
 
     useEffect(() => {
         let uretimPin = !!sessionStorage.getItem('sb47_uretim_token');
@@ -33,7 +33,7 @@ export default function MuhasebeMainContainer() {
         let kanal;
         const baslatKanal = () => {
             if (isYetkili && !document.hidden) {
-                // [AI ZIRHI]: Realtime WebSocket (Visibility Optimizasyonu)
+                // PERFORMANS OPTİMİZASYONU: Realtime WebSocket
                 kanal = supabase.channel('muhasebe-gercek-zamanli-optimize')
                     .on('postgres_changes', { event: '*', schema: 'public', table: 'b1_muhasebe_raporlari' }, yukle)
                     .subscribe();
@@ -62,7 +62,7 @@ export default function MuhasebeMainContainer() {
         try {
             const req1 = supabase.from('b1_muhasebe_raporlari').select('*').order('created_at', { ascending: false }).limit(200);
 
-            // 🚨 EKİP GAMMA: Muhasebe ID Çakışması düzeltildi. Artık Model Taslakları yerine tamamlanmış İş Emirleri (production_orders) listeleniyor
+            // VERİ BÜTÜNLÜĞÜ: Model Taslakları yerine tamamlanmış İş Emirleri (production_orders) referans alınıyor
             const req2 = supabase.from('production_orders')
                 .select('id, quantity, status, b1_model_taslaklari:model_id(model_kodu, model_adi)')
                 .eq('status', 'completed')
@@ -164,9 +164,7 @@ export default function MuhasebeMainContainer() {
             }).eq('id', rapor.id);
             if (error) throw error;
 
-            // ✅ [MÜDAHALE - NİZAM STOK SİGORTASI] Ekip Gamma Tarafından Kapatıldı
-            // Nedeni: İmalat (M4) aşaması bittiğinde stok zaten `imalatApi.js` tarafından otomatik eklendi.
-            // Burada tekrar stok girişi/çıkışı yapılamaz. Ancak bu aşama bir 2. Birim Onayı log'laması şeklinde kalabilir.
+            // ONAY AKIŞI: İmalat (M4) aşaması bittiğinde stoklar eklendiği için burada sadece 2. Birim Onayı log'laması yapılır.
             try {
                 const { data: orderData } = await supabase.from('production_orders')
                     .select('model_id, quantity, b1_model_taslaklari(model_kodu)')
@@ -206,7 +204,7 @@ export default function MuhasebeMainContainer() {
             if (mErr) throw mErr;
             let toplamMaliyet = (maliyetler || []).reduce((s, m) => s + parseFloat(m.tutar_tl || 0), 0);
 
-            // [M8 ZIRHI: Stratejik GÜG Körlüğü Kapatıldı]
+            // MALİYET KURALI: Otonom GÜG (Genel İşletme Gideri) Payı Kesintisi
             const yuzde15Gider = parseFloat((toplamMaliyet * 0.15).toFixed(2));
             if (yuzde15Gider > 0) {
                 try {
@@ -262,7 +260,7 @@ export default function MuhasebeMainContainer() {
         setDuzenleModal({ ...rapor, zeyilname_modu: false });
     };
 
-    // [M8 ZIRHI: ZEYİLNAME SİGORTASI]
+    // [M8 KONTROLÜ: ZEYİLNAME SİGORTASI]
     const zeyilnameAc = (rapor) => {
         if (rapor.rapor_durumu !== 'kilitlendi') return goster('Sadece devri tamamlanıp KİLİTLENMİŞ raporlara sonradan gelen farklar (Zeyilname) yazılabilir.', 'warning');
         setDuzenleForm({

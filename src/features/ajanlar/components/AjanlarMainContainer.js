@@ -115,7 +115,7 @@ export default function AjanlarMainContainer() {
     const [filtre, setFiltre] = useState('hepsi');
     const [secilenGorev, setSecilenGorev] = useState(/** @type {any} */(null));
     const [istatistik, setIstatistik] = useState({ toplam: 0, tamamlandi: 0, calisıyor: 0, hata: 0, bekliyor: 0 });
-    const [islemdeId, setIslemdeId] = useState(/** @type {any} */(null)); // [SPAM ZIRHI]
+    const [islemdeId, setIslemdeId] = useState(/** @type {any} */(null)); // ÇİFT TIKLAMA KORUMASI
     const [konfig, setKonfig] = useState(() => {
         if (typeof window !== 'undefined') {
             const k = localStorage.getItem('ajan_konfig');
@@ -182,7 +182,7 @@ export default function AjanlarMainContainer() {
 
     const yukle = async () => {
         try {
-            // [AI ZIRHI]: 10sn timeout DDoS kalkanı (Kriter Q)
+            // SİSTEM OPTİMİZASYONU: 10sn timeout DDoS kalkanı (Kriter Q)
             const timeout = new Promise((_, r) => setTimeout(() => r(new Error('Bağlantı zaman aşımı (10sn)')), 10000));
             const { data, error } = await Promise.race([
                 supabase.from('b1_ajan_gorevler').select('*').order('created_at', { ascending: false }).limit(50),
@@ -228,7 +228,7 @@ export default function AjanlarMainContainer() {
             setForm(BOS_FORM); setFormAcik(false); yukle();
             if (form.oncelik === 'acil') setTimeout(() => gorevCalistir(data.id), 500);
         } catch (error) {
-            // [AI ZIRHI]: Offline guard (Kriter J)
+            // SİSTEM OPTİMİZASYONU: Offline guard (Kriter J)
             if (!navigator.onLine || error.message?.includes('fetch')) {
                 const { cevrimeKuyrugaAl } = await import('@/lib/offlineKuyruk');
                 await cevrimeKuyrugaAl({ tablo: 'b1_ajan_gorevler', islem_tipi: 'INSERT', veri: { ...form, durum: 'bekliyor' } });
@@ -272,7 +272,7 @@ export default function AjanlarMainContainer() {
 
         try {
 
-            // [AI ZIRHI]: B0 KISMEN SILINMEDEN ONCE KARA KUTUYA YAZILIR (Kriter 25)
+            // SİSTEM OPTİMİZASYONU: B0 KISMEN SILINMEDEN ONCE KARA KUTUYA YAZILIR (Kriter 25)
             try {
                 await supabase.from('b0_sistem_loglari').insert([{
                     tablo_adi: String('b1_ajan_gorevler').replace(/['"]/g, ''),
@@ -553,7 +553,7 @@ export default function AjanlarMainContainer() {
                                                 <div style={{ fontSize: '0.72rem', color: '#a7f3d0' }}>{sure(gorev.baslangic_tarihi, gorev.bitis_tarihi) || '—'}</div>
                                                 <div style={{ display: 'flex', gap: 4, flexWrap: 'wrap' }} onClick={e => e.stopPropagation()}>
 
-                                                    {/* B1 HİBRİT ONAY ZIRHI KALKANI */}
+                                                    {/* B1 HİBRİT ONAY KONTROLÜ KALKANI */}
                                                     {gorev.hibrit_onay_gerekli && gorev.yonetici_onayi === 'bekliyor' ? (
                                                         <button onClick={async () => {
                                                             if (!confirm('Bu Otonom Göreve YÖNETİCİ ONAYI verilsin mi?')) return;

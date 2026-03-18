@@ -47,12 +47,12 @@ export default function PersonelMainContainer() {
     const [filtreRol, setFiltreRol] = useState('hepsi');
     const [sekme, setSekme] = useState('liste'); // liste | prim | devam
     const [devamlar, setDevamlar] = useState(/** @type {any[]} */([]));
-    const [avanslar, setAvanslar] = useState(/** @type {any[]} */([])); // [M13-M7 KÖPRÜSÜ ZIRHI]
+    const [avanslar, setAvanslar] = useState(/** @type {any[]} */([])); // [M13-M7 KÖPRÜSÜ KONTROLÜ]
     const [devamForm, setDevamForm] = useState(/** @type {any} */({ personel_id: '', tarih: new Date().toISOString().split('T')[0], durum: 'calisti', notlar: '' }));
     const [devamFormAcik, setDevamFormAcik] = useState(false);
     const [devamDuzenleId, setDevamDuzenleId] = useState(/** @type {any} */(null));
     const [sistemAyarlari, setSistemAyarlari] = useState({ dakika_basi_ucret: 2.50, prim_orani: 0.15, yillik_izin_hakki: 15 });
-    const [islemdeId, setIslemdeId] = useState(/** @type {any} */(null)); // [SPAM ZIRHI]
+    const [islemdeId, setIslemdeId] = useState(/** @type {any} */(null)); // ÇİFT TIKLAMA KORUMASI
 
     useEffect(() => {
         let uretimPin = !!sessionStorage.getItem('sb47_uretim_token');
@@ -61,7 +61,7 @@ export default function PersonelMainContainer() {
 
         if (erisebilir) {
 
-            // [AI ZIRHI]: Realtime Websocket (Kriter 20 & 34)
+            // SİSTEM OPTİMİZASYONU: Realtime Websocket (Kriter 20 & 34)
             const kanal = supabase.channel('islem-gercek-zamanli-ai')
                 .on('postgres_changes', { event: '*', schema: 'public' }, () => { yukle(); })
                 .subscribe();
@@ -102,7 +102,7 @@ export default function PersonelMainContainer() {
     const yukle = async () => {
         setLoading(true);
         try {
-            // [AI ZIRHI]: 10sn timeout DDoS kalkanı (Kriter Q)
+            // SİSTEM OPTİMİZASYONU: 10sn timeout DDoS kalkanı (Kriter Q)
             const timeout = new Promise((_, r) => setTimeout(() => r(new Error('Bağlantı zaman aşımı (10sn)')), 10000));
 
             // Personelleri Çek
@@ -207,7 +207,7 @@ export default function PersonelMainContainer() {
         if (!confirm('Personel kalıcı olarak silinsin mi?')) { setIslemdeId(null); return; }
         try {
 
-            // [AI ZIRHI]: B0 KISMEN SILINMEDEN ONCE KARA KUTUYA YAZILIR (Kriter 25)
+            // SİSTEM OPTİMİZASYONU: B0 KISMEN SILINMEDEN ONCE KARA KUTUYA YAZILIR (Kriter 25)
             try {
                 await supabase.from('b0_sistem_loglari').insert([{
                     tablo_adi: String('b1_personel').replace(/['"]/g, ''),
@@ -285,7 +285,7 @@ export default function PersonelMainContainer() {
         if (!confirm('Bu devam kaydı silinsin mi?')) { setIslemdeId(null); return; }
         try {
 
-            // [AI ZIRHI]: B0 KISMEN SILINMEDEN ONCE KARA KUTUYA YAZILIR (Kriter 25)
+            // SİSTEM OPTİMİZASYONU: B0 KISMEN SILINMEDEN ONCE KARA KUTUYA YAZILIR (Kriter 25)
             try {
                 await supabase.from('b0_sistem_loglari').insert([{
                     tablo_adi: String('b1_personel_devam').replace(/['"]/g, ''),
@@ -305,7 +305,7 @@ export default function PersonelMainContainer() {
     const durumGuncelle = async (id, adSoyad, yeniDurum) => {
         if (islemdeId === 'durum_' + id) return;
         setIslemdeId('durum_' + id);
-        // [AI ZIRHI]: Offline Modu (Kriter J)
+        // SİSTEM OPTİMİZASYONU: Offline Modu (Kriter J)
         if (!navigator.onLine) {
             await cevrimeKuyrugaAl('b1_personel', 'UPDATE', { id, durum: yeniDurum });
             setIslemdeId(null);
@@ -367,7 +367,7 @@ export default function PersonelMainContainer() {
         const asim = uretimDegeri - aylikMaliyet;
         const primHakki = asim > 0 ? asim * PRIM_ORANI : 0;
 
-        // [M13-M7 KÖPRÜSÜ ZIRHI] Personelin kasadan aldığı toplam avans 
+        // [M13-M7 KÖPRÜSÜ KONTROLÜ] Personelin kasadan aldığı toplam avans 
         const avansToplam = avanslar.filter(a => a.personel_id === p.id).reduce((sum, curr) => sum + (parseFloat(curr.tutar_tl) || 0), 0);
 
         return { aylikMaliyet, uretimDegeri, asim, primHakki, avansToplam };

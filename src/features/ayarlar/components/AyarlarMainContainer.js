@@ -43,7 +43,7 @@ export default function AyarlarMainContainer() {
         setYetkiliMi(erisebilir);
 
         if (erisebilir) {
-            // [AI ZIRHI]: Realtime Websocket (Kriter 20 & 34)
+            // SİSTEM OPTİMİZASYONU: Realtime Websocket (Kriter 20 & 34)
             const kanal = supabase.channel('ayarlar-gercek-zamanli')
                 .on('postgres_changes', { event: '*', schema: 'public', table: 'b1_sistem_ayarlari' }, () => { yukle(); })
                 .subscribe();
@@ -97,7 +97,7 @@ export default function AyarlarMainContainer() {
             goster('✅ Ayarlar kaydedildi.');
             telegramBildirim(`⚙️ SİSTEM AYARLARI GÜNCELLENDİ\nPrim: %${(ayarlar.prim_orani * 100).toFixed(0)}\nDk Mlyt: ₺${ayarlar.dakika_basi_ucret}\nSistem parametreleri yönetici tarafından değiştirildi.`);
         } catch (error) {
-            // [AI ZIRHI]: Offline guard (Kriter J)
+            // SİSTEM OPTİMİZASYONU: Offline guard (Kriter J)
             if (!navigator.onLine || error.message?.includes('fetch')) {
                 await cevrimeKuyrugaAl({ tablo: 'b1_sistem_ayarlari', islem_tipi: 'UPSERT', veri: { anahtar: 'sistem_genel', deger: JSON.stringify(ayarlar) } });
                 goster('İnternet Yok: Ayarlar çevrimdışı kuyruğa alındı.', 'success');

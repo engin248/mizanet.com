@@ -65,8 +65,9 @@ export default function ArgeMainContainer() {
                 else if (payload.eventType === 'UPDATE') setProducts(p => p.map(t => t.id === payload.new.id ? payload.new : t));
                 else if (payload.eventType === 'DELETE') setProducts(p => p.filter(t => t.id !== payload.old.id));
             }).subscribe();
-
-        return () => supabase.removeChannel(kanalProd);
+        return () => {
+            supabase.removeChannel(kanalProd);
+        };
     }, [kullanici]);
 
     // Karar Mekanizması
@@ -268,7 +269,7 @@ export default function ArgeMainContainer() {
 
                                                 {/* ÜRETİME SOK */}
                                                 <button onClick={() => kararVer(p.id, 'uretim_onay')} className="flex-1 md:flex-none px-6 py-2 rounded border border-emerald-500 bg-emerald-600 hover:bg-emerald-500 text-white text-[10px] font-black tracking-widest uppercase shadow-[0_0_15px_rgba(16,185,129,0.4)] transition-all flex items-center justify-center gap-2">
-                                                    <CheckCircle2 size={14} /> ÜRETİME ZEVK ET (M2)
+                                                    <CheckCircle2 size={14} /> ÜRETİME SEVK ET (M2)
                                                 </button>
                                             </div>
                                         </div>

@@ -51,7 +51,7 @@ export default function ScraperKarantinaContainer() {
         setIslemdeId(urun.id);
 
         try {
-            // [ZIRH]: Ana tabloda (b1_arge_products) eski kayıt var mı kontrolü?
+            // [KORUMA]: Ana tabloda (b1_arge_products) eski kayıt var mı kontrolü?
             const { data: mevcutKayit } = await supabase
                 .from('b1_arge_products')
                 .select('id')

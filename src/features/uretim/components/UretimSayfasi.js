@@ -30,7 +30,7 @@ export default function UretimSayfasi() {
         durumGuncelle, baslat, duraklat, durdur, formatSure, ciftBarkodOtonomIslem,
         yeniIsEmri, duzenleIsEmri, silIsEmri, maliyetKaydet, devirYap,
         toggleSiparisSec, tumunuSec, topluDurumGuncelleAction,
-        islemdeId, setIslemdeId, // [SPAM ZIRHI]
+        islemdeId, setIslemdeId, // ÇİFT TIKLAMA KORUMASI
         aktifPersonel, setAktifPersonel, aktifOperasyonlar, // [ÇİFT BARKOD]
     } = useIsEmri(kullanici);
 

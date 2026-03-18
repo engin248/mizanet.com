@@ -25,7 +25,7 @@ export function KarargahMainContainer() {
         return (
             <div className="p-12 text-center bg-red-950/20 shadow-2xl rounded-2xl m-8 border border-red-900/50">
                 <Lock size={64} className="mx-auto mb-4 text-red-500" />
-                <h2 className="text-2xl font-black text-red-500 uppercase">KARARGAHA GİRİŞ YASAKTIR (ZIRH)</h2>
+                <h2 className="text-2xl font-black text-red-500 uppercase">KARARGAHA GİRİŞ YASAKTIR (KORUMA)</h2>
             </div>
         );
     }

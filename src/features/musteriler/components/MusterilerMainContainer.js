@@ -43,7 +43,7 @@ export default function MusterilerSayfasi() {
     const [timelineLoglari, setTimelineLoglari] = useState(/** @type {any[]} */([]));
     const [yeniNot, setYeniNot] = useState('');
     const [notEkleniyor, setNotEkleniyor] = useState(false);
-    const [islemdeId, setIslemdeId] = useState(/** @type {any} */(null)); // [SPAM ZIRHI]
+    const [islemdeId, setIslemdeId] = useState(/** @type {any} */(null)); // ÇİFT TIKLAMA KORUMASI
 
     useEffect(() => {
         let uretimPin = !!sessionStorage.getItem('sb47_uretim_token');
@@ -51,7 +51,7 @@ export default function MusterilerSayfasi() {
         setYetkiliMi(erisebilir);
 
         if (erisebilir) {
-            // [AI ZIRHI]: Realtime WebSocket (Kriter 20 & 34)
+            // SİSTEM OPTİMİZASYONU: Realtime WebSocket (Kriter 20 & 34)
             const kanal = supabase.channel('musteriler-gercek-zamanli')
                 .on('postgres_changes', { event: '*', schema: 'public', table: 'b2_musteriler' }, () => yukle())
                 .subscribe();
@@ -65,7 +65,7 @@ export default function MusterilerSayfasi() {
     const yukle = async () => {
         setLoading(true);
         try {
-            // [AI ZIRHI]: 10sn timeout DDoS kalkanı (Kriter Q)
+            // SİSTEM OPTİMİZASYONU: 10sn timeout DDoS kalkanı (Kriter Q)
             const timeout = new Promise((_, r) => setTimeout(() => r(new Error('Bağlantı zaman aşımı (10sn)')), 10000));
             const { data, error } = await Promise.race([
                 supabase.from('b2_musteriler').select('*').order('created_at', { ascending: false }).limit(500),
@@ -80,7 +80,7 @@ export default function MusterilerSayfasi() {
     const kaydet = async () => {
         if (islemdeId === 'kayit') return;
         setIslemdeId('kayit');
-        // [AI ZIRHI]: Validasyon Zırhı (Kriter V)
+        // SİSTEM OPTİMİZASYONU: Validasyon Zırhı (Kriter V)
         if (!form.musteri_kodu.trim()) { setIslemdeId(null); return goster('Müşteri kodu zorunludur!', 'error'); }
         if (form.musteri_kodu.length > 30) { setIslemdeId(null); return goster('Müşteri kodu en fazla 30 karakter!', 'error'); }
         if (!form.ad_soyad.trim()) { setIslemdeId(null); return goster('Ad Soyad zorunludur!', 'error'); }
@@ -104,7 +104,7 @@ export default function MusterilerSayfasi() {
             aktif: form.aktif !== false,
         };
 
-        // [AI ZIRHI]: Offline Modu (Kriter J)
+        // SİSTEM OPTİMİZASYONU: Offline Modu (Kriter J)
         if (!navigator.onLine) {
             await cevrimeKuyrugaAl('b2_musteriler', duzenleId ? 'UPDATE' : 'INSERT', duzenleId ? { id: duzenleId, ...payload } : payload);
             goster('⚡ Çevrimdışı: Müşteri kaydı kuyruğa alındı.');
@@ -116,7 +116,7 @@ export default function MusterilerSayfasi() {
         setLoading(true);
         try {
             if (duzenleId) {
-                // [AI ZIRHI]: Mükerrer engeli - güncelleme sırasında başka kayıt aynı kodu kullanıyor mu?
+                // SİSTEM OPTİMİZASYONU: Mükerrer engeli - güncelleme sırasında başka kayıt aynı kodu kullanıyor mu?
                 const { data: cakisan } = await supabase.from('b2_musteriler').select('id').eq('musteri_kodu', payload.musteri_kodu).neq('id', duzenleId);
                 if (cakisan && cakisan.length > 0) {
                     setLoading(false);
@@ -126,7 +126,7 @@ export default function MusterilerSayfasi() {
                 if (error) throw error;
                 goster('✅ Müşteri güncellendi!');
             } else {
-                // [AI ZIRHI]: Mükerrer Kayıt Engeli (Kriter U)
+                // SİSTEM OPTİMİZASYONU: Mükerrer Kayıt Engeli (Kriter U)
                 const { data: mevcut } = await supabase.from('b2_musteriler').select('id').eq('musteri_kodu', payload.musteri_kodu);
                 if (mevcut && mevcut.length > 0) {
                     setLoading(false);
@@ -223,7 +223,7 @@ export default function MusterilerSayfasi() {
         }
         if (!confirm(`"${kod}" müşterisi silinsin mi? İlişkili siparişler etkilenebilir!`)) { setIslemdeId(null); return; }
 
-        // [AI ZIRHI]: B0 Kara Kutu silme logu (Kriter 25)
+        // SİSTEM OPTİMİZASYONU: B0 Kara Kutu silme logu (Kriter 25)
         try {
             await supabase.from('b0_sistem_loglari').insert([{
                 tablo_adi: 'b2_musteriler', islem_tipi: 'SILME',

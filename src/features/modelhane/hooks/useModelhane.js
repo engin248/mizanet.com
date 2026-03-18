@@ -33,7 +33,7 @@ export function useModelhane(kullanici) {
 
             // M3'ten gelen kalıp verileri (Numune emri için bekleniyor)
             const { data: kaliplar, error: kalErr } = await supabase.from('b1_model_kaliplari')
-                .select('id, kalip_adi, bedenler, b1_model_taslaklari(model_kodu, model_adi)')
+                .select('id, kalip_adi, bedenler, b1_model_taslaklari(model_kodu, model_adi, durum)')
                 .order('created_at', { ascending: false }).limit(50);
 
             if (kalErr) throw kalErr;

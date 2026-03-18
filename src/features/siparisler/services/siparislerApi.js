@@ -83,7 +83,7 @@ export async function durumGuncelle(id, durum, ekstraBilgi = {}) {
     if (durum === 'teslim') {
         await stokDus(id);
 
-        // 🚨 EKİP GAMMA: Sipariş ve Kasa Modülü Otomasyonu (Satış Tahsilatı)
+        // 🚨 VERİ BÜTÜNLÜĞÜ UZMANI: Sipariş ve Kasa Modülü Otomasyonu (Satış Tahsilatı)
         try {
             if (mevcut && mevcut.toplam_tutar_tl > 0) {
                 const kasaPayload = {

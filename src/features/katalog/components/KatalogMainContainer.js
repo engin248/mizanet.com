@@ -95,7 +95,7 @@ export default function KatalogSayfasi() {
     // KAT-04 (B-04): Toplu Ürün Yükleme (Excel/CSV)
     const [topluYuklemeAcik, setTopluYuklemeAcik] = useState(false);
     const [topluYukleniyor, setTopluYukleniyor] = useState(false);
-    const [islemdeId, setIslemdeId] = useState(/** @type {any} */(null)); // [SPAM ZIRHI]
+    const [islemdeId, setIslemdeId] = useState(/** @type {any} */(null)); // ÇİFT TIKLAMA KORUMASI
 
     useEffect(() => {
         setMounted(true);
@@ -179,7 +179,7 @@ export default function KatalogSayfasi() {
             fiyat: u.satis_fiyati_tl,
             stok: u.stok_adeti
         });
-        // [SPA ZIRHI]: Full reload engelleyip React Router ile geçiş yapıldı.
+        // [SPA KONTROLÜ]: Full reload engelleyip React Router ile geçiş yapıldı.
         router.push(`/siparisler?${params.toString()}`);
     };
 
@@ -245,7 +245,7 @@ export default function KatalogSayfasi() {
         finally { setLoading(false); setSkuAcik(false); }
     };
 
-    // [M10-M8 KÖPRÜSÜ ZIRHI] - Kilitli Üretim raporlarından (M8) güncel maliyet kancası
+    // [M10-M8 KÖPRÜSÜ KONTROLÜ] - Kilitli Üretim raporlarından (M8) güncel maliyet kancası
     const maliyetleriGuncelle = async () => {
         if (islemdeId === 'maliyet_guncelle') return;
         setIslemdeId('maliyet_guncelle');

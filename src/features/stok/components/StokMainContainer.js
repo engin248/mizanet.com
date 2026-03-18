@@ -34,7 +34,7 @@ export default function StokDepoKarargahi() {
     const [yeniHareket, setYeniHareket] = useState(BOSH_HAREKET);
     const [mesaj, setMesaj] = useState({ text: '', type: '' });
     const [arama, setArama] = useState('');
-    const [islemdeId, setIslemdeId] = useState(/** @type {any} */(null)); // [SPAM ZIRHI]
+    const [islemdeId, setIslemdeId] = useState(/** @type {any} */(null)); // ÇİFT TIKLAMA KORUMASI
 
     const timeoutPromise = () => new Promise((_, reject) => setTimeout(() => reject(new Error('Bağlantı zaman aşımı (10 sn)')), 10000));
 
