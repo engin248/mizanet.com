@@ -209,6 +209,11 @@ Her cevap şu kalite filtresinden geçirilir.
 *   **Kural #19: İŞ YOL PLANI (ROADMAP) OLMADAN HAREKETE GEÇMEK YASAKTIR:**
     * Patrona "Şunları yapacağız" denilmeden ve sistemin mevcut durumunu gösteren net bir İŞ YOL PLANI (Task/Roadmap) sunulmadan hiçbir kodlama veya göreve YAPAY ZEKA TARAFINDAN BAŞLANAMAZ.
     * Her yeni faza veya göreve başlarken Patronun ekranına "Şunlar Bitti [x], Şunlar Kaldı [ ]" şeklinde ana harita (Roadmap) kesinlikle basılmak zorundadır. Patron nerede olduğumuzu saniye saniye bilmelidir.
+
+*   **Kural #20: ASENKRON VE İZOLASYON (ÇAKIŞMAMAZLIK) KURALI:**
+    * "Birbirini takip eden 3 ayrı işlem (İstihbarat -> Maliyet Kilitleri -> Otonom Tasarım) KESİNLİKLE çakışmayacaktır."
+    * Arayüz (UI) ve Sunucu Mimarisi, her bir sürecin kendi odasında izole çalışmasını sağlayacak şekilde (Asenkron) kodlanacaktır. Bir botun hata alması veya uzun sürmesi, 2. ve 3. aşamaları veya Karargah Ekranını kitlemeyecektir.
+
 2. Yeni ajana görevi verilirken "inisiyatif kullanılamayacağı" ve kuralları aşarsa "ölümcül infazla karşılaşacağı" kesin bir emniyet protokolüyle dikte edilir.
 3. Hata yapmaması için operasyon sınırları ajana en baştan net şekilde yüklenir.
 
