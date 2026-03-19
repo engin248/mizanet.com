@@ -105,15 +105,15 @@ export default function GirisSayfasi() {
                     </div>
                 </div>
 
-                {/* Başlık */}
+                {/* Başlık ve İlahi Adalet Mühürü */}
                 <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
-                    <div style={{ width: 56, height: 56, background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 16, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.25rem' }}>
-                        <Lock size={26} color="#d8b863" />
+                    <div style={{ width: 120, height: 120, border: '2px solid rgba(216,184,99,0.8)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.25rem', overflow: 'hidden', boxShadow: '0 0 30px rgba(216,184,99,0.2)' }}>
+                        <img src="/adalet_muhuru.png" alt="Adalet Mühürü - Namaz Kılan Adam" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                     </div>
                     <h1 style={{ fontSize: '1.3rem', fontWeight: 800, color: '#e2e8f0', margin: 0, letterSpacing: '-0.01em' }}>
                         {T('sistem_adi', dil)}
                     </h1>
-                    <p style={{ fontSize: '0.72rem', color: '#475569', margin: '6px 0 0', fontWeight: 600 }}>
+                    <p style={{ fontSize: '0.72rem', color: '#6ee7b7', margin: '6px 0 0', fontWeight: 600 }}>
                         {dil === 'ar' ? 'نظام الإنتاج والمتجر' : 'Üretim & Mağaza Sistemi'}
                     </p>
                 </div>
@@ -172,8 +172,10 @@ export default function GirisSayfasi() {
                         </div>
                     ) : (
                         <button onClick={handleGiris} disabled={yukleniyor || kilitliSaniye > 0}
-                            style={{ width: '100%', padding: '13px', background: yukleniyor ? 'rgba(255,255,255,0.05)' : 'rgba(255,255,255,0.08)', color: yukleniyor ? '#475569' : '#e2e8f0', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 10, fontWeight: 700, fontSize: '0.9rem', cursor: yukleniyor ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, transition: 'all 0.2s', letterSpacing: '0.02em', flexDirection: dil === 'ar' ? 'row-reverse' : 'row' }}>
-                            {yukleniyor ? '...' : <><LogIn size={16} color="#d8b863" /> {dil === 'ar' ? 'تسجيل الدخول' : 'Giriş'}</>}
+                            style={{ width: '100%', padding: '13px', background: yukleniyor ? 'rgba(255,255,255,0.05)' : 'rgba(255,255,255,0.08)', color: yukleniyor ? '#64748b' : '#e2e8f0', border: `1px solid ${yukleniyor ? 'rgba(255,255,255,0.05)' : 'rgba(255,255,255,0.1)'}`, borderRadius: 10, fontWeight: 700, fontSize: '0.9rem', cursor: yukleniyor ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, transition: 'all 0.2s', letterSpacing: '0.02em', flexDirection: dil === 'ar' ? 'row-reverse' : 'row' }}>
+                            {yukleniyor
+                                ? <><span style={{ display: 'inline-block', width: 14, height: 14, border: '2px solid #475569', borderTopColor: '#94a3b8', borderRadius: '50%', animation: 'spin 0.7s linear infinite' }} />{dil === 'ar' ? 'جارٍ التحقق...' : 'Doğrulanıyor...'}</>
+                                : <><LogIn size={16} color="#d8b863" /> {dil === 'ar' ? 'تسجيل الدخول' : 'Giriş'}</>}
                         </button>
                     )}
                 </div>
@@ -185,7 +187,8 @@ export default function GirisSayfasi() {
 
             <style>{`
                 @keyframes fadeIn { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
-                input:focus { border-color: #d8b863 !important; }
+                @keyframes spin { to { transform: rotate(360deg); } }
+                input:focus { border-color: #047857 !important; box-shadow: 0 0 0 2px rgba(4,120,87,0.25) !important; }
                 input::placeholder { color: #576b63; letter-spacing: 0.1em; }
             `}</style>
         </div>

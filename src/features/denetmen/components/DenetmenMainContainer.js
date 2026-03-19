@@ -225,7 +225,7 @@ export default function DenetmenMainContainer() {
             {/* BAŞLIK */}
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                    <div style={{ width: 44, height: 44, background: 'linear-gradient(135deg,#7c3aed,#6d28d9)', borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <div style={{ width: 44, height: 44, background: 'linear-gradient(135deg,#047857,#064e3b)', borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                         <ShieldAlert size={24} color="white" />
                     </div>
                     <div>
@@ -235,7 +235,7 @@ export default function DenetmenMainContainer() {
                 </div>
                 <div style={{ display: 'flex', gap: 8 }}>
                     <button onClick={taramaCalistir} disabled={tarama}
-                        style={{ display: 'flex', alignItems: 'center', gap: 8, background: tarama ? '#94a3b8' : '#7c3aed', color: 'white', border: 'none', padding: '10px 20px', borderRadius: 10, fontWeight: 700, cursor: tarama ? 'not-allowed' : 'pointer', opacity: tarama ? 0.7 : 1 }}>
+                        style={{ display: 'flex', alignItems: 'center', gap: 8, background: tarama ? '#94a3b8' : '#047857', color: 'white', border: 'none', padding: '10px 20px', borderRadius: 10, fontWeight: 700, cursor: tarama ? 'not-allowed' : 'pointer', opacity: tarama ? 0.7 : 1 }}>
                         <RefreshCw size={16} style={{ animation: tarama ? 'spin 1s linear infinite' : 'none' }} />
                         {tarama ? 'Taranıyor...' : 'Tara & Güncelle'}
                     </button>
@@ -274,7 +274,7 @@ export default function DenetmenMainContainer() {
 
             {/* SEKMELER */}
             <div style={{ display: 'flex', gap: 4, marginBottom: '1.25rem', background: '#f1f5f9', borderRadius: 12, padding: 4 }}>
-                <button onClick={() => setAnaSekme('uyarilar')} style={{ flex: 1, padding: '10px 16px', borderRadius: 9, border: 'none', cursor: 'pointer', fontWeight: 800, fontSize: '0.85rem', transition: 'all 0.2s', background: anaSekme === 'uyarilar' ? 'white' : 'transparent', color: anaSekme === 'uyarilar' ? '#7c3aed' : '#64748b', boxShadow: anaSekme === 'uyarilar' ? '0 2px 8px rgba(0,0,0,0.08)' : 'none' }}>
+                <button onClick={() => setAnaSekme('uyarilar')} style={{ flex: 1, padding: '10px 16px', borderRadius: 9, border: 'none', cursor: 'pointer', fontWeight: 800, fontSize: '0.85rem', transition: 'all 0.2s', background: anaSekme === 'uyarilar' ? 'white' : 'transparent', color: anaSekme === 'uyarilar' ? '#047857' : '#64748b', boxShadow: anaSekme === 'uyarilar' ? '0 2px 8px rgba(0,0,0,0.08)' : 'none' }}>
                     🚨 Sistem Uyarıları
                 </button>
                 <button onClick={() => setAnaSekme('buyuk_veri')} style={{ flex: 1, padding: '10px 16px', borderRadius: 9, border: 'none', cursor: 'pointer', fontWeight: 800, fontSize: '0.85rem', transition: 'all 0.2s', background: anaSekme === 'buyuk_veri' ? '#1e1b4b' : 'transparent', color: anaSekme === 'buyuk_veri' ? '#a78bfa' : '#64748b', boxShadow: anaSekme === 'buyuk_veri' ? '0 4px 12px rgba(0,0,0,0.2)' : 'none' }}>
@@ -287,7 +287,7 @@ export default function DenetmenMainContainer() {
                     {/* ÖZET KARTLAR */}
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: '0.75rem', marginBottom: '1.25rem' }}>
                         {[
-                            { label: 'Aktif Uyarı', val: uyarilar.length, color: '#7c3aed', bg: '#f5f3ff' },
+                            { label: 'Aktif Uyarı', val: uyarilar.length, color: '#047857', bg: '#ecfdf5' },
                             { label: 'Kritik', val: kritikSayisi, color: '#ef4444', bg: '#fef2f2' },
                             { label: 'Uyarı', val: uyariSayisi, color: '#f59e0b', bg: '#fffbeb' },
                         ].map((k, i) => (

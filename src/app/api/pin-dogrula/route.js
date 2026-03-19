@@ -23,7 +23,7 @@ try {
             prefix: 'pin_giris',
         });
     }
-} catch { /* Upstash yoksa devam */ }
+} catch (upstashHata) { console.warn('[PIN] Upstash import edilemedi, in-memory fallback aktif:', upstashHata.message); }
 
 // In-memory fallback (Upstash olmadığında)
 const BELLEK_KILIT = new Map();
@@ -116,7 +116,7 @@ export async function POST(request) {
         const durum = belleKileKontrol(ip);
         if (!durum.izinli) {
             return NextResponse.json(
-                { hata: `Çok fazla hatalı deneme. ${Math.ceil(durum.kalanSaniye / 60)} dakika bekleyin.`, kalanDeneme: 0 },
+                { hata: `Çok fazla hatalı deneme. ${Math.ceil((durum.kalanSaniye ?? 60) / 60)} dakika bekleyin.`, kalanDeneme: 0 },
                 { status: 429 }
             );
         }
@@ -143,7 +143,6 @@ export async function POST(request) {
     // En yüksek yetki önce — aynı PIN birden fazla gruba denk gelirse tam > uretim > genel
     const YETKI_SIRASI = [
         { pin: temizle(process.env.COORDINATOR_PIN), grup: 'tam' },
-        { pin: temizle(process.env.TEST_COORDINATOR_PIN), grup: 'tam' }, // geçici test
         { pin: temizle(process.env.URETIM_PIN), grup: 'uretim' },
         { pin: temizle(process.env.GENEL_PIN), grup: 'genel' },
     ];

@@ -59,6 +59,7 @@ export default function AyarlarMainContainer() {
     const goster = (text, type = 'success') => { setMesaj({ text, type }); setTimeout(() => setMesaj({ text: '', type: '' }), 5000); };
 
     const yukle = async () => {
+        setLoading(true);
         try {
             const { data, error } = await supabase.from('b1_sistem_ayarlari').select('*').limit(1).maybeSingle();
             if (error) throw error;
@@ -66,6 +67,7 @@ export default function AyarlarMainContainer() {
                 try { setAyarlar({ ...VARSAYILAN, ...JSON.parse(data.deger) }); } catch (e) { console.error('[SİSTEM HATASI] Ayarlar Parse:', e); }
             }
         } catch (error) { goster('Ayarlar yüklenemedi: ' + error.message, 'error'); }
+        finally { setLoading(false); }
     };
 
     const kaydet = async () => {

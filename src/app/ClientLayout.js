@@ -234,12 +234,17 @@ function LayoutInner({ children }) {
         <div className="layout-container" style={{ flexDirection: isAR ? 'row-reverse' : 'row' }}>
             {/* SIDEBAR */}
             <aside className={`sidebar${sidebarAcik ? ' mobile-open' : ''}`}>
-                {/* Başlık */}
+                {/* Başlık ve İlahi Adalet Mühürü */}
                 <div style={{ padding: '1.25rem 1rem', borderBottom: '1px solid rgba(255,255,255,0.08)', marginBottom: '0.25rem' }}>
-                    <h1 style={{ fontSize: '1.5rem', fontWeight: 900, letterSpacing: '0.1em', margin: 0 }}>
-                        <span style={{ color: '#f59e0b' }}>mizanet</span>
-                        <span style={{ color: '#6ee7b7' }}>.com</span>
-                    </h1>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px' }}>
+                        <div style={{ width: 44, height: 44, borderRadius: '50%', border: '1.5px solid rgba(216,184,99,0.8)', overflow: 'hidden', boxShadow: '0 0 15px rgba(216,184,99,0.3)', flexShrink: 0 }}>
+                            <img src="/adalet_muhuru.png" alt="Adalet Mühürü - Namaz Kılan Adam" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                        </div>
+                        <h1 style={{ fontSize: '1.5rem', fontWeight: 900, letterSpacing: '0.1em', margin: 0 }}>
+                            <span style={{ color: '#f59e0b' }}>mizanet</span>
+                            <span style={{ color: '#6ee7b7' }}>.com</span>
+                        </h1>
+                    </div>
                     <p style={{ fontSize: '0.85rem', color: '#e2e8f0', margin: '6px 0 0', fontWeight: 700, letterSpacing: '0.05em', lineHeight: '1.4' }}>
                         Adil Düzen · Şeffaf Maliyet<br />Adaletli Dağıtım
                     </p>
@@ -332,7 +337,7 @@ function LayoutInner({ children }) {
             {/* KÖR NOKTA 4: CANLI AĞ BİLDİRİM BALONU */}
             {canliBildirim && (
                 <div onClick={() => window.location.reload()}
-                    style={{ position: 'fixed', bottom: 20, right: 20, background: '#10b981', color: 'white', padding: '12px 20px', borderRadius: '12px', fontSize: '0.85rem', fontWeight: 800, boxShadow: '0 10px 30px rgba(16,185,129,0.4)', cursor: 'pointer', zIndex: 9999, animation: 'slideIn 0.3s ease-out' }}>
+                    style={{ position: 'fixed', bottom: 80, right: 20, background: '#10b981', color: 'white', padding: '12px 20px', borderRadius: '12px', fontSize: '0.85rem', fontWeight: 800, boxShadow: '0 10px 30px rgba(16,185,129,0.4)', cursor: 'pointer', zIndex: 9998, animation: 'slideIn 0.3s ease-out', maxWidth: 340 }}>
                     {canliBildirim}
                 </div>
             )}
