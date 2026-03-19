@@ -5,6 +5,7 @@ import {
     Database, Cpu, Network, AlertTriangle, Radio, Eye, Target, Shield
 } from 'lucide-react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useAuth } from '@/lib/auth';
 import { useKarargah } from '../hooks/useKarargah';
 import { useState, useEffect, useCallback } from 'react';
@@ -278,7 +279,45 @@ export function KarargahMainContainer() {
                 {/* ── SOL / ORTA KOLON ── */}
                 <div className="lg:col-span-3 flex flex-col gap-4">
 
+                    {/* ── ADALET MÜHÜRÜ BANNER ── */}
+                    <div className="relative border border-green-900/60 bg-black/70 overflow-hidden" style={{ minHeight: 120 }}>
+                        {/* Arkaplan tarama efekti */}
+                        <div className="absolute inset-0 opacity-20"
+                            style={{ backgroundImage: 'repeating-linear-gradient(90deg, transparent, transparent 40px, rgba(0,255,65,0.05) 40px, rgba(0,255,65,0.05) 41px)' }} />
+                        {/* Sol: Taktik metin */}
+                        <div className="absolute inset-0 flex flex-col justify-center pl-6 z-10">
+                            <div className="text-[8px] text-green-700 uppercase tracking-[0.4em] mb-1">Demir Tekstil — THE ORDER</div>
+                            <div className="text-[11px] font-bold text-green-400 uppercase tracking-[0.25em] leading-tight">
+                                MİZANET<br />
+                                <span className="text-[9px] text-green-600">SİBER KARARGAH</span>
+                            </div>
+                            <div className="mt-2 flex items-center gap-2">
+                                <div className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
+                                <span className="text-[8px] text-green-600 uppercase tracking-[0.3em]">OPERASYONEL</span>
+                            </div>
+                            <div className="mt-1 text-[7px] text-green-900 uppercase tracking-widest">Adil Düzen · Şeffaf Maliyet · Adaletli Dağıtım</div>
+                        </div>
+                        {/* Sağ: Adalet Mühürü */}
+                        <div className="absolute right-0 top-0 bottom-0 w-40 flex items-center justify-center">
+                            <div className="relative">
+                                {/* Glow halka */}
+                                <div className="absolute inset-0 rounded-full bg-green-500/10 blur-xl scale-150" />
+                                <Image
+                                    src="/adalet_muhuru.png"
+                                    alt="Adalet Mühürü — Divine Justice"
+                                    width={110}
+                                    height={110}
+                                    className="relative z-10 opacity-85"
+                                    style={{ filter: 'drop-shadow(0 0 12px rgba(0,255,65,0.4))' }}
+                                />
+                            </div>
+                        </div>
+                        {/* Alt çizgi ışık efekti */}
+                        <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-green-500/40 to-transparent" />
+                    </div>
+
                     {/* METRİK PANELLER */}
+
                     <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
                         {[
                             { baslik: 'GÜNLÜK CİRO', deger: isAdmin ? `₺ ${fm(stats.ciro)}` : '▓▓▓▓▓▓', renk: 'green', link: '/raporlar', ikon: <Target size={12} /> },
