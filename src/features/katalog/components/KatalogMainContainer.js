@@ -124,7 +124,7 @@ export default function KatalogSayfasi() {
                 gonderim_durumu: 'gonderildi',
                 gonderen: kullanici?.label || 'Satış Yetkilisi',
             }]);
-        } catch { }
+        } catch (e) { console.error('[SİSTEM HATASI] Katalog Parse 1:', e); }
     };
 
 
@@ -169,7 +169,7 @@ export default function KatalogSayfasi() {
             const gecmis = data || [];
             if (gecmis.length === 0) gecmis.push(/** @type {any} */({ satis_fiyati_tl: u.satis_fiyati_tl, birim_maliyet_tl: u.birim_maliyet_tl, updated_at: u.updated_at || u.created_at, not_str: 'Mevcut fiyat' }));
             setFiyatGecmisi(gecmis);
-        } catch { }
+        } catch (e) { console.error('[SİSTEM HATASI] Katalog Parse 2:', e); }
     };
 
     // KAT-04: SKU Matrisi Ac
@@ -539,7 +539,7 @@ export default function KatalogSayfasi() {
                     tablo_adi: 'b2_urun_katalogu', islem_tipi: 'SILME', kullanici_adi: kullanici?.label || 'M9 Yetkilisi',
                     eski_veri: { durum: 'M9 Urun kalici silindi.', urun_kodu: m_kodu }
                 }]);
-            } catch (e) { }
+            } catch (e) { console.error('[B0 LOG HATASI] Katalog:', e); }
 
             await supabase.from('b2_urun_katalogu').delete().eq('id', id);
             yukle(); goster('Silindi');

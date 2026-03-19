@@ -230,7 +230,7 @@ export default function MusterilerSayfasi() {
                 kullanici_adi: /** @type {any} */ (kullanici)?.label || 'Saha Yetkilisi',
                 eski_veri: { musteri_kodu: kod, mesaj: 'Müşteri kaydı kalıcı olarak silindi.' }
             }]);
-        } catch (e) { }
+        } catch (e) { console.error('[B0 LOG HATASI] Müşteriler:', e); }
 
         try {
             const { error } = await supabase.from('b2_musteriler').delete().eq('id', id);

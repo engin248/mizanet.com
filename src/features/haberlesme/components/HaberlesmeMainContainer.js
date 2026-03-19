@@ -210,7 +210,7 @@ export default function HaberlesmeMainContainer() {
         };
         rec.onend = () => { setDinliyor(false); };
 
-        try { rec.start(); } catch (err) { }
+        try { rec.start(); } catch (err) { console.warn('[UYARI] Ses Tanıma API Başlatılamadı:', err); }
     };
 
     // ── MESAJ AÇ + OKUNDU DAMGASI ────────────────────────────────────────────

@@ -353,7 +353,7 @@ export default function ModelhaneSayfasi() {
                     kullanici_adi: 'Saha Yetkilisi (Otonom Log)',
                     eski_veri: { durum: 'Soft Delete / Arşive alındı.', ver_id: id }
                 }]);
-            } catch (e) { }
+            } catch (e) { console.error('[B0 LOG HATASI] Modelhane:', e); }
 
             let error = null;
             if (tablo === 'b1_dikim_talimatlari') {

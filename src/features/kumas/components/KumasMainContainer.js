@@ -253,7 +253,7 @@ export default function KumasArsiviSayfasi() {
                     kullanici_adi: 'Saha Yetkilisi (Otonom Log)',
                     eski_veri: { durum: 'Veri kalici silinmeden once loglandi.' }
                 }]);
-            } catch (e) { }
+            } catch (e) { console.error('[B0 LOG HATASI] Kumaş:', e); }
 
             const { error } = await supabase.from(tablo).update({ aktif: false }).eq('id', id);
             if (error) throw error;

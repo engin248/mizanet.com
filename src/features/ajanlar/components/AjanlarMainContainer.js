@@ -283,7 +283,7 @@ export default function AjanlarMainContainer() {
                     kullanici_adi: 'Saha Yetkilisi (Otonom Log)',
                     eski_veri: { durum: 'Veri kalici silinmeden once loglandi.' }
                 }]);
-            } catch (e) { }
+            } catch (e) { console.error('[B0 LOG HATASI] Ajanlar:', e); }
 
             const { error } = await supabase.from('b1_ajan_gorevler').delete().eq('id', id);
             if (error) throw error;

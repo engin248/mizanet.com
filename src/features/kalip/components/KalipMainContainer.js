@@ -269,7 +269,7 @@ export default function KalipMainContainer() {
                     kullanici_adi: 'Saha Yetkilisi (Otonom Log)',
                     eski_veri: { durum: 'Veri kalici silinmeden once loglandi.' }
                 }]);
-            } catch (e) { }
+            } catch (e) { console.error('[B0 LOG HATASI] Kalıphane:', e); }
 
             const { error } = await supabase.from(tablo).delete().eq('id', id);
             if (error) throw error;

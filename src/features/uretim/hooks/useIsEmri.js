@@ -147,7 +147,7 @@ export function useIsEmri(kullanici) {
                 setKronometer(prev => ({ ...prev, ...yeniKronometer }));
                 setSure(prev => ({ ...prev, ...yeniSure }));
             }
-        } catch (e) { }
+        } catch (e) { console.error('[B0 LOG HATASI] Üretim:', e); }
 
         return () => Object.values(timerRef.current).forEach(clearInterval);
     }, []);
@@ -203,7 +203,7 @@ export function useIsEmri(kullanici) {
                     kalem_aciklama: `Kronometre: ${formatSure(toplamSn)} (${sureDk} dk) | x${zorlukKatsayisi.toFixed(1)} - ${liyakatYildiz}`,
                     onay_durumu: 'hesaplandi'
                 }]);
-            } catch (e) { }
+            } catch (e) { console.error('[B0 LOG HATASI] Üretim (Beden):', e); }
         }
     };
 

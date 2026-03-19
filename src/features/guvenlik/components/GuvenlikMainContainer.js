@@ -191,7 +191,7 @@ export default function GuvenlikMainContainer() {
                         try {
                             const mevcut = JSON.parse(localStorage.getItem('sb47_auth') || 'null');
                             if (mevcut?.grup === grup) localStorage.removeItem('sb47_auth');
-                        } catch { }
+                        } catch (e) { console.error('[SİSTEM HATASI] Güvenlik Log:', e); }
                         telegramBildirim(`🔴 YETKİ İPTAL EDİLDİ\nErişim yetkisi kapatıldı.\nGrup: ${grup.toUpperCase()}`);
                         goster(`Erişim kapatıldı. Aktif oturumlar sonlandırıldı.`);
                     } catch (error) { goster('Hata: ' + error.message, 'error'); }

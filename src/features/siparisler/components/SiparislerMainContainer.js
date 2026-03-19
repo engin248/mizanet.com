@@ -312,7 +312,7 @@ export default function SiparislerSayfasi() {
                     kullanici_adi: 'Saha Yetkilisi (Otonom Log)',
                     eski_veri: { durum: 'Veri kalici silinmeden once loglandi.' }
                 }]);
-            } catch (e) { }
+            } catch (e) { console.error('[B0 LOG HATASI] Sipariş:', e); }
 
             const { error } = await supabase.from('b2_siparisler').delete().eq('id', id);
             if (error) throw error;

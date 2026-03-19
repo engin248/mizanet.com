@@ -134,7 +134,7 @@ export default function MuhasebeMainContainer() {
                     tablo_adi: 'b1_muhasebe_raporlari', islem_tipi: 'UPDATE', kullanici_adi: kullanici?.label || 'Muhasebe Yetkilisi',
                     eski_veri: { mesaj: rapor.model_kodu + ' numarali emrin muhasebesi kilitlendi ve devre verildi.' }
                 }]);
-            } catch (e) { }
+            } catch (e) { console.error('[SİSTEM HATASI] Muhasebe JSON Parse:', e); }
 
             const { error } = await supabase.from('b1_muhasebe_raporlari').update({
                 rapor_durumu: 'kilitlendi', devir_durumu: true, onay_tarihi: new Date().toISOString()
@@ -166,7 +166,7 @@ export default function MuhasebeMainContainer() {
                         { order_id: model.id, maliyet_tipi: 'isletme_gideri', kalem_aciklama: 'Otonom GÜG (%15 İşletme/Amortisman Payı)', tutar_tl: yuzde15Gider, onay_durumu: 'hesaplandi' }
                     ]);
                     toplamMaliyet += yuzde15Gider;
-                } catch (e) { }
+                } catch (e) { console.error('[B0 LOG HATASI] Muhasebe Fiş İptali:', e); }
             }
 
             const insertData = {
@@ -271,7 +271,7 @@ export default function MuhasebeMainContainer() {
                     kullanici_adi: kullanici?.label || 'Muhasebe Yetkilisi',
                     eski_veri: { rapor_durumu: rapor.rapor_durumu, model_kodu: rapor.model_kodu }
                 }]);
-            } catch (e) { }
+            } catch (e) { console.error('[B0 LOG HATASI] Muhasebe Silme:', e); }
             const { error } = await supabase.from('b1_muhasebe_raporlari').delete().eq('id', rapor.id);
             if (error) throw error;
             goster('Rapor silindi.');
