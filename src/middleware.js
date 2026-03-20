@@ -60,7 +60,22 @@ const PUBLIC_API_ROTALAR = [
     // Artık x-internal-api-key header'ı zorunlu (aşağıdaki korunanApiRotalar'a eklendi)
 ];
 
+// ─── HONEYPOT / WORDPRESS BOT ENGELİ ────────────────────────────
+const HONEYPOT_YOLLARI = [
+    '/wp-admin', '/wp-login', '/wp-content', '/wp-includes',
+    '/wordpress', '/backup', '/old', '/new', '/blog',
+    '/.env', '/.git', '/config.php', '/setup-config.php',
+];
+
 export async function middleware(request) {
+    const url = request.nextUrl.pathname;
+
+    // ─── [0] HONEYPOT: WordPress/bot tarama yollarını anında engelle ──
+    const honeypotEslesti = HONEYPOT_YOLLARI.some(hp => url.startsWith(hp));
+    if (honeypotEslesti) {
+        return new NextResponse(null, { status: 403 });
+    }
+
     // ─── [S1] JWT_SIRRI ENV ALARM GUARD ─────────────────────────
     // SPF: Bu iki değişken yoksa auth sistemi tamamen çöker → 503 ver
     const sirriKontrol = process.env.JWT_SIRRI || process.env.INTERNAL_API_KEY;
@@ -72,7 +87,6 @@ export async function middleware(request) {
         );
     }
 
-    const url = request.nextUrl.pathname;
     const ip = request.headers.get('x-forwarded-for')?.split(',')[0].trim() || 'bilinmeyen';
     const userAgent = (request.headers.get('user-agent') || '').toLowerCase();
 
