@@ -1,13 +1,8 @@
-<<<<<<< HEAD
-﻿@tailwind base;
-=======
-@tailwind base;
->>>>>>> 00caa2c7edc776b4729700b66de9c773e83bf552
+﻿﻿@tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-<<<<<<< HEAD
   --primary: #10B981;
   /* Canl─▒ Z├╝mr├╝t Ye┼şili (Marka Rengi) */
   --primary-light: #34D399;
@@ -29,26 +24,6 @@
   /* Soft Emerald Alt Metin */
   --border: #1e4a43;
   /* Koyu Emerald Kenarlık */
-=======
-  --primary: #02624B;
-  /* Koyu Zümrüt (#004D40) ile Açık Yeşil (#047857) arasında bir ton */
-  --primary-light: #047857;
-  /* Daha Açık Zümrüt Yeşili (Hover) */
-  --secondary: #d4af37;
-  /* Klasik Metalik Altın (Butonlar/Vurgu) */
-  --success: #10b981;
-  --danger: #ef4444;
-  --warning: #f59e0b;
-  --bg-color: #fcfcf9;
-  /* Çok hafif krem/kemik (Sayfa arka planı) */
-  --card-bg: #ffffff;
-  --text-main: #022c22;
-  /* Neredeyse siyah, çok koyu zümrüt (Ana yazı) */
-  --text-muted: #4b5563;
-  /* Koyu Gri (Alt metinler) */
-  --border: #e5e7eb;
-  /* Daha yumuşak kenarlıklar */
->>>>>>> 00caa2c7edc776b4729700b66de9c773e83bf552
 }
 
 * {
@@ -71,7 +46,6 @@ body {
 }
 
 .sidebar {
-<<<<<<< HEAD
   width: 290px;
   /* Menü etiketleri kırılmasın diye genişletildi */
   flex-shrink: 0;
@@ -80,17 +54,11 @@ body {
   /* Saf siyah yerine okunabilir, derin bir yeşil siyahı */
   border-right: 1px solid rgba(255, 255, 255, 0.05);
   /* Sadece hissettirilen bir ayırıcı çizgi */
-=======
-  width: 250px;
-  flex-shrink: 0;
-  background: var(--primary);
->>>>>>> 00caa2c7edc776b4729700b66de9c773e83bf552
   color: white;
   padding: 1.5rem 1rem;
   display: flex;
   flex-direction: column;
   gap: 1rem;
-<<<<<<< HEAD
   z-index: 10;
 }
 
@@ -102,21 +70,11 @@ body {
   color: #EDEDED;
   letter-spacing: -0.01em;
   /* Mac/Vercel tarz─▒ profesyonel s─▒k─▒┼şt─▒rma */
-=======
-}
-
-.sidebar h1 {
-  font-size: 1.25rem;
-  font-weight: 700;
-  margin-bottom: 2rem;
-  color: white;
->>>>>>> 00caa2c7edc776b4729700b66de9c773e83bf552
 }
 
 .nav-item {
   display: flex;
   align-items: center;
-<<<<<<< HEAD
   gap: 0.85rem;
   padding: 0.65rem 1rem;
   border-radius: 8px;
@@ -143,21 +101,6 @@ body {
   font-weight: 600;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
   /* Yukar─▒dan hafif ─▒┼ş─▒k s─▒zmas─▒ */
-=======
-  gap: 0.75rem;
-  padding: 0.75rem 1rem;
-  border-radius: 6px;
-  color: #cbd5e1;
-  text-decoration: none;
-  transition: all 0.2s;
-  font-weight: 500;
-}
-
-.nav-item:hover,
-.nav-item.active {
-  background: var(--primary-light);
-  color: white;
->>>>>>> 00caa2c7edc776b4729700b66de9c773e83bf552
 }
 
 .main-content {
@@ -167,7 +110,6 @@ body {
 }
 
 .topbar {
-<<<<<<< HEAD
   background: rgba(13, 17, 23, 0.85);
   /* Siyah buzlu cam */
   backdrop-filter: blur(16px) saturate(1.2);
@@ -181,14 +123,6 @@ body {
   position: sticky;
   top: 0;
   z-index: 20;
-=======
-  background: white;
-  padding: 1rem 2rem;
-  border-bottom: 1px solid var(--border);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
->>>>>>> 00caa2c7edc776b4729700b66de9c773e83bf552
 }
 
 .page-content {
@@ -200,7 +134,6 @@ body {
 /* Utilities */
 .card {
   background: var(--card-bg);
-<<<<<<< HEAD
   border-radius: 12px;
   border: 1px solid var(--border);
   padding: 1.5rem;
@@ -212,28 +145,13 @@ body {
 
 .card-title {
   font-size: 1.05rem;
-=======
-  border-radius: 8px;
-  border: 1px solid var(--border);
-  padding: 1.5rem;
-  margin-bottom: 1rem;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-}
-
-.card-title {
-  font-size: 1.125rem;
->>>>>>> 00caa2c7edc776b4729700b66de9c773e83bf552
   font-weight: 600;
   margin-bottom: 1rem;
   color: var(--text-main);
   display: flex;
   align-items: center;
-<<<<<<< HEAD
   gap: 0.6rem;
   letter-spacing: 0.02em;
-=======
-  gap: 0.5rem;
->>>>>>> 00caa2c7edc776b4729700b66de9c773e83bf552
 }
 
 .btn {
@@ -328,20 +246,16 @@ body {
   border: 1px solid var(--border);
   border-radius: 6px;
   font-size: 0.875rem;
-<<<<<<< HEAD
   background-color: #0b1d1a;
   /* Derin siyah/yeşil okunabilir zemin */
   /* Arka planda okunabilir koyuluk */
   color: #FFFFFF;
   /* Giren metin bembeyaz ve net */
-=======
->>>>>>> 00caa2c7edc776b4729700b66de9c773e83bf552
 }
 
 .form-input:focus,
 .form-select:focus {
   outline: none;
-<<<<<<< HEAD
   border-color: var(--primary);
   /* Kutucuklara t─▒klan─▒nca marka ye┼şilimiz yans─▒r */
   box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15);
@@ -350,20 +264,11 @@ body {
 
 /* ÔöÇÔöÇÔöÇ NOT: Tailwind utility class'lar─▒ (.grid, .flex vb.) burada tan─▒mlanmaz ÔöÇÔöÇÔöÇ */
 /* Tailwind'in @tailwind utilities direktifi zaten bunlar─▒ sa─şlar. */
-=======
-  border-color: var(--secondary);
-  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
-}
-
-/* ─── NOT: Tailwind utility class'ları (.grid, .flex vb.) burada tanımlanmaz ─── */
-/* Tailwind'in @tailwind utilities direktifi zaten bunları sağlar. */
->>>>>>> 00caa2c7edc776b4729700b66de9c773e83bf552
 
 .text-muted {
   color: var(--text-muted);
 }
 
-<<<<<<< HEAD
 /* ÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉ
    ­şÆÄ PREMIUM DESIGN LANGUAGE (UX/UI 2026 TRENDS)
 ÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉ */
@@ -378,24 +283,10 @@ body {
   /* Yok denecek kadar az gri çerçeve */
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
   /* Hafif derinlik */
-=======
-/* ═══════════════════════════════════════════════
-   💎 PREMIUM DESIGN LANGUAGE (UX/UI 2026 TRENDS)
-═══════════════════════════════════════════════ */
-
-/* 1. Gölgeler (Soft Shadows) & Cam Efekti (Glassmorphism) */
-.glass-panel {
-  background: rgba(255, 255, 255, 0.75);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
->>>>>>> 00caa2c7edc776b4729700b66de9c773e83bf552
 }
 
 .premium-card {
   background: #ffffff;
-<<<<<<< HEAD
   /* Tam beyaz kartlar */
   border-radius: 12px;
   border: 1px solid rgba(0, 0, 0, 0.05);
@@ -404,30 +295,16 @@ body {
   /* Sil├╝et g├Âlge */
   padding: 1.5rem;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-=======
-  border-radius: 12px;
-  border: 1px solid #f1f5f9;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
-  padding: 1.5rem;
-  transition: all 0.3s ease;
->>>>>>> 00caa2c7edc776b4729700b66de9c773e83bf552
 }
 
 .premium-card:hover {
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
-<<<<<<< HEAD
   /* Hover durumunda ─▒┼ş─▒kta y├╝kselme efekti */
   transform: translateY(-2px);
   border-color: rgba(0, 0, 0, 0.08);
 }
 
 /* 2. Micro-Animations (Hover Durumlar─▒) */
-=======
-  transform: translateY(-2px);
-}
-
-/* 2. Micro-Animations (Hover Durumları) */
->>>>>>> 00caa2c7edc776b4729700b66de9c773e83bf552
 .hover-elevate {
   transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -437,7 +314,6 @@ body {
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
 }
 
-<<<<<<< HEAD
 /* 3. Offcanvas Drawer (├çekmece UI) */
 .drawer-overlay {
   position: fixed;
@@ -445,14 +321,6 @@ body {
   background: rgba(0, 0, 0, 0.6);
   /* Daha keskin karartma */
   backdrop-filter: blur(8px);
-=======
-/* 3. Offcanvas Drawer (Çekmece UI) */
-.drawer-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(15, 23, 42, 0.4);
-  backdrop-filter: blur(4px);
->>>>>>> 00caa2c7edc776b4729700b66de9c773e83bf552
   z-index: 100;
   opacity: 0;
   visibility: hidden;
@@ -471,7 +339,6 @@ body {
   width: 100%;
   max-width: 450px;
   height: 100vh;
-<<<<<<< HEAD
   background: #0b1d1a;
   /* Çok hafif açılmış, siyah olmayan, orijinal Karargah tonu */
   /* Obsidyen siyah iptal edildi */
@@ -480,10 +347,6 @@ body {
   box-shadow: -10px 0 40px rgba(0, 0, 0, 0.5);
   /* Gölge yumuşatıldı */
   /* Siyah üzerine keskin gölge */
-=======
-  background: #ffffff;
-  box-shadow: -10px 0 40px rgba(0, 0, 0, 0.1);
->>>>>>> 00caa2c7edc776b4729700b66de9c773e83bf552
   z-index: 101;
   transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   display: flex;
@@ -494,7 +357,6 @@ body {
   right: 0;
 }
 
-<<<<<<< HEAD
 /* RTL deste─şi i├ğin drawer panel'─▒ soldan a├ğma */
 .layout-container[style*="row-reverse"] .drawer-panel {
   right: auto;
@@ -502,13 +364,6 @@ body {
   border-left: none;
   border-right: 1px solid rgba(255, 255, 255, 0.05);
   box-shadow: 10px 0 40px rgba(0, 0, 0, 0.5);
-=======
-/* RTL desteği için drawer panel'ı soldan açma */
-.layout-container[style*="row-reverse"] .drawer-panel {
-  right: auto;
-  left: -500px;
-  box-shadow: 10px 0 40px rgba(0, 0, 0, 0.1);
->>>>>>> 00caa2c7edc776b4729700b66de9c773e83bf552
   transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -518,7 +373,6 @@ body {
 
 .drawer-header {
   padding: 1.5rem;
-<<<<<<< HEAD
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
   /* Yar─▒ saydam ay─▒r─▒c─▒ */
   display: flex;
@@ -526,13 +380,6 @@ body {
   align-items: center;
   background: rgba(255, 255, 255, 0.02);
   /* ├çok hafif bir derinlik fark─▒ */
-=======
-  border-bottom: 1px solid #f1f5f9;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: #f8fafc;
->>>>>>> 00caa2c7edc776b4729700b66de9c773e83bf552
 }
 
 .drawer-content {
@@ -541,11 +388,7 @@ body {
   flex: 1;
 }
 
-<<<<<<< HEAD
 /* 4. Kanban / Column Base UI (G├Ârevler/├£retim ─░├ğin) */
-=======
-/* 4. Kanban / Column Base UI (Görevler/Üretim İçin) */
->>>>>>> 00caa2c7edc776b4729700b66de9c773e83bf552
 .kanban-board {
   display: flex;
   gap: 1.5rem;
@@ -555,12 +398,8 @@ body {
 }
 
 .kanban-column {
-<<<<<<< HEAD
   background: rgba(255, 255, 255, 0.02);
   /* Koyu zemin */
-=======
-  background: #f8fafc;
->>>>>>> 00caa2c7edc776b4729700b66de9c773e83bf552
   border-radius: 12px;
   min-width: 320px;
   max-width: 320px;
@@ -568,26 +407,17 @@ body {
   display: flex;
   flex-direction: column;
   gap: 1rem;
-<<<<<<< HEAD
   border: 1px solid rgba(255, 255, 255, 0.05);
   /* Yar─▒ saydam ├ğer├ğeve */
-=======
-  border: 1px solid #e2e8f0;
->>>>>>> 00caa2c7edc776b4729700b66de9c773e83bf552
 }
 
 .kanban-col-header {
   font-weight: 700;
-<<<<<<< HEAD
   color: #EDEDED;
-=======
-  color: #334155;
->>>>>>> 00caa2c7edc776b4729700b66de9c773e83bf552
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding-bottom: 0.5rem;
-<<<<<<< HEAD
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   /* ├çizgi yumu┼şat─▒ld─▒ */
 }
@@ -600,40 +430,20 @@ body {
   border: 1px solid rgba(255, 255, 255, 0.03);
   cursor: grab;
   color: #EDEDED;
-=======
-  border-bottom: 2px solid #e2e8f0;
-}
-
-.kanban-item {
-  background: #ffffff;
-  border-radius: 8px;
-  padding: 1rem;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
-  border: 1px solid #f1f5f9;
-  cursor: grab;
->>>>>>> 00caa2c7edc776b4729700b66de9c773e83bf552
   transition: transform 0.2s, box-shadow 0.2s;
 }
 
 .kanban-item:hover {
   transform: translateY(-2px);
-<<<<<<< HEAD
   background: rgba(255, 255, 255, 0.06);
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
-=======
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
->>>>>>> 00caa2c7edc776b4729700b66de9c773e83bf552
 }
 
 .kanban-item:active {
   cursor: grabbing;
 }
 
-<<<<<<< HEAD
 /* 5. Geli┼şmi┼ş Tablo Dili */
-=======
-/* 5. Gelişmiş Tablo Dili */
->>>>>>> 00caa2c7edc776b4729700b66de9c773e83bf552
 .premium-table {
   width: 100%;
   border-collapse: separate;
@@ -641,39 +451,25 @@ body {
 }
 
 .premium-table th {
-<<<<<<< HEAD
   background: rgba(255, 255, 255, 0.02);
   /* Koyu gri tablo ba┼şl─▒─ş─▒ */
   color: #888888;
   /* Gri ba┼şl─▒k metni */
-=======
-  background: #f8fafc;
-  color: #64748b;
->>>>>>> 00caa2c7edc776b4729700b66de9c773e83bf552
   font-weight: 600;
   font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   padding: 1rem;
-<<<<<<< HEAD
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-=======
-  border-bottom: 1px solid #e2e8f0;
->>>>>>> 00caa2c7edc776b4729700b66de9c773e83bf552
   white-space: nowrap;
 }
 
 .premium-table td {
   padding: 1rem;
-<<<<<<< HEAD
   border-bottom: 1px solid rgba(255, 255, 255, 0.04);
   /* ─░├ğ sat─▒r b├Âl├╝c├╝leri ├ğok hafif */
   color: #EDEDED;
   /* Beyaz veri metni */
-=======
-  border-bottom: 1px solid #f1f5f9;
-  color: #334155;
->>>>>>> 00caa2c7edc776b4729700b66de9c773e83bf552
   vertical-align: middle;
 }
 
@@ -682,12 +478,8 @@ body {
 }
 
 .premium-table tbody tr:hover {
-<<<<<<< HEAD
   background-color: rgba(255, 255, 255, 0.05);
   /* Siyah tablo üzerinde sadece çok saydam ve aydınlık bir beyaz parlaması (okunmayı artırır) */
-=======
-  background-color: #f8fafc;
->>>>>>> 00caa2c7edc776b4729700b66de9c773e83bf552
 }
 
 /* Fab (Floating Action Button) */
@@ -698,7 +490,6 @@ body {
   width: 64px;
   height: 64px;
   border-radius: 50%;
-<<<<<<< HEAD
   background: var(--primary);
   /* L├╝ks Z├╝mr├╝t Ye┼şili */
   backdrop-filter: blur(8px);
@@ -709,14 +500,6 @@ body {
   justify-content: center;
   box-shadow: 0 4px 20px rgba(16, 185, 129, 0.4);
   /* Ye┼şil, enerjik g├Âlge */
-=======
-  background: var(--secondary);
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 4px 20px rgba(212, 175, 55, 0.4);
->>>>>>> 00caa2c7edc776b4729700b66de9c773e83bf552
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
   z-index: 50;
@@ -733,19 +516,11 @@ body {
 }
 
 
-<<<<<<< HEAD
 /* ÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉ
    MOB─░L RESPONSIVE
 ÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉ */
 
 /* Hamburger butonu ÔÇö masa├╝st├╝nde gizle */
-=======
-/* ═══════════════════════════════════════════════
-   MOBİL RESPONSIVE
-═══════════════════════════════════════════════ */
-
-/* Hamburger butonu — masaüstünde gizle */
->>>>>>> 00caa2c7edc776b4729700b66de9c773e83bf552
 .hamburger-btn {
   display: none;
   background: none;
@@ -755,11 +530,7 @@ body {
   color: #64748b;
 }
 
-<<<<<<< HEAD
 /* Mobil overlay (sidebar a├ğ─▒kkenarka) */
-=======
-/* Mobil overlay (sidebar açıkkenarka) */
->>>>>>> 00caa2c7edc776b4729700b66de9c773e83bf552
 .sidebar-overlay {
   display: none;
   position: fixed;
@@ -771,22 +542,14 @@ body {
 
 @media (max-width: 768px) {
 
-<<<<<<< HEAD
   /* Hamburger g├Âr├╝n├╝r */
-=======
-  /* Hamburger görünür */
->>>>>>> 00caa2c7edc776b4729700b66de9c773e83bf552
   .hamburger-btn {
     display: flex;
     align-items: center;
     justify-content: center;
   }
 
-<<<<<<< HEAD
   /* Sidebar kapal─▒ durumda gizli */
-=======
-  /* Sidebar kapalı durumda gizli */
->>>>>>> 00caa2c7edc776b4729700b66de9c773e83bf552
   .sidebar {
     position: fixed;
     top: 0;
@@ -800,29 +563,17 @@ body {
     padding: 1rem 0.75rem;
   }
 
-<<<<<<< HEAD
   /* Sidebar a├ğ─▒k */
-=======
-  /* Sidebar açık */
->>>>>>> 00caa2c7edc776b4729700b66de9c773e83bf552
   .sidebar.mobile-open {
     transform: translateX(0);
   }
 
-<<<<<<< HEAD
   /* Overlay g├Âr├╝n├╝r */
-=======
-  /* Overlay görünür */
->>>>>>> 00caa2c7edc776b4729700b66de9c773e83bf552
   .sidebar-overlay.mobile-open {
     display: block;
   }
 
-<<<<<<< HEAD
   /* RTL deste─şi */
-=======
-  /* RTL desteği */
->>>>>>> 00caa2c7edc776b4729700b66de9c773e83bf552
   .layout-container[style*="row-reverse"] .sidebar {
     left: auto;
     right: 0;
@@ -833,20 +584,12 @@ body {
     transform: translateX(0);
   }
 
-<<<<<<< HEAD
   /* ─░├ğerik tam geni┼şlik */
-=======
-  /* İçerik tam genişlik */
->>>>>>> 00caa2c7edc776b4729700b66de9c773e83bf552
   .main-content {
     width: 100%;
   }
 
-<<<<<<< HEAD
   /* Topbar k├╝├ğ├╝k ekran */
-=======
-  /* Topbar küçük ekran */
->>>>>>> 00caa2c7edc776b4729700b66de9c773e83bf552
   .topbar {
     padding: 0.75rem 1rem;
     gap: 0.5rem;
@@ -860,21 +603,13 @@ body {
     display: none;
   }
 
-<<<<<<< HEAD
   /* Sayfa i├ğeri─şi */
-=======
-  /* Sayfa içeriği */
->>>>>>> 00caa2c7edc776b4729700b66de9c773e83bf552
   .page-content {
     padding: 1rem;
   }
 
   /* -------------------------------------
-<<<<<<< HEAD
      B-03: UX MOBIL ─░Y─░LE┼ŞT─░RMELER─░ 
-=======
-     B-03: UX MOBIL İYİLEŞTİRMELERİ 
->>>>>>> 00caa2c7edc776b4729700b66de9c773e83bf552
   -------------------------------------- */
 
   /* 1. Touch Targets (Minimum 44x44 dokunmatik alan) */
@@ -882,30 +617,18 @@ body {
     min-height: 44px;
   }
 
-<<<<<<< HEAD
   /* Form Input ve Select'leri parma─şa uygun bo┼şlukland─▒r */
-=======
-  /* Form Input ve Select'leri parmağa uygun boşluklandır */
->>>>>>> 00caa2c7edc776b4729700b66de9c773e83bf552
   input[type="text"],
   input[type="number"],
   input[type="email"],
   select,
   textarea {
     font-size: 16px !important;
-<<<<<<< HEAD
     /* iOS oto zoom engellemek i├ğin */
     padding: 12px !important;
   }
 
   /* 2. Drawer (Sa─şdan a├ğ─▒lan) -> Bottom Sheet (Alttan a├ğ─▒lan form) d├Ân├╝┼ş├╝m├╝ */
-=======
-    /* iOS oto zoom engellemek için */
-    padding: 12px !important;
-  }
-
-  /* 2. Drawer (Sağdan açılan) -> Bottom Sheet (Alttan açılan form) dönüşümü */
->>>>>>> 00caa2c7edc776b4729700b66de9c773e83bf552
   .drawer-panel {
     top: auto;
     bottom: -100vh;
@@ -914,11 +637,7 @@ body {
     width: 100% !important;
     max-width: 100%;
     height: 85vh;
-<<<<<<< HEAD
     /* Tam ekran yapma, arkada sayfa kals─▒n */
-=======
-    /* Tam ekran yapma, arkada sayfa kalsın */
->>>>>>> 00caa2c7edc776b4729700b66de9c773e83bf552
     border-radius: 20px 20px 0 0;
     transition: bottom 0.35s cubic-bezier(0.4, 0, 0.2, 1);
     box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.15);
@@ -928,11 +647,7 @@ body {
     bottom: 0;
   }
 
-<<<<<<< HEAD
   /* RTL ├Âzel override iptal (Alttan a├ğ─▒laca─ş─▒ i├ğin sa─ş/sol farketmez) */
-=======
-  /* RTL özel override iptal (Alttan açılacağı için sağ/sol farketmez) */
->>>>>>> 00caa2c7edc776b4729700b66de9c773e83bf552
   .layout-container[style*="row-reverse"] .drawer-panel {
     transform: none !important;
     left: 0 !important;
@@ -940,7 +655,6 @@ body {
 
 }
 
-<<<<<<< HEAD
 /* ÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉ
    LINEAR + STRIPE TASARIM S─░STEM─░
    Katmanl─▒ Derinlik + Tek Cesur Aksan + Nefes Alan Bo┼şluk
@@ -1041,18 +755,12 @@ body {
   background: rgba(255, 255, 255, 0.15);
 }
 
-=======
->>>>>>> 00caa2c7edc776b4729700b66de9c773e83bf552
 @media (max-width: 480px) {
   .page-content {
     padding: 0.75rem;
   }
 
-<<<<<<< HEAD
   /* 3. ─░statistik Kartlar─▒n─▒ K├╝├ğ├╝lt (Ekranda yer kaplamas─▒n─▒ ├Ânler) */
-=======
-  /* 3. İstatistik Kartlarını Küçült (Ekranda yer kaplamasını önler) */
->>>>>>> 00caa2c7edc776b4729700b66de9c773e83bf552
   .premium-card.hover-elevate.glass-panel {
     padding: 0.75rem;
   }
@@ -1061,17 +769,10 @@ body {
     font-size: 1.1rem !important;
   }
 
-<<<<<<< HEAD
   /* 4. Tablo Mod├╝llerini (Maliyet, ├£retim) Card View'a ├ğevir */
   .premium-table thead {
     display: none;
     /* Ba┼şl─▒klar─▒ gizle */
-=======
-  /* 4. Tablo Modüllerini (Maliyet, Üretim) Card View'a çevir */
-  .premium-table thead {
-    display: none;
-    /* Başlıkları gizle */
->>>>>>> 00caa2c7edc776b4729700b66de9c773e83bf552
   }
 
   .premium-table,
@@ -1114,24 +815,6 @@ body {
   .premium-table td:last-child {
     border-bottom: 0;
   }
-<<<<<<< HEAD
 }
 
-/* ====================================================
-   B-04: ARAPÇA (RTL) KORUMA VE INPUT ZIRHI
-==================================================== */
-input[dir="rtl"],
-textarea[dir="rtl"],
-div[dir="rtl"] {
-  direction: rtl;
-  text-align: right;
-  unicode-bidi: isolate;
-}
-
-.layout-container[style*="row-reverse"] input,
-.layout-container[style*="row-reverse"] textarea {
-  direction: rtl;
-  text-align: right;
-=======
->>>>>>> 00caa2c7edc776b4729700b66de9c773e83bf552
-}
+/* =============================================}
