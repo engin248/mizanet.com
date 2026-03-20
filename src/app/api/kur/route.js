@@ -1,11 +1,10 @@
-/**
+﻿/**
  * /api/kur — Günlük Döviz Kuru
  * [A-02] TCMB (Merkez Bankası) Canlı Kuru
  * Supabase'e günlük cache yazılır — aynı gün ikincil istek yapılmaz
  */
 import { NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/lib/supabaseAdmin';
-<<<<<<< HEAD
 import { spamKontrol } from '@/lib/ApiZirhi';
 
 export async function GET(request) {
@@ -14,10 +13,6 @@ export async function GET(request) {
     const { izinVerildi } = spamKontrol(ip);
     if (!izinVerildi) return NextResponse.json({ usd_tl: 32.5, eur_tl: null, kaynak: 'rate_limit' }, { status: 429 });
 
-=======
-
-export async function GET() {
->>>>>>> 00caa2c7edc776b4729700b66de9c773e83bf552
     try {
         const bugun = new Date().toISOString().slice(0, 10); // "2026-03-10"
 

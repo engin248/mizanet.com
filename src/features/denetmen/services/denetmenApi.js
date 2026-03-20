@@ -1,4 +1,4 @@
-/**
+﻿/**
  * features/denetmen/services/denetmenApi.js
  * Tablolar: b1_sistem_uyarilari, b1_agent_loglari, b2_urun_katalogu, b1_muhasebe_raporlari
  * (MainContainer'dan doğrulanan gerçek tablo adları)
@@ -7,7 +7,6 @@ import { supabase } from '@/lib/supabase';
 
 export async function denetimLoglariniGetir() {
     const [uyRes, agRes] = await Promise.allSettled([
-<<<<<<< HEAD
         supabase.from('b1_sistem_uyarilari')
             .select('id, baslik, aciklama, tip, kritik, durum, olusturma')
             .eq('durum', 'aktif')
@@ -17,12 +16,6 @@ export async function denetimLoglariniGetir() {
             .select('id, ajan_adi, islem_tipi, mesaj, sonuc, created_at')
             .order('created_at', { ascending: false })
             .limit(10),
-=======
-        supabase.from('b1_sistem_uyarilari').select('*').eq('durum', 'aktif')
-            .order('olusturma', { ascending: false }).limit(100),
-        supabase.from('b1_agent_loglari').select('*')
-            .order('created_at', { ascending: false }).limit(20),
->>>>>>> 00caa2c7edc776b4729700b66de9c773e83bf552
     ]);
     return {
         denetimLoglari: uyRes.status === 'fulfilled' ? (uyRes.value.data || []) : [],

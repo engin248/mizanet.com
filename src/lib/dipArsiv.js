@@ -1,4 +1,4 @@
-/**
+﻿/**
  * lib/dipArsiv.js — KN-6: Dip Arşiv Katmanı
  *
  * Her HARD DELETE öncesi veriyi b0_arsiv tablosuna kopyalar.
@@ -36,11 +36,7 @@ export async function dipArsiveKaldir(tablo, id, kullanici = 'Sistem') {
 
     } catch (e) {
         // Sessiz fail — arşivleme kritik değilse silmeyi engellemez
-<<<<<<< HEAD
 
-=======
-        console.warn('[DipArsiv] Arşivleme yapılamadı:', e.message);
->>>>>>> 00caa2c7edc776b4729700b66de9c773e83bf552
     }
 }
 

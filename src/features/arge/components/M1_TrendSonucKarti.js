@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 import { useState } from 'react';
 import { TrendingUp, Plus, ExternalLink, Bot, Zap, AlertTriangle, CheckCircle2, Search } from 'lucide-react';
 
@@ -22,13 +22,10 @@ export default function M1_TrendSonucKarti({ sonuc, onKaydet, isAR }) {
         if (kasifYukleniyor) return;
         setKasifYukleniyor(true);
         setKasifSonucu(null);
-<<<<<<< HEAD
 
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), 55000); // 55s Timeout
 
-=======
->>>>>>> 00caa2c7edc776b4729700b66de9c773e83bf552
         try {
             const res = await fetch('/api/agent/kasif', {
                 method: 'POST',
@@ -40,27 +37,19 @@ export default function M1_TrendSonucKarti({ sonuc, onKaydet, isAR }) {
                     sezon: sonuc.sezon || 'genel',
                     hermesSkoru: skor,
                 }),
-<<<<<<< HEAD
                 signal: controller.signal
             });
             clearTimeout(timeoutId);
-=======
-            });
->>>>>>> 00caa2c7edc776b4729700b66de9c773e83bf552
             const data = await res.json();
             setKasifSonucu(data);
             setKasifAcik(true);
         } catch (e) {
-<<<<<<< HEAD
             clearTimeout(timeoutId);
             if (e.name === 'AbortError') {
                 setKasifSonucu({ error: 'Kaşif bağlantısı zaman aşımına uğradı. Veri boyutu büyük olabilir veya ajan meşgul.' });
             } else {
                 setKasifSonucu({ error: 'Kaşif bağlantı hatası: ' + e.message });
             }
-=======
-            setKasifSonucu({ error: 'Kaşif bağlantı hatası: ' + e.message });
->>>>>>> 00caa2c7edc776b4729700b66de9c773e83bf552
         } finally {
             setKasifYukleniyor(false);
         }
@@ -106,7 +95,6 @@ export default function M1_TrendSonucKarti({ sonuc, onKaydet, isAR }) {
                         💰 <strong>Fiyat:</strong> {sonuc.fiyat_araligi}
                     </div>
                 )}
-<<<<<<< HEAD
                 {sonuc.hedef_musteri && (
                     <div style={{ marginBottom: 6 }}>
                         🎯 <strong>Hedef Kitle:</strong> {sonuc.hedef_musteri}
@@ -122,8 +110,6 @@ export default function M1_TrendSonucKarti({ sonuc, onKaydet, isAR }) {
                         🏷️ <strong>Kategori:</strong> {sonuc.kategori}
                     </div>
                 )}
-=======
->>>>>>> 00caa2c7edc776b4729700b66de9c773e83bf552
                 {sonuc.risk_seviyesi && (
                     <div style={{ marginBottom: 6, color: sonuc.risk_seviyesi === 'Yüksek' ? '#ef4444' : '#f59e0b' }}>
                         ⚠️ <strong>Risk:</strong> {sonuc.risk_seviyesi}

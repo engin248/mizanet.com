@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 /**
  * features/siparisler/services/siparislerApi.js
  * M10 Siparişler — Supabase Servis Katmanı
@@ -6,10 +6,7 @@
  */
 import { supabase } from '@/lib/supabase';
 import { telegramBildirim } from '@/lib/utils';
-<<<<<<< HEAD
 import { cevrimeKuyrugaAl } from '@/lib/offlineKuyruk';
-=======
->>>>>>> 00caa2c7edc776b4729700b66de9c773e83bf552
 
 // ── Veri Çekme ───────────────────────────────────────────────────────────────
 export async function fetchSiparisler() {
@@ -77,11 +74,7 @@ export async function siparisKaydet(form, kalemler) {
 // ── Durum Güncelle ─────────────────────────────────────────────────────────────
 export async function durumGuncelle(id, durum, ekstraBilgi = {}) {
     // Mükerrer işlem engeli (U Kriteri)
-<<<<<<< HEAD
     const { data: mevcut } = await supabase.from('b2_siparisler').select('durum, siparis_no, toplam_tutar_tl').eq('id', id).single();
-=======
-    const { data: mevcut } = await supabase.from('b2_siparisler').select('durum').eq('id', id).single();
->>>>>>> 00caa2c7edc776b4729700b66de9c773e83bf552
     if (mevcut?.durum === durum) throw new Error(`Sipariş zaten "${durum}" durumunda — mükerrer engellendi.`);
 
     const { error } = await supabase.from('b2_siparisler').update({ durum, ...ekstraBilgi }).eq('id', id);
@@ -89,7 +82,6 @@ export async function durumGuncelle(id, durum, ekstraBilgi = {}) {
 
     if (durum === 'teslim') {
         await stokDus(id);
-<<<<<<< HEAD
 
         // 🚨 VERİ BÜTÜNLÜĞÜ UZMANI: Sipariş ve Kasa Modülü Otomasyonu (Satış Tahsilatı)
         try {
@@ -122,9 +114,6 @@ export async function durumGuncelle(id, durum, ekstraBilgi = {}) {
         }
 
         telegramBildirim(`🎉 SİPARİŞ TESLİM EDİLDİ!\nSipariş ID: ${mevcut?.siparis_no || id}\nStok çıkışı ve Finansal gelir tahakkuku yapıldı.`);
-=======
-        telegramBildirim(`🎉 SİPARİŞ TESLİM EDİLDİ!\nSipariş ID: ${id}\nStok ciro işlemi yapıldı.`);
->>>>>>> 00caa2c7edc776b4729700b66de9c773e83bf552
     } else if (durum === 'kargoda') {
         telegramBildirim(`🚚 SİPARİŞ KARGOYA VERİLDİ!\nSipariş ID: ${id}\nTakip: ${ekstraBilgi.kargo_takip_no || 'Belirtilmedi'}`);
     }

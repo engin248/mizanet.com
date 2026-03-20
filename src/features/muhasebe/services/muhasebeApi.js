@@ -1,4 +1,4 @@
-/**
+﻿/**
  * features/muhasebe/services/muhasebeApi.js
  * M14 Muhasebe & Final Rapor — Supabase Servis Katmanı
  */
@@ -55,15 +55,11 @@ export async function devirKapat(rapor, kullaniciLabel = '') {
         kullanici_adi: kullaniciLabel || 'Muhasebe Yetkilisi',
         eski_veri: { mesaj: (rapor.model_kodu || rapor.id) + ' kilitlendi ve 2. birime devredildi.' },
     }]);
-<<<<<<< HEAD
 
-=======
->>>>>>> 00caa2c7edc776b4729700b66de9c773e83bf552
     const { error } = await supabase.from('b1_muhasebe_raporlari').update({
         rapor_durumu: 'kilitlendi', devir_durumu: true, onay_tarihi: new Date().toISOString()
     }).eq('id', rapor.id);
     if (error) throw error;
-<<<<<<< HEAD
 
     // ─── STOK OTONOMU (GAMMA AJANI) ───
     try {
@@ -115,9 +111,6 @@ export async function devirKapat(rapor, kullaniciLabel = '') {
     }
 
     telegramBildirim(`🔒 2. BİRİME DEVİR ONAYLANDI & STOK GÜNCELLENDİ!\nBir üretim raporu KİLİTLENDİ.`);
-=======
-    telegramBildirim(`🔒 2. BİRİME DEVİR ONAYLANDI!\nBir üretim raporu KİLİTLENDİ.`);
->>>>>>> 00caa2c7edc776b4729700b66de9c773e83bf552
     return { offline: false };
 }
 

@@ -58,11 +58,7 @@ export function useMaliyet(kullanici) {
         try {
             const payload = {
                 order_id: form.order_id,
-<<<<<<< HEAD
                 maliyet_tipi: form.maliyet_tipi || 'personel_iscilik',
-=======
-                kalem_turu: form.kalem_turu || 'personel_iscilik',
->>>>>>> 00caa2c7edc776b4729700b66de9c773e83bf552
                 kalem_aciklama: form.kalem_aciklama.trim(),
                 tutar_tl: parseFloat(form.tutar_tl),
                 miktar: form.miktar ? parseFloat(form.miktar) : null,
@@ -102,11 +98,7 @@ export function useMaliyet(kullanici) {
     const duzenleAc = (m) => {
         setForm({
             order_id: m.order_id || '',
-<<<<<<< HEAD
             maliyet_tipi: m.maliyet_tipi || 'personel_iscilik',
-=======
-            kalem_turu: m.kalem_turu || m.maliyet_tipi || 'personel_iscilik',
->>>>>>> 00caa2c7edc776b4729700b66de9c773e83bf552
             kalem_aciklama: m.kalem_aciklama || '',
             tutar_tl: String(m.tutar_tl || ''),
             miktar: String(m.miktar || ''),
@@ -117,11 +109,7 @@ export function useMaliyet(kullanici) {
     };
 
     const filtreliMaliyetler = maliyetler.filter(m => {
-<<<<<<< HEAD
         const tipOk = filtreTip === 'hepsi' || m.maliyet_tipi === filtreTip;
-=======
-        const tipOk = filtreTip === 'hepsi' || m.kalem_turu === filtreTip || m.maliyet_tipi === filtreTip;
->>>>>>> 00caa2c7edc776b4729700b66de9c773e83bf552
         const aramaOk = !aramaMetni || m.kalem_aciklama?.toLowerCase().includes(aramaMetni.toLowerCase());
         return tipOk && aramaOk;
     });
@@ -129,13 +117,8 @@ export function useMaliyet(kullanici) {
     const istatistik = {
         toplam: maliyetler.length,
         toplamTutar: maliyetler.reduce((s, m) => s + parseFloat(m.tutar_tl || 0), 0),
-<<<<<<< HEAD
         personel: maliyetler.filter(m => m.maliyet_tipi === 'personel_iscilik').length,
         isletme: maliyetler.filter(m => m.maliyet_tipi === 'isletme_gideri').length,
-=======
-        personel: maliyetler.filter(m => m.kalem_turu === 'personel_iscilik' || m.maliyet_tipi === 'personel_iscilik').length,
-        isletme: maliyetler.filter(m => m.kalem_turu === 'isletme_gideri' || m.maliyet_tipi === 'isletme_gideri').length,
->>>>>>> 00caa2c7edc776b4729700b66de9c773e83bf552
     };
 
     return {

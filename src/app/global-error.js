@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 import { useEffect } from 'react';
 
 // ─── KÜRESEL ÇÖKME VE ZIRH KALKANI (GLOBAL ERROR BOUNDARY) ───
@@ -14,13 +14,8 @@ export default function GlobalError({ error, reset }) {
             fetch('/api/telegram-bildirim', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-<<<<<<< HEAD
                 body: JSON.stringify({ mesaj: '⚠️ GLOBAL CRASH!\n\nUrl: /app/global-error.js\nHata: ' + error.message }),
             }).catch(() => null);
-=======
-                body: JSON.stringify({ mesaj: `🚨 [KRİTİK HATA] Küresel çökme kalkanı devreye girdi!\nHata: ${error?.message}` })
-            });
->>>>>>> 00caa2c7edc776b4729700b66de9c773e83bf552
         } catch { }
     }, [error]);
 
