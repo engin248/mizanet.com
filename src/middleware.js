@@ -199,7 +199,7 @@ export async function middleware(request) {
         // Eski session cookie'si olan kullanıcılar giris sayfasına yönlendirilir.
 
         if (!yetkiliMi) {
-            const geriDonusUrl = new URL('/?hata=yetkisiz_erisim_middleware_kalkani', request.url);
+            const geriDonusUrl = new URL('/giris?hata=yetkisiz', request.url);
             return NextResponse.redirect(geriDonusUrl);
         }
     }
@@ -211,7 +211,7 @@ export async function middleware(request) {
     response.headers.set('X-XSS-Protection', '1; mode=block');
     response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
     response.headers.set('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
-    response.headers.set('X-Powered-By', 'THE ORDER / NIZAM v2');
+    response.headers.set('X-Powered-By', 'Mizanet v3.7');
 
     return response;
 }

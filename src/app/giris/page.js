@@ -4,7 +4,7 @@
  * Tüm UI   → features/giris/components/GirisMainContainer.js
  * Route    : /giris  (PIN Authentication)
  */
-import { GirisMainContainer } from '@/features/giris';
+import GirisMainContainer from '@/features/giris/components/GirisMainContainer';
 import ErrorBoundary from '@/components/ErrorBoundary';
 
 export default function GirisPage() {

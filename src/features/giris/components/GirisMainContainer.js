@@ -119,7 +119,10 @@ export default function GirisSayfasi() {
                 </div>
 
                 {/* PIN Kartı */}
-                <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 16, padding: '1.75rem' }}>
+                <form
+                    onSubmit={e => { e.preventDefault(); handleGiris(); }}
+                    style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 16, padding: '1.75rem' }}
+                >
                     <label style={{ fontSize: '0.68rem', fontWeight: 700, color: '#a7f3d0', textTransform: 'uppercase', letterSpacing: '0.08em', display: 'block', marginBottom: '0.625rem' }}>
                         {dil === 'ar' ? 'رمز الوصول' : 'Erişim Kodu'}
                     </label>
@@ -176,7 +179,7 @@ export default function GirisSayfasi() {
                             {yukleniyor ? '...' : <><LogIn size={16} color="#d8b863" /> {dil === 'ar' ? 'تسجيل الدخول' : 'Giriş'}</>}
                         </button>
                     )}
-                </div>
+                </form>
 
                 <p style={{ textAlign: 'center', fontSize: '0.62rem', color: '#e2e8f0', marginTop: '1.25rem', fontWeight: 600 }}>
                     {dil === 'ar' ? `الجلسة صالحة لمدة 4 ساعات • ${MAX_DENEME} محاولات خاطئة قفل ${KILIT_SURE_SN} ثانية` : `Oturum 4 saat geçerlidir • ${MAX_DENEME} yanlış denemede ${KILIT_SURE_SN}s kilit`}
@@ -188,6 +191,6 @@ export default function GirisSayfasi() {
                 input:focus { border-color: #d8b863 !important; }
                 input::placeholder { color: #576b63; letter-spacing: 0.1em; }
             `}</style>
-        </div>
+        </div >
     );
 }

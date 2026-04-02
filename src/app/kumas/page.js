@@ -4,7 +4,7 @@
  * Tüm UI   → features/kumas/components/KumasMainContainer.js
  * Route    : /kumas
  */
-import { KumasMainContainer } from '@/features/kumas';
+import KumasMainContainer from '@/features/kumas/components/KumasMainContainer';
 import ErrorBoundary from '@/components/ErrorBoundary';
 
 export default function KumasPage() {

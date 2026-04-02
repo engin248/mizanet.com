@@ -9,7 +9,17 @@ import { supabaseAdmin } from '@/lib/supabaseAdmin';
 
 export const dynamic = 'force-dynamic';
 
-export async function GET() {
+export async function GET(request) {
+    // ─── AUTH: Sadece internal API key ile erişilebilir ───────────
+    const incomingKey = request.headers.get('x-internal-api-key');
+    const validKey = process.env.INTERNAL_API_KEY?.trim();
+    if (!incomingKey || !validKey || incomingKey !== validKey) {
+        return NextResponse.json(
+            { hata: 'Yetkisiz erişim.' },
+            { status: 401 }
+        );
+    }
+
     const basla = Date.now();
     const sonuclar = {};
     let tamam = true;

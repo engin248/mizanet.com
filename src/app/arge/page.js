@@ -4,7 +4,7 @@
  * Tüm UI   → features/arge/components/ArgeMainContainer.js
  * Route    : /arge
  */
-import { ArgeMainContainer } from '@/features/arge';
+import ArgeMainContainer from '@/features/arge/components/ArgeMainContainer';
 import ErrorBoundary from '@/components/ErrorBoundary';
 
 export default function ArgePage() {
