@@ -7,9 +7,9 @@ import ClientLayout from './ClientLayout';
 // ─── NEXT.JS METADATA API (Doğru Kullanım) ───────────────────
 export const metadata = {
     title: '47 Sil Baştan — Üretim & Mağaza Sistemi',
-    description: 'THE ORDER NIZAM — Adil Düzen, Şeffaf Maliyet, Adaletli Dağıtım. Fason ve Ürün Yönetim Sistemi.',
+    description: 'mizanet.com — Adil Düzen, Şeffaf Maliyet, Adaletli Dağıtım. Fason ve Ürün Yönetim Sistemi.',
     manifest: '/manifest.json',
-    keywords: ['üretim', 'fason', 'tekstil', 'stok', 'muhasebe', 'nizam'],
+    keywords: ['üretim', 'fason', 'tekstil', 'stok', 'muhasebe', 'mizanet'],
     icons: {
         icon: '/icon.png',
         apple: '/icon.png',
@@ -21,7 +21,7 @@ export const metadata = {
         googleBot: { index: false, follow: false },
     },
     openGraph: {
-        title: '47 Sil Baştan — THE ORDER NIZAM',
+        title: '47 Sil Baştan — mizanet.com',
         description: 'Adil Düzen · Şeffaf Maliyet · Adaletli Dağıtım',
         locale: 'tr_TR',
         type: 'website',
