@@ -203,7 +203,7 @@ async function rakipVerisiKazi(kategoriUrl, markaKategoriAdi) {
     } catch (error) {
         console.error(`[ÖLÜ İŞÇİ] CRASH: ${error.message}`);
     } finally {
-        try { await browser.close(); } catch { }
+        try { await browser.close(); } catch (e) { console.error('[CATCH oluisci]', e?.message || e); }
     }
 }
 

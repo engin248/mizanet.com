@@ -63,7 +63,7 @@ export default function AyarlarMainContainer() {
             const { data, error } = await supabase.from('b1_sistem_ayarlari').select('*').limit(1).maybeSingle();
             if (error) throw error;
             if (data?.deger) {
-                try { setAyarlar({ ...VARSAYILAN, ...JSON.parse(data.deger) }); } catch { }
+                try { setAyarlar({ ...VARSAYILAN, ...JSON.parse(data.deger) }); } catch (e) { console.error('[CATCH AyarlarMain]', e?.message || e); }
             }
         } catch (error) { goster('Ayarlar yüklenemedi: ' + error.message, 'error'); }
     };

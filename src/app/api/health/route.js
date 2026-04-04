@@ -46,7 +46,7 @@ export async function GET(request) {
         sonuclar.ajan_hatalar = error
             ? { durum: 'hata', hata: error.message }
             : { durum: 'ok', son_1s_hata_sayisi: data?.length || 0 };
-    } catch { sonuclar.ajan_hatalar = { durum: 'atlandi' }; }
+    } catch (e) { console.error('[CATCH health]', e?.message || e); sonuclar.ajan_hatalar = { durum: 'atlandi' }; }
 
     // 3. Sipariş sistemi
     try {

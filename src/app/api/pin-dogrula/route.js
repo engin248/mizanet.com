@@ -167,7 +167,7 @@ export async function POST(request) {
                             detay: `IP: ${ip} | İstek tipi: ${tip} | Saat: ${new Date().toISOString()}`,
                             seviye: 'uyari',
                         }]);
-                    } catch { }
+                    } catch (e) { console.error('[CATCH pin-dogrula]', e?.message || e); }
                 })();
             }
         } catch { /* Log başarısız olsa bile sistemi engelleme */ }
@@ -195,7 +195,7 @@ export async function POST(request) {
                     detay: `IP: ${ip} | Grup: ${grup} | Token süresi: 8 saat`,
                     seviye: 'bilgi',
                 }]);
-            } catch { }
+            } catch (e) { console.error('[CATCH pin-dogrula]', e?.message || e); }
         })();
     } catch { /* Log başarısız olsa bile sistemi engelleme */ }
 

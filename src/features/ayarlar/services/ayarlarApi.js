@@ -23,7 +23,7 @@ export async function ayarlariGetir() {
         .maybeSingle();
     if (error) throw error;
     if (!data?.deger) return null;
-    try { return JSON.parse(data.deger); } catch { return null; }
+    try { return JSON.parse(data.deger); } catch (e) { console.error('[CATCH ayarlarApi]', e?.message || e); return null; }
 }
 
 // ─── YAZMA ───────────────────────────────────────────────────────

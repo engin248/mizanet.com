@@ -105,7 +105,7 @@ export async function GET(req) {
                     await supabaseAdmin.from('camera_events').insert([{
                         camera_id: null, event_type: 'offline_alarm', video_url: null
                     }]);
-                } catch { }
+                } catch (e) { console.error('[CATCH cron-ajanlar]', e?.message || e); }
 
                 const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
                 const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID;
@@ -125,7 +125,7 @@ export async function GET(req) {
                     await supabaseAdmin.from('camera_events').insert([{
                         camera_id: null, event_type: 'offline_sleep', video_url: null
                     }]);
-                } catch { }
+                } catch (e) { console.error('[CATCH cron-ajanlar]', e?.message || e); }
             }
 
             return NextResponse.json({ success: true, mesaj: `Kamera Cron Çalıştı. Durum: ${nvrDurum}, Mesai Dışı: ${mesaiDisi}` });

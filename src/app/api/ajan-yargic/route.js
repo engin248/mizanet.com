@@ -61,7 +61,7 @@ export async function POST(req) {
             const urun = hamUrunler[i];
 
             let parsedHamVeri = {};
-            try { parsedHamVeri = typeof urun.ham_veri === 'string' ? JSON.parse(urun.ham_veri) : urun.ham_veri || {}; } catch { }
+            try { parsedHamVeri = typeof urun.ham_veri === 'string' ? JSON.parse(urun.ham_veri) : urun.ham_veri || {}; } catch (e) { console.error('[CATCH ajan-yargic]', e?.message || e); }
             const urunAdi = parsedHamVeri.isim || 'Bilinmeyen Ürün';
             const fiyatSayi = parsedHamVeri.fiyatSayi || 0;
             const kaynak = urun.veri_kaynagi || 'Trendyol';

@@ -1,0 +1,168 @@
+﻿node.exe : [@sentry/nextjs] DEPRECATION WARNING: disableLogger is deprec
+ated and will be removed in a future version. Use webpack.treeshake.remo
+veDebugLogging instead.
+At line:1 char:1
++ & "C:\nvm4w\nodejs/node.exe" "C:\nvm4w\nodejs/node_modules/npm/bin/np 
+...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: ([@sentry/nextjs...ogging i 
+   nstead.:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+[@sentry/nextjs] DEPRECATION WARNING: automaticVercelMonitors is depreca
+ted and will be removed in a future version. Use webpack.automaticVercel
+Monitors instead.
+   Ôû▓ Next.js 15.3.6
+   - Environments: .env.local
+   - Experiments (use with caution):
+     ┬À clientTraceMetadata
+
+   Creating an optimized production build ...
+[@sentry/nextjs] It appears you've configured a `sentry.server.config.js
+` file. Please ensure to put this file's content into the `register()` f
+unction of a Next.js instrumentation file instead. To ensure correct fun
+ctionality of the SDK, `Sentry.init` must be called inside of an instrum
+entation file. Learn more about setting up an instrumentation file in Ne
+xt.js: https://nextjs.org/docs/app/building-your-application/optimizing/
+instrumentation. You can safely delete the `sentry.server.config.js` fil
+e afterward.
+[@sentry/nextjs] Could not find a Next.js instrumentation file. This ind
+icates an incomplete configuration of the Sentry SDK. An instrumentation
+ file is required for the Sentry SDK to be initialized on the server: ht
+tps://docs.sentry.io/platforms/javascript/guides/nextjs/manual-setup/#cr
+eate-initialization-config-files (you can suppress this warning by setti
+ng SENTRY_SUPPRESS_INSTRUMENTATION_FILE_WARNING=1 as environment variabl
+e)
+[@sentry/nextjs] DEPRECATION WARNING: It is recommended renaming your `s
+entry.client.config.js` file, or moving its content to `instrumentation-
+client.ts`. When using Turbopack `sentry.client.config.js` will no longe
+r work. Read more about the `instrumentation-client.ts` file: https://ne
+xtjs.org/docs/app/api-reference/file-conventions/instrumentation-client
+<w> [webpack.cache.PackFileCacheStrategy] Serializing big strings (139ki
+B) impacts deserialization performance (consider using Buffer instead an
+d decode when needed)
+<w> [webpack.cache.PackFileCacheStrategy] Serializing big strings (184ki
+B) impacts deserialization performance (consider using Buffer instead an
+d decode when needed)
+ Ô£ô Compiled successfully in 31.0s
+   Skipping linting
+   Checking validity of types ...
+   Collecting page data ...
+   Generating static pages (0/98) ...
+   Generating static pages (24/98) 
+   Generating static pages (48/98) 
+   Generating static pages (73/98) 
+ Ô£ô Generating static pages (98/98)
+   Finalizing page optimization ...
+   Collecting build traces ...
+
+Route (app)                                 Size  First Load JS
+Ôöî Ôùï /                                    31.5 kB         274 kB
+Ôö£ Ôùï /_not-found                            490 B         190 kB
+Ôö£ Ôùï /ajanlar                             23.5 kB         267 kB
+Ôö£ ãÆ /api/2fa-dogrula                       491 B         190 kB
+Ôö£ ãÆ /api/2fa-kurulum                       491 B         190 kB
+Ôö£ ãÆ /api/agent/kasif                       491 B         190 kB
+Ôö£ ãÆ /api/ai-kahin-ajan                     490 B         190 kB
+Ôö£ ãÆ /api/ajan-calistir                     491 B         190 kB
+Ôö£ ãÆ /api/ajan-orkestrator                  492 B         190 kB
+Ôö£ ãÆ /api/ajan-tetikle                      491 B         190 kB
+Ôö£ ãÆ /api/ajan-yargic                       492 B         190 kB
+Ôö£ ãÆ /api/b2b-webhook-tetikle               490 B         190 kB
+Ôö£ ãÆ /api/batch-ai                          492 B         190 kB
+Ôö£ ãÆ /api/beyaz-saha                        491 B         190 kB
+Ôö£ ãÆ /api/cikis                             491 B         190 kB
+Ôö£ ãÆ /api/cron-ajanlar                      491 B         190 kB
+Ôö£ ãÆ /api/deepseek-analiz                   490 B         190 kB
+Ôö£ ãÆ /api/gorev-ekle                        491 B         190 kB
+Ôö£ ãÆ /api/haberlesme/gonder                 490 B         190 kB
+Ôö£ ãÆ /api/haberlesme/oku                    491 B         190 kB
+Ôö£ ãÆ /api/health                            491 B         190 kB
+Ôö£ ãÆ /api/is-emri-ekle                      492 B         190 kB
+Ôö£ ãÆ /api/kamera-sayac                      492 B         190 kB
+Ôö£ ãÆ /api/kasa-ozet                         491 B         190 kB
+Ôö£ ãÆ /api/kopru-ajan                        491 B         190 kB
+Ôö£ ãÆ /api/kumas-ekle                        491 B         190 kB
+Ôö£ ãÆ /api/kur                               491 B         190 kB
+Ôö£ ãÆ /api/kuyruk-motoru                     493 B         190 kB
+Ôö£ ãÆ /api/m1-motor-test                     489 B         190 kB
+Ôö£ ãÆ /api/m1-scraper-webhook                491 B         190 kB
+Ôö£ ãÆ /api/m4-vision                         493 B         190 kB
+Ôö£ ãÆ /api/model-hafizasi                    490 B         190 kB
+Ôö£ ãÆ /api/musteri-ekle                      491 B         190 kB
+Ôö£ ãÆ /api/perplexity-arama                  491 B         190 kB
+Ôö£ ãÆ /api/personel-ekle                     491 B         190 kB
+Ôö£ ãÆ /api/pin-dogrula                       491 B         190 kB
+Ôö£ ãÆ /api/rapor/atil-sermaye                491 B         190 kB
+Ôö£ ãÆ /api/rapor/darbogaz                    491 B         190 kB
+Ôö£ ãÆ /api/rapor/kor-nokta                   489 B         190 kB
+Ôö£ ãÆ /api/rapor/kumbaraci                   491 B         190 kB
+Ôö£ ãÆ /api/rapor/mevsimsel-muneccim          492 B         190 kB
+Ôö£ ãÆ /api/rapor/sabika-kaydi                491 B         190 kB
+Ôö£ ãÆ /api/rapor/sistem-hafizasi             491 B         190 kB
+Ôö£ ãÆ /api/rapor/yirtici-firsat              492 B         190 kB
+Ôö£ ãÆ /api/serp-trend                        490 B         190 kB
+Ôö£ ãÆ /api/siparis-ekle                      491 B         190 kB
+Ôö£ ãÆ /api/stok-alarm                        492 B         190 kB
+Ôö£ ãÆ /api/stok-hareket-ekle                 492 B         190 kB
+Ôö£ ãÆ /api/stream-durum                      491 B         190 kB
+Ôö£ ãÆ /api/stress-test                       490 B         190 kB
+Ôö£ ãÆ /api/telegram-bildirim                 491 B         190 kB
+Ôö£ ãÆ /api/telegram-foto                     493 B         190 kB
+Ôö£ ãÆ /api/telegram-webhook                  491 B         190 kB
+Ôö£ ãÆ /api/test-arge/ajan2-analist           491 B         190 kB
+Ôö£ ãÆ /api/trend-ara                         491 B         190 kB
+Ôö£ ãÆ /api/trigger-agents                    492 B         190 kB
+Ôö£ ãÆ /api/veri-getir                        491 B         190 kB
+Ôö£ ãÆ /api/worker-ajan                       491 B         190 kB
+Ôö£ ãÆ /api/yargic-motor-test                 490 B         190 kB
+Ôö£ Ôùï /arge                                6.99 kB         248 kB
+Ôö£ Ôùï /arge_test_paneli                    4.84 kB         246 kB
+Ôö£ Ôùï /arge/karantina                      7.96 kB         250 kB
+Ôö£ Ôùï /ayarlar                             9.13 kB         253 kB
+Ôö£ Ôùï /denetmen                            10.3 kB         257 kB
+Ôö£ Ôùï /giris                               6.35 kB         196 kB
+Ôö£ Ôùï /gorevler                            8.67 kB         252 kB
+Ôö£ Ôùï /guvenlik                             8.6 kB         252 kB
+Ôö£ Ôùï /haberlesme                          12.7 kB         256 kB
+Ôö£ Ôùï /icon.svg                                0 B            0 B
+Ôö£ Ôùï /imalat                              13.9 kB         262 kB
+Ôö£ Ôùï /kalip                               10.4 kB         256 kB
+Ôö£ Ôùï /kameralar                           10.4 kB         254 kB
+Ôö£ Ôùï /karargah                              492 B         190 kB
+Ôö£ Ôùï /karargah/telsiz                     1.77 kB         192 kB
+Ôö£ Ôùï /karargah/test-arge                    490 B         190 kB
+Ôö£ Ôùï /kasa                                10.3 kB         256 kB
+Ôö£ Ôùï /katalog                              152 kB         408 kB
+Ôö£ Ôùï /kesim                               9.96 kB         266 kB
+Ôö£ Ôùï /kumas                               11.1 kB         256 kB
+Ôö£ Ôùï /m1-istihbarat                       2.87 kB         244 kB
+Ôö£ Ôùï /m2-finans                           2.13 kB         243 kB
+Ôö£ Ôùï /m3-tasarim                          2.46 kB         243 kB
+Ôö£ Ôùï /m4-lojistik                         1.75 kB         242 kB
+Ôö£ Ôùï /maliyet                             9.99 kB         260 kB
+Ôö£ Ôùï /modelhane                           9.51 kB         255 kB
+Ôö£ Ôùï /muhasebe                            9.45 kB         259 kB
+Ôö£ Ôùï /musteriler                          11.4 kB         257 kB
+Ôö£ Ôùï /odalar/albay                        1.76 kB         192 kB
+Ôö£ Ôùï /odalar/basmimar                     1.76 kB         192 kB
+Ôö£ Ôùï /odalar/mufettis                     1.77 kB         192 kB
+Ôö£ Ôùï /personel                            14.4 kB         260 kB
+Ôö£ Ôùï /raporlar                             118 kB         361 kB
+Ôö£ Ôùï /siparisler                          20.5 kB         266 kB
+Ôö£ Ôùï /sistem-raporu                       2.83 kB         193 kB
+Ôö£ Ôùï /stok                                10.8 kB         256 kB
+Ôö£ Ôùï /tasarim                              8.6 kB         252 kB
+Ôö£ Ôùï /uretim                              18.9 kB         264 kB
+Ôöö Ôùï /uretim-kiosk                         9.7 kB         250 kB
++ First Load JS shared by all             190 kB
+  Ôö£ chunks/1294-965c564debb3abc4.js       133 kB
+  Ôö£ chunks/4bd1b696-e9c2f95c19bb868c.js  53.4 kB
+  Ôöö other shared chunks (total)          3.25 kB
+
+
+ãÆ Middleware                             41.6 kB
+
+Ôùï  (Static)   prerendered as static content
+ãÆ  (Dynamic)  server-rendered on demand
+

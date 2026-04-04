@@ -1,90 +1,52 @@
 ---
-description: /baslat — Oturum açılış brifingi. Her yeni sohbet başında çalıştırılır.
+description: /baslat — Oturum acilis brifingi. Her yeni sohbet basinda calistirilir.
 ---
 
-# BAŞLAT — Oturum Açılış Protokolü
+# BASLAT — Oturum Acilis Protokolu
 
-<<<<<<< HEAD
-## ⚠️ SİSTEM SABİT BİLGİLERİ — HER AGENT OKUYACAK
-=======
-## ⚠️ SİSTEM SABİT BİLGİLERİ — HER AGENT OKUYACAK, ASLA KARIŞTIRILMAYACAK
->>>>>>> 00caa2c7edc776b4729700b66de9c773e83bf552
+## SiSTEM SABiT BiLGiLERi — HER AGENT OKUYACAK
 
-| Bilgi | Değer |
+| Bilgi | Deger |
 |---|---|
-| Sistem Adı | THE ORDER / NIZAM |
-<<<<<<< HEAD
-| Canlı Domain | **https://mizanet.com** |
-| Proje Klasörü | `C:\Users\Esisya\Desktop\47_SilBaştan` |
-=======
-| Canlı Domain | **https://mizannet.com** (çift n, çift t — mizaNNet.com) |
-| Yanlış Adres | ~~mizanet.com~~ (YANLIŞ — kullanılmaz) |
-| Proje Klasörü | `C:\Users\Admin\CUsersAdminDesktop47_SIL_BASTAN_01` |
-| Giriş Şifresi | Sistem kurucusundan al |
->>>>>>> 00caa2c7edc776b4729700b66de9c773e83bf552
-| Veritabanı | Supabase |
+| Sistem Adi | Mizanet ERP |
+| Canli Domain | **https://mizanet.com** |
+| Proje Klasoru | `C:\Users\Esisya\Desktop\Mizanet` |
+| Veritabani | Supabase |
 | Sistem Kurucusu | Engin |
-| Renk Standardı | Zümrüt #047857 + Koyu Gold #B8860B + Mavi #1D4ED8 |
+| Renk Standardi | Zumrut #047857 + Koyu Gold #B8860B + Mavi #1D4ED8 |
 
-Her yeni sohbet başında aşağıdaki adımlar sırayla çalıştırılır.
+Her yeni sohbet basinda asagidaki adimlar sirayla calistirilir.
 
-## Adım 1 — Git Güncelleme
+## Adim 1 — Git Guncelleme
 ```
-<<<<<<< HEAD
-cd C:\Users\Esisya\Desktop\47_SilBaştan
-=======
->>>>>>> 00caa2c7edc776b4729700b66de9c773e83bf552
 git pull origin main
 ```
 Yerel dosyalar GitHub ile senkronize edilir.
 
-<<<<<<< HEAD
-## Adım 2 — SESSION_HANDOFF Oku
-Son oturum notları okunur:
-- `C:\Users\Esisya\Desktop\47_SilBaştan\_agents\SESSION_HANDOFF.md`
+## Adim 2 — SESSION_HANDOFF Oku
+Son oturum notlari okunur:
+- `C:\Users\Esisya\Desktop\Mizanet\_agents\SESSION_HANDOFF.md`
 
-Bu dosya: tamamlanan işler, açık görevler, deployment durumu ve bir sonraki adımları içerir.
+Bu dosya: tamamlanan isler, acik gorevler, deployment durumu ve bir sonraki adimlari icerir.
 
-## Adım 3 — GEMINI.md Oku (varsa)
-Dosya: `C:\Users\Esisya\Desktop\47_SilBaştan\GEMINI.md`
-Yoksa bu adımı atla.
+## Adim 3 — GEMINI.md Oku (varsa)
+Dosya: `C:\Users\Esisya\Desktop\Mizanet\GEMINI.md`
+Yoksa bu adimi atla.
 
-## Adım 4 — Brifing Üret
-=======
-## Adım 2 — GEMINI.md Oku
-GEMINI.md dosyası okunur. Sistem kuralları teyit edilir.
-Dosya: `C:\Users\Admin\CUsersAdminDesktop47_SIL_BASTAN_01\GEMINI.md`
-
-## Adım 3 — Son İşlem Logu Oku
-Son sohbet(ler)de yapılan işlemler okunur.
-Referans dosyalar:
-- `120_NIZAM_V3_DENETIM_RAPORU.md`
-- `14_YENI_PROJE_SOHBET_OZETI.md`
-- `47_SIL_BASTAN_1_SISTEM_TAM_KONTROL_LISTESI.md`
-
-## Adım 4 — Brifing Üret
-Aşağıdaki formatta oturum brifingi üretilir:
->>>>>>> 00caa2c7edc776b4729700b66de9c773e83bf552
+## Adim 4 — Brifing Uret
 
 ```
-═══════════════════════════════════════
-THE ORDER / NIZAM — OTURUM BRİFİNGİ
-Tarih : [BUGÜN]
-═══════════════════════════════════════
-✅ GİT DURUMU     : [up-to-date / değişiklik var]
-<<<<<<< HEAD
-📌 SON YAPILAN    : [SESSION_HANDOFF'dan - tamamlananlar]
-🚫 YAPILMAYAN     : [SESSION_HANDOFF'dan - açık görevler]
-🎯 SIRADAKI ADIM  : [P0 pagination → siparislerApi + ajanlarApi]
-⚠️ BİLİNEN SORUN  : [Gemini generateContent 404, Upstash key yok]
-=======
-📋 KURALLAR       : GEMINI.md aktif
-📌 SON YAPILAN    : [Son sohbetteki tamamlanan işlemler]
-🚫 YAPILMAYAN     : [Henüz tamamlanmamış görevler]
-🎯 SIRADAKI ADIM  : [Önerilen sonraki görev]
->>>>>>> 00caa2c7edc776b4729700b66de9c773e83bf552
-═══════════════════════════════════════
+=============================================
+MIZANET ERP — OTURUM BRiFiNGi
+Tarih : [BUGUN]
+=============================================
+GiT DURUMU     : [up-to-date / degisiklik var]
+SON YAPILAN    : [SESSION_HANDOFF'dan - tamamlananlar]
+YAPILMAYAN     : [SESSION_HANDOFF'dan - acik gorevler]
+SIRADAKI ADIM  : [Onerilen sonraki gorev]
+BiLiNEN SORUN  : [Varsa bilinen sorunlar]
+=============================================
 ```
 
-## Adım 5 — Hazır Bekle
-Brifing sonrası kullanıcıdan komut bekle. İzinsiz iş başlatma.
+## Adim 5 — Hazir Bekle
+Brifing sonrasi kullanicidan komut bekle. Izinsiz is baslatma.

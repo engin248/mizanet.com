@@ -250,7 +250,7 @@ export default function HaberlesmeMainContainer() {
                 ));
                 // Badge sayacını azalt
                 setOkunmamisSayi(prev => Math.max(0, prev - 1));
-            } catch { /* sessiz */ }
+            } catch (e) { console.error('[CATCH Haberlesme]', e?.message || e); }
         }
     };
 

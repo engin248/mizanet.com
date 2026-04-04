@@ -55,7 +55,7 @@ export const logger = {
                     gercekcilik: veri.gercekcilikDurumu || 'kontrol_edilmedi',
                     yapan_kullanici: kullanici?.grup || 'sistem',
                 }]);
-            } catch { }
+            } catch (e) { console.error('[CATCH logger]', e?.message || e); }
         }
     },
 

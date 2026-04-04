@@ -191,7 +191,7 @@ export default function GuvenlikMainContainer() {
                         try {
                             const mevcut = JSON.parse(localStorage.getItem('sb47_auth') || 'null');
                             if (mevcut?.grup === grup) localStorage.removeItem('sb47_auth');
-                        } catch { }
+                        } catch (e) { console.error('[CATCH GuvenlikMain]', e?.message || e); }
                         telegramBildirim(`🔴 YETKİ İPTAL EDİLDİ\nErişim yetkisi kapatıldı.\nGrup: ${grup.toUpperCase()}`);
                         goster(`Erişim kapatıldı. Aktif oturumlar sonlandırıldı.`);
                     } catch (error) { goster('Hata: ' + error.message, 'error'); }
@@ -400,7 +400,7 @@ export default function GuvenlikMainContainer() {
                                             <span style={{ fontWeight: 900, fontSize: '0.8rem', color: sayi >= 5 ? '#dc2626' : sayi > 0 ? '#d97706' : '#10b981' }}>
                                                 {sayi}/5 deneme
                                             </span>
-                                             {sayi > 0 && <button onClick={async () => { const pin = prompt('Sifirlamak icin Admin PIN girin:'); if (!pin) return; try { const res = await fetch('/api/pin-dogrula', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ pin, grup: 'tam' }) }); const d = await res.json(); if (!d.token) { goster('Yetkisiz! PIN hatali.', 'error'); return; } setHataliGirisler(p => ({ ...p, [g]: 0 })); goster('Sifirlandi.'); } catch { goster('Sunucu hatasi.', 'error'); } }} style={{ fontSize: '0.65rem', background: '#173a34', border: 'none', borderRadius: 4, padding: '2px 6px', cursor: 'pointer', color: '#a7f3d0' }}>sifirla</button>}
+                                            {sayi > 0 && <button onClick={async () => { const pin = prompt('Sifirlamak icin Admin PIN girin:'); if (!pin) return; try { const res = await fetch('/api/pin-dogrula', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ pin, grup: 'tam' }) }); const d = await res.json(); if (!d.token) { goster('Yetkisiz! PIN hatali.', 'error'); return; } setHataliGirisler(p => ({ ...p, [g]: 0 })); goster('Sifirlandi.'); } catch { goster('Sunucu hatasi.', 'error'); } }} style={{ fontSize: '0.65rem', background: '#173a34', border: 'none', borderRadius: 4, padding: '2px 6px', cursor: 'pointer', color: '#a7f3d0' }}>sifirla</button>}
                                         </div>
                                     </div>
                                 );
