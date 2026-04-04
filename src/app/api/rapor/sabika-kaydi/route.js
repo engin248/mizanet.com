@@ -10,6 +10,13 @@ import { supabaseAdmin as sb } from '@/lib/supabaseAdmin';
 // ============================================================
 
 export async function GET(req) {
+    // [AUDIT-FIX #3]: Defense-in-depth — Route-level auth guard
+    const jwt = req.cookies.get('sb47_jwt_token')?.value;
+    const apiKey = req.headers.get('x-internal-api-key');
+    if (!jwt && !apiKey) {
+        return NextResponse.json({ error: 'Yetkisiz erişim.' }, { status: 401 });
+    }
+
     try {
         const url = new URL(req.url);
         const gunSayisi = parseInt(url.searchParams.get('gun') || '90');
