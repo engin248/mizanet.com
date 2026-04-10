@@ -1,13 +1,14 @@
 ﻿'use client';
+import { handleError, logCatch } from '@/lib/errorCore';
 /**
  * features/gorevler/components/GorevlerMainContainer.js
  * B-06: Sürükle-bırak Kanban Board eklendi (HTML5 Drag-and-Drop tabanlı)
  */
 import { useState, useEffect, useRef } from 'react';
 import { ClipboardList, Plus, CheckCircle2, AlertTriangle, Trash2, LayoutGrid, List } from 'lucide-react';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/core/db/supabaseClient';
 import { formatTarih, telegramBildirim } from '@/lib/utils';
-import { useAuth } from '@/lib/auth';
+import { useAuth } from '@/core/auth';
 import { useLang } from '@/lib/langContext';
 import { cevrimeKuyrugaAl } from '@/lib/offlineKuyruk';
 import { silmeYetkiDogrula } from '@/lib/silmeYetkiDogrula';
@@ -65,6 +66,7 @@ export default function GorevlerMainContainer() {
             else if (error) { throw error; }
             else if (data) { setGorevler(data); }
         } catch (err) { goster('Görevler Yüklenemedi: ' + err.message, 'error'); }
+            handleError('ERR-GRV-CM-101', 'src/features/gorevler/components/GorevlerMainContainer.js', err, 'orta');
         setLoading(false);
     };
 
@@ -101,6 +103,7 @@ export default function GorevlerMainContainer() {
             }
             setForm(BOSH); setFormAcik(false); setDuzenleId(null); yukle();
         } catch (err) { goster('Hata: ' + err.message, 'error'); }
+            handleError('ERR-GRV-CM-101', 'src/features/gorevler/components/GorevlerMainContainer.js', err, 'orta');
         setLoading(false);
     };
 
@@ -112,6 +115,7 @@ export default function GorevlerMainContainer() {
             if (durum === 'tamamlandi') telegramBildirim(`✅ GÖREV TAMAMLANDI!\n${baslik}`);
             yukle();
         } catch (err) { goster('Durum Hatası: ' + err.message, 'error'); }
+            handleError('ERR-GRV-CM-101', 'src/features/gorevler/components/GorevlerMainContainer.js', err, 'orta');
     };
 
     const sil = async (id) => {
@@ -125,6 +129,7 @@ export default function GorevlerMainContainer() {
             if (error) throw error;
             yukle(); goster('Silindi');
         } catch (err) { goster('Silinemedi: ' + err.message, 'error'); }
+            handleError('ERR-GRV-CM-101', 'src/features/gorevler/components/GorevlerMainContainer.js', err, 'orta');
     };
 
     // ── Drag-and-drop handlers ──────────────────────────────────────

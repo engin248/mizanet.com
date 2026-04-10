@@ -1,11 +1,12 @@
 ﻿'use client';
+import { handleError, logCatch } from '@/lib/errorCore';
 import { cevrimeKuyrugaAl } from '@/lib/offlineKuyruk';
 import { useState, useEffect } from 'react';
 import { Scissors, Plus, Search, CheckCircle2, AlertTriangle, Trash2, ShieldAlert, QrCode } from 'lucide-react';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/core/db/supabaseClient';
 import { createIsEmri } from '@/features/uretim/services/uretimApi';
 import { createGoster, telegramBildirim, formatTarih, yetkiKontrol } from '@/lib/utils';
-import { useAuth } from '@/lib/auth';
+import { useAuth } from '@/core/auth';
 import { useLang } from '@/lib/langContext';
 import SilBastanModal from '@/components/ui/SilBastanModal';
 import FizikselQRBarkod from '@/lib/components/barkod/FizikselQRBarkod';
@@ -76,6 +77,7 @@ export default function KesimMainContainer() {
             if (modelRes.status === 'fulfilled' && modelRes.value.data) setModeller(modelRes.value.data);
             if (kumasRes && kumasRes.status === 'fulfilled' && kumasRes.value.data) setKumaslar(kumasRes.value.data);
         } catch (error) {
+        handleError('ERR-KSM-CM-101', 'src/features/kesim/components/KesimMainContainer.js', error, 'orta');
             goster('Bağlantı/Zaman aşımı hatası: ' + error.message, 'error');
         }
         setLoading(false);
@@ -123,6 +125,7 @@ export default function KesimMainContainer() {
             setForm(BOSH_KESIM); setFormAcik(false); setDuzenleId(null);
             yukle();
         } catch (error) {
+        handleError('ERR-KSM-CM-101', 'src/features/kesim/components/KesimMainContainer.js', error, 'orta');
             goster('Hata oluştu: ' + error.message, 'error');
         }
         setLoading(false);
@@ -227,7 +230,7 @@ export default function KesimMainContainer() {
                         }
                     }
                 } catch (stokHata) {
-                    console.error("Stok düşme hatası (Kumaş kaydı olmayabilir):", stokHata);
+                    handleError('ERR-KSM-CM-101', 'src/features/kesim/components/KesimMainContainer.js', stokHata, 'orta');
                 }
             }
         } catch (error) { goster('Durum güncellenemedi!', 'error'); }

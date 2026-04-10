@@ -2,7 +2,8 @@
  * features/personel/services/personelApi.js
  * Tablolar: b1_personel, b1_personel_devam, b1_sistem_ayarlari
  */
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/core/db/supabaseClient';
+import { handleError, logCatch } from '@/lib/errorCore';
 import { telegramBildirim } from '@/lib/utils';
 import { cevrimeKuyrugaAl } from '@/lib/offlineKuyruk';
 
@@ -28,7 +29,7 @@ export async function devamlarGetir() {
 export async function sistemAyarlariGetir() {
     const { data } = await supabase.from('b1_sistem_ayarlari').select('deger').limit(1).maybeSingle();
     if (data?.deger) {
-        try { return JSON.parse(data.deger); } catch (e) { console.error('[CATCH personelApi]', e?.message || e); }
+        try { return JSON.parse(data.deger); } catch (e) { logCatch('ERR-PRS-SV-101', 'src/features/personel/services/personelApi.js', e); }
     }
     return { dakika_basi_ucret: 2.50, prim_orani: 0.15, yillik_izin_hakki: 15 };
 }

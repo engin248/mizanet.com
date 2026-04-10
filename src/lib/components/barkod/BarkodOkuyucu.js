@@ -1,4 +1,5 @@
 'use client';
+import { handleError, logCatch } from '@/lib/errorCore';
 import React, { useEffect, useState } from 'react';
 import { Html5QrcodeScanner } from 'html5-qrcode';
 import SilBastanModal from '../ui/SilBastanModal';
@@ -31,7 +32,7 @@ export default function BarkodOkuyucu({ acik, onClose, onOkundu }) {
         });
 
         return () => {
-            scanner.clear().catch(error => console.error("Scanner temizlenemedi", error));
+            scanner.clear().catch(error => { logCatch('ERR-URT-CM-105', 'src\lib\components\barkod\BarkodOkuyucu.js', error); });
         };
     }, [acik, okundu, onOkundu]);
 

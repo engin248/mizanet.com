@@ -1,4 +1,5 @@
 ﻿'use client';
+import { handleError, logCatch } from '@/lib/errorCore';
 /**
  * features/raporlar/components/RaporlarMainContainer.js
  * [A-01] Recharts grafik motoru eklendi — Bar, Line, Pie charts
@@ -9,9 +10,9 @@ import {
     BarChart, Bar, LineChart, Line, PieChart, Pie, Cell,
     XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer
 } from 'recharts';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/core/db/supabaseClient';
 import { createGoster, telegramBildirim, formatTarih, yetkiKontrol } from '@/lib/utils';
-import { useAuth } from '@/lib/auth';
+import { useAuth } from '@/core/auth';
 import { useLang } from '@/lib/langContext';
 
 // CSV Export yardımcı fonksiyonu
@@ -164,6 +165,7 @@ export default function RaporlarMainContainer() {
                 siparislerListesi: s.data || [], malGrup, durumSay, toplamCiro, loading: false,
             });
         } catch (error) { goster('Veriler Okunamadı: ' + error.message, 'error'); setVeriler(p => ({ ...p, loading: false })); }
+            handleError('ERR-RPR-CM-101', 'src/features/raporlar/components/RaporlarMainContainer.js', error, 'orta');
     };
 
     const { modeller, kumaslar, siparis, personel, uretim, aktifUretim, siparislerListesi, malGrup, durumSay, toplamCiro, loading } = veriler;

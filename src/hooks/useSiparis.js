@@ -1,9 +1,10 @@
-/**
+﻿/**
  * useSiparis — Sipariş Yönetim Hook
  */
 'use client';
+import { handleError, logCatch } from '@/lib/errorCore';
 import { useState, useCallback } from 'react';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/core/db/supabaseClient';
 import { createGoster, telegramBildirim } from '@/lib/utils';
 
 export function useSiparis(kullanici) {
@@ -23,6 +24,7 @@ export function useSiparis(kullanici) {
             if (error) throw error;
             setSiparisler(data || []);
         } catch (e) {
+        handleError('ERR-SPR-HK-102', 'src/hooks/useSiparis.js', e, 'orta');
             goster('Sipariş verileri alınamadı: ' + e.message, 'error');
         }
         setLoading(false);

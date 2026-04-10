@@ -1,9 +1,9 @@
-/**
+﻿/**
  * features/musteriler/services/musterilerApi.js
  * Tablo: b2_musteriler
  * [B-09d FIX] Servis dosyası oluşturuldu
  */
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/core/db/supabaseClient';
 import { cevrimeKuyrugaAl } from '@/lib/offlineKuyruk';
 
 export async function musterileriGetir(aramaMetni = '') {

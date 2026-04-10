@@ -1,4 +1,5 @@
 ﻿'use client';
+import { handleError, logCatch } from '@/lib/errorCore';
 /**
  * features/katalog/components/KatalogMainContainer.js
  * Kaynak: app/katalog/page.js → features mimarisine taşındı
@@ -7,9 +8,9 @@
 import { cevrimeKuyrugaAl } from '@/lib/offlineKuyruk';
 import { useState, useEffect } from 'react';
 import { BookOpen, ShoppingBag, Plus, RefreshCw, AlertTriangle, CheckCircle2, QrCode, Trash2, Tag, ShieldCheck, Image, Grid3X3, History, Link as LinkIcon, Package } from 'lucide-react';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/core/db/supabaseClient';
 import { createGoster, telegramBildirim, formatTarih, yetkiKontrol } from '@/lib/utils';
-import { useAuth } from '@/lib/auth';
+import { useAuth } from '@/core/auth';
 import { useLang } from '@/lib/langContext';
 import { silmeYetkiDogrula } from '@/lib/silmeYetkiDogrula'; // [B-08 FIX]
 import SilBastanModal from '@/components/ui/SilBastanModal';
@@ -166,6 +167,7 @@ export default function KatalogSayfasi() {
             if (data) setUrunler(data);
             setSonSenkron(new Date()); // KAT-06: stok sync timestamp
         } catch (error) {
+        handleError('ERR-KTL-CM-101', 'src/features/katalog/components/KatalogMainContainer.js', error, 'orta');
             goster('Liste yüklenemedi: ' + error.message, 'error');
         }
         setLoading(false);
@@ -310,6 +312,7 @@ export default function KatalogSayfasi() {
             yukle();
 
         } catch (e) {
+        handleError('ERR-KTL-CM-101', 'src/features/katalog/components/KatalogMainContainer.js', e, 'orta');
             goster('Maliyet Senkronizasyon Hatası: ' + e.message, 'error');
         } finally {
             setLoading(false);
@@ -359,6 +362,7 @@ export default function KatalogSayfasi() {
             setTopluFiyatAcik(false);
             yukle();
         } catch (e) {
+        handleError('ERR-KTL-CM-101', 'src/features/katalog/components/KatalogMainContainer.js', e, 'orta');
             goster('Toplu güncelleme hatası: ' + e.message, 'error');
         } finally {
             setIslemdeId(null);
@@ -432,6 +436,7 @@ export default function KatalogSayfasi() {
             setForm(BOSH_URUN); setFormAcik(false); setDuzenleId(null);
             yukle();
         } catch (error) {
+        handleError('ERR-KTL-CM-101', 'src/features/katalog/components/KatalogMainContainer.js', error, 'orta');
             goster('Hata oluştu: ' + error.message, 'error');
         }
         finally { setLoading(false); setIslemdeId(null); }
@@ -546,6 +551,7 @@ export default function KatalogSayfasi() {
                 telegramBildirim(`📦 KATALOG TOPLU YÜKLEME\n${kullanici?.label || 'M9 Yetkilisi'} tarafından Excel aracıyla kataloga ${eklendi} yeni ürün eklendi.`);
 
             } catch (err) {
+        handleError('ERR-KTL-CM-101', 'src/features/katalog/components/KatalogMainContainer.js', err, 'orta');
                 setTopluYukleniyor(false);
                 goster('Dosya okuma hatası. Geçerli bir şablon doldurunuz.', 'error');
             }
@@ -577,6 +583,7 @@ export default function KatalogSayfasi() {
             yukle(); goster('Silindi');
             telegramBildirim(`🗑️ ÜRÜN SİLİNDİ\n${m_kodu} stoklardan ve katalogdan kaldırıldı.`);
         } catch (error) {
+        handleError('ERR-KTL-CM-101', 'src/features/katalog/components/KatalogMainContainer.js', error, 'orta');
             if (error.code === '23503') goster('HATA: Bu ürün Siparişlerde (M10) kullanıldığı için silinemez. Durumunu Pasif yapın.', 'error');
             else goster('Silme hatası: ' + error.message, 'error');
         }

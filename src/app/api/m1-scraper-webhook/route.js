@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { handleError, logCatch } from '@/lib/errorCore';
 import { M1GelistirilmisTrendMotoru } from '@/services/M1TrendAnalizMotoru';
 import { supabaseAdmin } from '@/lib/supabaseAdmin';
 
@@ -62,7 +63,8 @@ export async function POST(req) {
         });
 
     } catch (e) {
-        console.error("WEBHOOK HATASI:", e);
+        handleError('ERR-ARG-RT-003', 'api/m1-scraper-webhook', e, 'yuksek');
+        handleError('ERR-ARG-RT-004', 'api/m1-scraper-webhook', e, 'yuksek');
         return NextResponse.json({ basarili: false, error: e.message }, { status: 500 });
     }
 }

@@ -7,7 +7,7 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 
-import { useAuth } from '@/lib/auth';
+import { useAuth } from '@/core/auth';
 import { useModelhane } from '@/features/modelhane/hooks/useModelhane';
 
 export default function ModelhaneMainContainer() {

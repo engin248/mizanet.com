@@ -1,10 +1,11 @@
 ﻿'use client';
+import { handleError, logCatch } from '@/lib/errorCore';
 import { cevrimeKuyrugaAl } from '@/lib/offlineKuyruk';
 import { useState, useEffect } from 'react';
 import { DollarSign, Lock, Plus, Trash2, RefreshCw, ArrowUpCircle, ArrowDownCircle, Clock, CheckCircle } from 'lucide-react';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/core/db/supabaseClient';
 import { createGoster, telegramBildirim, formatTarih, yetkiKontrol } from '@/lib/utils';
-import { useAuth } from '@/lib/auth';
+import { useAuth } from '@/core/auth';
 import { useLang } from '@/lib/langContext';
 import { silmeYetkiDogrula } from '@/lib/silmeYetkiDogrula';
 import Link from 'next/link';
@@ -204,7 +205,7 @@ export default function KasaMainContainer() {
                 kullanici_adi: /** @type {any} */ (kullanici)?.label || 'Kasa Yetkilisi',
                 eski_veri: { mesaj: `Kasa hareketi silindi. ID: ${id}` }
             }]);
-        } catch (e) { console.error('[KÖR NOKTA ZIRHI - SESSİZ YUTMA ENGELLENDİ] Dosya: KasaMainContainer.js | Hata:', e ? e.message || e : 'Bilinmiyor'); }
+        } catch (e) { logCatch('ERR-KSA-CM-101', 'src/features/kasa/components/KasaMainContainer.js', e); }
 
         try {
             const { error } = await supabase.from('b2_kasa_hareketleri').delete().eq('id', id);

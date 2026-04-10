@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { handleError, logCatch } from '@/lib/errorCore';
 import { supabaseAdmin as sb } from '@/lib/supabaseAdmin';
 
 // ============================================================
@@ -105,6 +106,7 @@ export async function POST(req) {
         });
 
     } catch (e) {
+        handleError('ERR-RPR-RT-007', 'api/rapor/sistem-hafizasi', e, 'yuksek');
         return NextResponse.json({ error: e.message, engel: false }, { status: 500 });
     }
 }
@@ -133,6 +135,7 @@ export async function GET(req) {
             toplam_kayit: (reddedilenler?.length || 0) + (zararlar?.length || 0),
         });
     } catch (e) {
+        handleError('ERR-RPR-RT-007', 'api/rapor/sistem-hafizasi', e, 'yuksek');
         return NextResponse.json({ error: e.message }, { status: 500 });
     }
 }

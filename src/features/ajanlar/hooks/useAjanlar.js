@@ -1,4 +1,5 @@
 ﻿'use client';
+import { handleError, logCatch } from '@/lib/errorCore';
 /**
  * features/ajanlar/hooks/useAjanlar.js
  * M19 AI Ajanlar — Tüm State & İş Mantığı
@@ -7,7 +8,7 @@
  *   import { useAjanlar } from '@/features/ajanlar';
  */
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/core/db/supabaseClient';
 import { silmeYetkiDogrula } from '@/lib/silmeYetkiDogrula';
 import { cevrimeKuyrugaAl } from '@/lib/offlineKuyruk';
 import {
@@ -84,6 +85,7 @@ export function useAjanlar(kullanici) {
             // Acil görevler otomatik başlatılır
             if (form.oncelik === 'acil') setTimeout(() => gorevCalistirAction(data.id), 500);
         } catch (e) {
+        handleError('ERR-AJN-HK-101', 'src/features/ajanlar/hooks/useAjanlar.js', e, 'orta');
             if (!navigator.onLine || e.message?.includes('fetch')) {
                 await cevrimeKuyrugaAl({ tablo: 'b1_ajan_gorevler', islem_tipi: 'INSERT', veri: { ...form, durum: 'bekliyor' } });
                 goster('İnternet yok: Görev çevrimdışı kuyruğa alındı.');

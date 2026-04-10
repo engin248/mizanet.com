@@ -1,4 +1,5 @@
 ﻿'use client';
+import { handleError, logCatch } from '@/lib/errorCore';
 /**
  * features/musteriler/components/MusterilerMainContainer.js
  * Kaynak: app/musteriler/page.js → features mimarisine taşındı
@@ -7,9 +8,9 @@
 import { cevrimeKuyrugaAl } from '@/lib/offlineKuyruk';
 import { useState, useEffect } from 'react';
 import { UserCheck, Plus, Phone, Mail, MapPin, Trash2, Lock, Search, Edit3, AlertTriangle, RefreshCw, ShieldOff, ShieldCheck, History } from 'lucide-react';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/core/db/supabaseClient';
 import { createGoster, telegramBildirim, formatTarih, yetkiKontrol } from '@/lib/utils';
-import { useAuth } from '@/lib/auth';
+import { useAuth } from '@/core/auth';
 import { useLang } from '@/lib/langContext';
 import SilBastanModal from '@/components/ui/SilBastanModal';
 import Link from 'next/link';
@@ -223,7 +224,7 @@ export default function MusterilerSayfasi() {
                 kullanici_adi: /** @type {any} */ (kullanici)?.label || 'Saha Yetkilisi',
                 eski_veri: { musteri_kodu: kod, mesaj: 'Müşteri kaydı kalıcı olarak silindi.' }
             }]);
-        } catch (e) { console.error('[SILME LOG HATASI]:', e?.message || e); }
+        } catch (e) { logCatch('ERR-MST-CM-101', 'src/features/musteriler/components/MusterilerMainContainer.js', e); }
 
         try {
             const { error } = await supabase.from('b2_musteriler').delete().eq('id', id);

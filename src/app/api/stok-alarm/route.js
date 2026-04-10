@@ -1,7 +1,8 @@
-﻿// src/app/api/stok-alarm/route.js
+// src/app/api/stok-alarm/route.js
 // [A-06] Stok Kritik Uyarı Sistemi + Telegram Entegrasyonu
 import { NextResponse } from 'next/server';
-import { supabaseAdmin as supabase } from '@/lib/supabaseAdmin';
+import { supabaseAdmin as supabase } from '@/core/db/supabaseAdmin';
+import { handleError, logCatch } from '@/lib/errorCore';
 
 const STOK_ESIGI = 5;   // Minimum stok adedi eşiği
 
@@ -24,6 +25,7 @@ export async function GET(request) {
             tarih: new Date().toISOString(),
         });
     } catch (e) {
+        handleError('ERR-STK-RT-003', 'api/stok-alarm/GET', e, 'yuksek', { tablo: 'b2_urun_katalogu' });
         return NextResponse.json({ error: e.message }, { status: 500 });
     }
 }
@@ -83,7 +85,7 @@ export async function POST(request) {
                 kullanici_adi: 'sistem',
                 eski_veri: { kritik_urun_sayisi: kritikUrunler.length, manuel, telegram: telegramOk },
             }]);
-        } catch (logHata) { /* log hatası sistemi durdurmasın */ }
+        } catch (logHata) { logCatch('ERR-STK-RT-005', 'api/stok-alarm/kara-kutu-log', logHata); }
 
         return NextResponse.json({
             kritik: kritikUrunler,
@@ -92,6 +94,7 @@ export async function POST(request) {
             mesaj: telegramOk ? '✅ Telegram bildirimi gönderildi' : '📊 Rapor hazır (Telegram token eksik)',
         });
     } catch (e) {
+        handleError('ERR-STK-RT-004', 'api/stok-alarm/POST', e, 'yuksek', { tablo: 'b2_urun_katalogu' });
         return NextResponse.json({ error: e.message }, { status: 500 });
     }
 }

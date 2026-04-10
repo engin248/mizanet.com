@@ -1,10 +1,11 @@
 ﻿'use client';
+import { handleError, logCatch } from '@/lib/errorCore';
 import { cevrimeKuyrugaAl } from '@/lib/offlineKuyruk';
 import { useState, useEffect } from 'react';
 import { Save, Settings2, Globe, CheckCircle2, AlertTriangle, Lock } from 'lucide-react';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/core/db/supabaseClient';
 import { createGoster, telegramBildirim, formatTarih, yetkiKontrol } from '@/lib/utils';
-import { useAuth } from '@/lib/auth';
+import { useAuth } from '@/core/auth';
 import { useLang } from '@/lib/langContext';
 import { silmeYetkiDogrula } from '@/lib/silmeYetkiDogrula';
 
@@ -97,6 +98,7 @@ export default function AyarlarMainContainer() {
             goster('✅ Ayarlar kaydedildi.');
             telegramBildirim(`⚙️ SİSTEM AYARLARI GÜNCELLENDİ\nPrim: %${(ayarlar.prim_orani * 100).toFixed(0)}\nDk Mlyt: ₺${ayarlar.dakika_basi_ucret}\nSistem parametreleri yönetici tarafından değiştirildi.`);
         } catch (error) {
+        handleError('ERR-AYR-CM-101', 'src/features/ayarlar/components/AyarlarMainContainer.js', error, 'orta');
             // SİSTEM OPTİMİZASYONU: Offline guard (Kriter J)
             if (!navigator.onLine || error.message?.includes('fetch')) {
                 await cevrimeKuyrugaAl({ tablo: 'b1_sistem_ayarlari', islem_tipi: 'UPSERT', veri: { anahtar: 'sistem_genel', deger: JSON.stringify(ayarlar) } });

@@ -3,7 +3,7 @@
  * Tablolar: b1_sistem_uyarilari, b1_agent_loglari, b2_urun_katalogu, b1_muhasebe_raporlari
  * (MainContainer'dan doğrulanan gerçek tablo adları)
  */
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/core/db/supabaseClient';
 
 export async function denetimLoglariniGetir() {
     const [uyRes, agRes] = await Promise.allSettled([

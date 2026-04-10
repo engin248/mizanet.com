@@ -1,5 +1,6 @@
 ﻿export const maxDuration = 60; // Vercel Timeout (522/504) Engelleyici
 import { NextResponse } from 'next/server';
+import { handleError, logCatch } from '@/lib/errorCore';
 // Build Hatasını Önlemek İçin Upstash Geçici Olarak Devre Dışı
 // import { Ratelimit } from '@upstash/ratelimit';
 // import { Redis } from '@upstash/redis';
@@ -24,6 +25,7 @@ export async function POST(request) {
             return NextResponse.json({ error: 'Sistem Bütçe Koruması devrede. Spam ve mali kayıp riski (Sorgu başı Fatura) önlendi. Yeni bir arama yapmak için lütfen 10 dakika bekleyiniz.' }, { status: 429 });
         }
     } catch (error) {
+        handleError('ERR-ARG-RT-006', 'api/trend-ara', error, 'yuksek');
         // Redis bağlanamazsa işlemi kesme, logla ve devam et (Fallback)
     }
     */
@@ -130,6 +132,7 @@ Odak: Sınırsız Üretim Güceü (İç Tesis + Fason), Kârlılık, Operasyonel
         return NextResponse.json({ basarili: true, ...parsed });
 
     } catch (err) {
+        handleError('ERR-ARG-RT-006', 'api/trend-ara', err, 'yuksek');
         return NextResponse.json({ error: err.message }, { status: 500 });
     }
 }

@@ -1,10 +1,11 @@
 ﻿'use client';
+import { handleError, logCatch } from '@/lib/errorCore';
 /**
  * features/uretim/components/UretimSayfasi.js
  * Üretim Bandı Sayfası — Tüm UI burada, logic useIsEmri hook'unda
  */
 import { LayoutList, Play, Square, Pause, FileCheck, RefreshCw, AlertTriangle, Plus, Trash2, StopCircle, Clock, Save, DollarSign, Activity, Factory, Lock } from 'lucide-react';
-import { useAuth } from '@/lib/auth';
+import { useAuth } from '@/core/auth';
 import { useLang } from '@/lib/langContext';
 import { useIsEmri, DEPARTMANLAR, DURUS_KODLARI, MALIYET_TIPLERI, ST_RENK, ST_LABEL, getST_RENK, getST_LABEL } from '@/features/uretim/hooks/useIsEmri';
 import { useUretimRecetesi } from '@/features/uretim/hooks/useUretimRecetesi';
@@ -49,6 +50,7 @@ export default function UretimSayfasi() {
             yetkiliMi = kullanici?.grup === 'tam' || !!atob(sessionStorage.getItem('sb47_uretim_pin') || '');
         }
     } catch { yetkiliMi = typeof window !== 'undefined' && !!sessionStorage.getItem('sb47_uretim_pin'); }
+        handleError('ERR-URT-CM-103', 'src/features/uretim/components/UretimSayfasi.js', e, 'orta');
 
     const inp = { width: '100%', padding: '9px 12px', border: '2px solid #e5e7eb', borderRadius: '8px', fontSize: '0.875rem', fontFamily: 'inherit', boxSizing: 'border-box', outline: 'none' };
     const lbl = { display: 'block', fontSize: '0.7rem', fontWeight: 700, color: '#374151', marginBottom: 5, textTransform: 'uppercase' };

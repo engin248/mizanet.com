@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { spamKontrol } from '@/lib/ApiZirhi';
+import { handleError } from '@/lib/errorCore';
 
 export const revalidate = 3600; // Karargah Ana Verileri 1 SAAT boyunca statik kalır (Bedava & Çok Hızlı)
 
@@ -65,6 +66,7 @@ export async function GET(request) {
         });
 
     } catch (e) {
+        handleError('ERR-KSA-RT-001', 'api/kasa-ozet', e, 'yuksek', { tablo: 'b2_kasa_hareketleri' });
         return NextResponse.json({ e: e.message, ciro: 0, maliyet: 0, personel: 0, alarmlar: [] }, { status: 500 });
     }
 }

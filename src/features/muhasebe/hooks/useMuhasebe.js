@@ -1,4 +1,5 @@
 ﻿'use client';
+import { handleError, logCatch } from '@/lib/errorCore';
 /**
  * features/muhasebe/hooks/useMuhasebe.js
  * M14 Muhasebe — Tüm State & İş Mantığı
@@ -6,7 +7,7 @@
  *   import { useMuhasebe } from '@/features/muhasebe';
  */
 import { useState, useEffect, useCallback } from 'react';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/core/db/supabaseClient';
 import { silmeYetkiDogrula } from '@/lib/silmeYetkiDogrula';
 import {
     fetchMuhasebeVerileri, fetchIlgiliMaliyetler,
@@ -38,12 +39,14 @@ export function useMuhasebe(kullanici) {
             const { raporlar: r, raporsizemOrders: o } = await fetchMuhasebeVerileri();
             setRaporlar(r); setRaporsizemOrders(o);
         } catch (e) { goster('Ağ bağlantısı koptu! ' + e.message, 'error'); }
+            handleError('ERR-MHS-HK-101', 'src/features/muhasebe/hooks/useMuhasebe.js', e, 'orta');
         setLoading(false);
     }, []);
 
     useEffect(() => {
         let pin = false;
         try { pin = !!atob(sessionStorage.getItem('sb47_uretim_pin') || ''); } catch { pin = !!sessionStorage.getItem('sb47_uretim_pin'); }
+            handleError('ERR-MHS-HK-101', 'src/features/muhasebe/hooks/useMuhasebe.js', e, 'orta');
         const ok = kullanici?.grup === 'tam' || pin;
         setYetkiliMi(ok);
         if (!ok) return;
@@ -60,6 +63,7 @@ export function useMuhasebe(kullanici) {
             const detay = await fetchIlgiliMaliyetler(rapor.order_id);
             setIlgiliMaliyetler(detay);
         } catch (e) { goster('Detay yüklenemedi: ' + e.message, 'error'); }
+            handleError('ERR-MHS-HK-101', 'src/features/muhasebe/hooks/useMuhasebe.js', e, 'orta');
     };
 
     const durumGuncelleAction = async (id, yeniDurum) => {
@@ -69,6 +73,7 @@ export function useMuhasebe(kullanici) {
             yukle();
             if (secilenRapor?.id === id) setSecilenRapor(p => ({ ...p, rapor_durumu: yeniDurum }));
         } catch (e) { goster('Hata: ' + e.message, 'error'); }
+            handleError('ERR-MHS-HK-101', 'src/features/muhasebe/hooks/useMuhasebe.js', e, 'orta');
     };
 
     const devirKapatAction = async (rapor) => {
@@ -80,6 +85,7 @@ export function useMuhasebe(kullanici) {
             goster(res.offline ? '⚡ Çevrimdışı: Devir kuyruğa yazıldı!' : '✅ Rapor kilitlendi. 2. Birime devir tamamlandı!');
             yukle(); setSecilenRapor(null);
         } catch (e) { goster('Devir hatası: ' + e.message, 'error'); }
+            handleError('ERR-MHS-HK-101', 'src/features/muhasebe/hooks/useMuhasebe.js', e, 'orta');
     };
 
     const uretimdenRaporOlusturAction = async (model) => {
@@ -91,6 +97,7 @@ export function useMuhasebe(kullanici) {
                 : `✅ ${model.model_adi} için rapor oluşturuldu. Toplam: ₺${res.toplam.toFixed(2)}`);
             yukle();
         } catch (e) { goster(e.message, 'error'); }
+            handleError('ERR-MHS-HK-101', 'src/features/muhasebe/hooks/useMuhasebe.js', e, 'orta');
         setLoading(false);
     };
 
@@ -101,6 +108,7 @@ export function useMuhasebe(kullanici) {
             yukle();
             if (secilenRapor?.id === rapor.id) setSecilenRapor(p => ({ ...p, gerceklesen_maliyet_tl: toplam }));
         } catch (e) { goster('Senkronizasyon hatası: ' + e.message, 'error'); }
+            handleError('ERR-MHS-HK-101', 'src/features/muhasebe/hooks/useMuhasebe.js', e, 'orta');
     };
 
     const duzenleAc = (rapor) => {
@@ -123,6 +131,7 @@ export function useMuhasebe(kullanici) {
             if (secilenRapor?.id === duzenleModal.id) setSecilenRapor(p => ({ ...p, ...payload }));
             setDuzenleModal(null);
         } catch (e) { goster('Düzenleme hatası: ' + e.message, 'error'); }
+            handleError('ERR-MHS-HK-101', 'src/features/muhasebe/hooks/useMuhasebe.js', e, 'orta');
         setLoading(false);
     };
 
@@ -137,6 +146,7 @@ export function useMuhasebe(kullanici) {
             if (secilenRapor?.id === rapor.id) setSecilenRapor(null);
             yukle();
         } catch (e) { goster('Silme hatası: ' + e.message, 'error'); }
+            handleError('ERR-MHS-HK-101', 'src/features/muhasebe/hooks/useMuhasebe.js', e, 'orta');
     };
 
     const filtreliRaporlar = raporlar.filter(r =>

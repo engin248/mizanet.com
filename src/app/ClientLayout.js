@@ -1,4 +1,5 @@
 ﻿'use client';
+import { handleError, logCatch } from '@/lib/errorCore';
 import './globals.css';
 import {
     LayoutDashboard, Scissors, Activity, FileSearch, Settings, Users, Bot,
@@ -8,11 +9,11 @@ import {
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
-import { AuthProvider, useAuth, ERISIM_MATRISI } from '@/lib/auth';
-import { supabase } from '@/lib/supabase';
+import { AuthProvider, useAuth, ERISIM_MATRISI } from '@/core/auth';
+import { supabase } from '@/core/db/supabaseClient';
 import { bekleyenleriGetir, offlineSenkronizasyonuBaslat } from '@/lib/offlineKuyruk';
 import { LangProvider, useLang } from '@/lib/langContext';
-import { YetkiProvider } from '@/lib/yetki';
+import { YetkiProvider } from '@/core/permissions';
 import { TasarimProvider } from '@/lib/TasarimContext';
 import ErrorBoundary from '@/components/ErrorBoundary';
 import BildirimZili from '@/lib/components/ui/BildirimZili';
@@ -155,6 +156,7 @@ function LayoutInner({ children }) {
             const kuyruk = await bekleyenleriGetir();
             setBekleyenIslemAdeti(kuyruk.length);
         } catch (e) {
+        handleError('ERR-SYS-CM-101', 'src/app/ClientLayout.js', e, 'orta');
             // IndexedDB kapalı veya henüz yüklenmedi
         }
     };
@@ -218,7 +220,10 @@ function LayoutInner({ children }) {
 
     // KÖKLÜ ÇÖZÜM: SSR Hydration çakışmasına sebep olan "SİSTEME BAĞLANILIYOR" tam ekran kilidi KURTARILDI.
     // Artık sistem client tarafında React'i dondurmayacak, direkt render edilecek.
-    if (isGiris || (!kullanici && yukleniyor === false)) {
+    // İSTİSNA: /kumas rotası yeni tasarım standardına dahil olduğu için global layout'tan muaf tutulur.
+    const isCustomLayout = isGiris || pathname === '/kumas';
+
+    if (isCustomLayout || (!kullanici && yukleniyor === false)) {
         return <>{children}</>;
     }
 

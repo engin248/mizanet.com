@@ -1,10 +1,11 @@
 ﻿'use client';
+import { handleError, logCatch } from '@/lib/errorCore';
 /**
  * features/modelhane/hooks/useModelhane.js
  * M5 Modelhane — Tasarım & Model Yönetimi  (versiyon takibi v1/v2 dahil)
  */
 import { useState, useEffect, useCallback } from 'react';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/core/db/supabaseClient';
 import { silmeYetkiDogrula } from '@/lib/silmeYetkiDogrula';
 import { cevrimeKuyrugaAl } from '@/lib/offlineKuyruk';
 import { telegramBildirim } from '@/lib/utils';
@@ -137,6 +138,7 @@ export function useModelhane(kullanici) {
             goster('Dikim süresi maliyet hanesine yazıldı.', 'success');
             yukle(); // Ekrani yenile
         } catch (e) {
+        handleError('ERR-MDL-HK-102', 'src/features/modelhane/hooks/useModelhane.js', e, 'orta');
             goster('Hata: ' + e.message, 'error');
         }
     };

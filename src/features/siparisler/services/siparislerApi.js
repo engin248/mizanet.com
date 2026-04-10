@@ -1,10 +1,11 @@
 ﻿'use client';
+import { handleError, logCatch } from '@/lib/errorCore';
 /**
  * features/siparisler/services/siparislerApi.js
  * M10 Siparişler — Supabase Servis Katmanı
  * Hook: useSiparisler.js | Barrel: features/siparisler/index.js
  */
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/core/db/supabaseClient';
 import { telegramBildirim } from '@/lib/utils';
 import { cevrimeKuyrugaAl } from '@/lib/offlineKuyruk';
 
@@ -110,7 +111,7 @@ export async function durumGuncelle(id, durum, ekstraBilgi = {}) {
                 }]);
             }
         } catch (kasaErr) {
-            console.error("Otomatik kasa kaydı atılırken hata oluştu (Sessiz Fallback):", kasaErr);
+            handleError('ERR-SPR-SV-101', 'src/features/siparisler/services/siparislerApi.js', kasaErr, 'orta');
         }
 
         telegramBildirim(`🎉 SİPARİŞ TESLİM EDİLDİ!\nSipariş ID: ${mevcut?.siparis_no || id}\nStok çıkışı ve Finansal gelir tahakkuku yapıldı.`);

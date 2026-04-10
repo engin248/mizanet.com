@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { handleError, logCatch } from '@/lib/errorCore';
 
 export async function POST() {
     try {
@@ -16,6 +17,7 @@ export async function POST() {
 
         return response;
     } catch (error) {
+        handleError('ERR-AUTH-RT-005', 'api/cikis', error, 'yuksek');
         return NextResponse.json({ error: error.message }, { status: 500 });
     }
 }

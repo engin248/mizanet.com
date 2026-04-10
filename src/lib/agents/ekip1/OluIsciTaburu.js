@@ -12,6 +12,7 @@
  */
 
 import { createClient } from '@supabase/supabase-js';
+import { handleError, logCatch } from '@/lib/errorCore';
 
 // YALNIZCA VERİTABANINA YAZMA YETKİSİ OLAN BAĞLANTI
 const supabase = createClient(
@@ -101,7 +102,7 @@ export class Ekip1_OluIsciTaburu {
             }
             return toplananUrunler;
         } catch (error) {
-            console.error('[AJAN 1] Kazıma Başarısız. Sebep: ', error.message);
+            handleError('ERR-AJN-LB-101', 'src/lib/agents/ekip1/OluIsciTaburu.js', error, 'orta');
             return [];
         } finally {
             if (browser) await browser.close();

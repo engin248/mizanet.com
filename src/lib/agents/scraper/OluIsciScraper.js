@@ -16,6 +16,7 @@
  */
 
 import { createClient } from '@supabase/supabase-js';
+import { handleError, logCatch } from '@/lib/errorCore';
 import puppeteer from 'puppeteer'; // İnsan hareketini taklit eden gezgin
 
 // Supabase Bağlantısı (NİZAM Ana Veritabanı) Dışarıdan yetki ile bağlanır.
@@ -92,7 +93,7 @@ export class OluIsciScraper {
             return true;
 
         } catch (err) {
-            console.error("[Ajan 1] Tarama sırasında bot engele veya proxy hatasına takıldı:", err.message);
+            handleError('ERR-AJN-LB-105', 'src/lib/agents/scraper/OluIsciScraper.js', err, 'orta');
             if (browser) await browser.close();
             return false;
         }

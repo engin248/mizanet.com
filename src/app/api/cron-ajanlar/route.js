@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { handleError, logCatch } from '@/lib/errorCore';
 import { supabaseAdmin } from '@/lib/supabaseAdmin';
 import {
     sabahSubayi,
@@ -18,7 +19,7 @@ import {
 export async function GET(req) {
     const cronSecret = process.env.CRON_SECRET;
     if (!cronSecret) {
-        console.error('[KRİTİK] CRON_SECRET ENV tanımlı değil — cron kilitlendi!');
+        logCatch('ERR-AJN-RT-008', 'api/cron-ajanlar/env-check', new Error('CRON_SECRET ENV tanimsiz'));
         return NextResponse.json({ error: 'Sistem yapılandırma hatası.' }, { status: 503 });
     }
     const authHeader = req.headers.get('Authorization');
@@ -105,7 +106,7 @@ export async function GET(req) {
                     await supabaseAdmin.from('camera_events').insert([{
                         camera_id: null, event_type: 'offline_alarm', video_url: null
                     }]);
-                } catch (e) { console.error('[CATCH cron-ajanlar]', e?.message || e); }
+                } catch (e) { logCatch('ERR-AJN-RT-008', 'api/cron-ajanlar', e); }
 
                 const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
                 const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID;
@@ -125,7 +126,7 @@ export async function GET(req) {
                     await supabaseAdmin.from('camera_events').insert([{
                         camera_id: null, event_type: 'offline_sleep', video_url: null
                     }]);
-                } catch (e) { console.error('[CATCH cron-ajanlar]', e?.message || e); }
+                } catch (e) { logCatch('ERR-AJN-RT-008', 'api/cron-ajanlar', e); }
             }
 
             return NextResponse.json({ success: true, mesaj: `Kamera Cron Çalıştı. Durum: ${nvrDurum}, Mesai Dışı: ${mesaiDisi}` });
@@ -168,6 +169,7 @@ export async function GET(req) {
         return NextResponse.json({ success: true, mesaj: 'Bilinmeyen Cron Parametresi. Boş dönüldü.' });
 
     } catch (e) {
+        handleError('ERR-AJN-RT-007', 'api/cron-ajanlar', e, 'yuksek');
         return NextResponse.json({ error: e.message }, { status: 500 });
     }
 }

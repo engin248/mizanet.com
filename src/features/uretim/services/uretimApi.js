@@ -1,4 +1,4 @@
-/**
+﻿/**
  * features/uretim/services/uretimApi.js
  * ═══════════════════════════════════════════════════════════════════
  * PRODUCTION ORDERS — MERKEZİ REPOSITORY KATMANI
@@ -10,7 +10,7 @@
  * Dünya standardı: Repository Pattern (Martin Fowler - Patterns of Enterprise Architecture)
  * @ts-nocheck
  */
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/core/db/supabaseClient';
 
 // ─── SABİTLER ──────────────────────────────────────────────────────────────
 const TABLO = 'production_orders';

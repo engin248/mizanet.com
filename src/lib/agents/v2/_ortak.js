@@ -4,6 +4,7 @@
 // Supabase bağlantısı, ajan isimleri, log ve alarm yardımcıları
 // ============================================================
 import { createClient } from '@supabase/supabase-js';
+import { handleError, logCatch } from '@/lib/errorCore';
 
 // [AUDIT-FIX #14]: Mock fallback kaldırıldı — ENV yoksa error log atılır.
 const sbUrl = (process.env.NEXT_PUBLIC_SUPABASE_URL || '').trim();
@@ -33,7 +34,7 @@ export async function logYaz(ajan_adi, islem_tipi, mesaj, sonuc = 'basarili', ta
             kaynak_tablo: tablo,
             sonuc, mesaj,
         }]);
-    } catch (e) { console.error('[Log hatası]', e.message); }
+    } catch (e) { logCatch('ERR-AJN-LB-114', 'src/lib/agents/v2/_ortak.js', e); }
 }
 
 // ─── YARDIMCI: Alarm yaz (duplicate önleme 2 saat) ──────────

@@ -1,8 +1,9 @@
-﻿import { NextResponse } from 'next/server';
-import { supabaseAdmin } from '@/lib/supabaseAdmin';
+import { NextResponse } from 'next/server';
+import { supabaseAdmin } from '@/core/db/supabaseAdmin';
 import { rateLimitKontrol } from '@/lib/rateLimit';
 import { kumasSchema, aksesuarSchema, veriDogrula } from '@/lib/zodSchemas';
 import { hataBildir } from '@/lib/hataBildirim';
+import { handleError, logCatch } from '@/lib/errorCore';
 
 // ─── SERVER-SIDE SUPABASE (Service Role Key — güvenli) ─────────
 // Client-side anon key yerine sunucu tarafı service key kullanılır.
@@ -81,13 +82,13 @@ export async function POST(request) {
                 eski_veri: { bilgi: `${kodDegeri} kodu ile yeni kayıt eklendi.` }
             }]);
         } catch (e) {
-            // log hatası sistemi durdurmasın
+            logCatch('ERR-KMS-RT-002', 'api/kumas-ekle/kara-kutu-log', e);
         }
 
         return NextResponse.json({ basarili: true, kayit: data?.[0] }, { status: 201 });
 
     } catch (error) {
-        console.error('[/api/kumas-ekle] Hata:', error.message);
+        handleError('ERR-KMS-RT-001', 'api/kumas-ekle', error, 'yuksek', { tablo: 'b1_kumas_arsivi' });
         await hataBildir('/api/kumas-ekle', error);
         return NextResponse.json(
             { hata: 'Sunucu hatası: ' + error.message },

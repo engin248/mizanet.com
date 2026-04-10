@@ -1,11 +1,12 @@
-// ████████████████████████████████████████████████████████████████
+﻿// ████████████████████████████████████████████████████████████████
 // MERKEZİ BİLDİRİM KATMANI — MİZANET
 // Kural: Tüm Telegram bildirimleri buradan geçer.
 // Modüller doğrudan telegramBildirim() ÇAĞIRMAZ — bu dosyayı kullanır.
 // Supabase log: b0_bildirim_loglari tablosuna yazılır.
 // ████████████████████████████████████████████████████████████████
 
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/core/db/supabaseClient';
+import { handleError, logCatch } from '@/lib/errorCore';
 
 // ─── BİLDİRİM ÖNCELİK SEVİYELERİ ────────────────────────────
 export const BILDIRIM_ONCELIK = {
@@ -68,7 +69,7 @@ export async function bildirimGonder({
             created_at: new Date().toISOString(),
         }]);
     } catch (logHatasi) {
-        console.error('[BİLDİRİM LOG HATASI]', logHatasi.message);
+        handleError('ERR-SYS-LB-102', 'src/lib/bildirim.js', logHatasi, 'orta');
         // Log başarısız olsa da Telegram'a gitmeye devam et
     }
 
@@ -106,7 +107,7 @@ export async function bildirimGonder({
 
         return { basarili: true, telegram: true };
     } catch (err) {
-        console.error('[BİLDİRİM] Telegram gönderilemedi:', err.message);
+        handleError('ERR-SYS-LB-102', 'src/lib/bildirim.js', err, 'orta');
         return { basarili: false, neden: err.message };
     }
 }

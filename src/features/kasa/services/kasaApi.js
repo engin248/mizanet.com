@@ -2,7 +2,7 @@
  * features/kasa/services/kasaApi.js
  * Tablo: b2_kasa_hareketleri (MainContainer'dan doğrulanan ad)
  */
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/core/db/supabaseClient';
 import { telegramBildirim } from '@/lib/utils';
 import { cevrimeKuyrugaAl } from '@/lib/offlineKuyruk';
 

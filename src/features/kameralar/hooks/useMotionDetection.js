@@ -1,5 +1,6 @@
-import { useEffect, useRef, useState } from 'react';
-import { supabase } from '@/lib/supabase';
+﻿import { useEffect, useRef, useState } from 'react';
+import { supabase } from '@/core/db/supabaseClient';
+import { handleError, logCatch } from '@/lib/errorCore';
 
 const GO2RTC_URL = process.env.NEXT_PUBLIC_GO2RTC_URL || 'http://localhost:1984';
 
@@ -100,6 +101,7 @@ export default function useMotionDetection(kameralar, aktif = true) {
                         });
                     }
                 } catch (err) {
+        handleError('ERR-KMR-HK-101', 'src/features/kameralar/hooks/useMotionDetection.js', err, 'orta');
                     // Frame çekilemedi, bağlantı koptu veya offline
                 }
             }

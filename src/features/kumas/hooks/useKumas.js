@@ -1,4 +1,5 @@
 ﻿'use client';
+import { handleError, logCatch } from '@/lib/errorCore';
 /**
  * features/kumas/hooks/useKumas.js
  * M2 Kumaş & Materyal Arşivi — Tüm State & İş Mantığı
@@ -6,7 +7,7 @@
  *   import { useKumas } from '@/features/kumas';
  */
 import { useState, useEffect, useCallback } from 'react';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/core/db/supabaseClient';
 import { silmeYetkiDogrula } from '@/lib/silmeYetkiDogrula';
 import {
     fetchKumas, fetchAksesuar, fetchGorselArsiv,
@@ -166,6 +167,7 @@ export function useKumas(kullanici) {
             await yukle();
 
         } catch (e) {
+        handleError('ERR-KMS-HK-101', 'src/features/kumas/hooks/useKumas.js', e, 'orta');
             goster('Kalıphaneye Aktarım Hatası: ' + e.message, 'error');
         }
         setLoading(false);

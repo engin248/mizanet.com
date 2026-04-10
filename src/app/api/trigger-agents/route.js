@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { KuyrugaEkle } from '../../../../src/lib/redis_kuyruk';
+import { handleError } from '@/lib/errorCore';
 
 export async function POST(req) {
     try {
@@ -25,7 +26,7 @@ export async function POST(req) {
         }, { status: 200 });
 
     } catch (error) {
-        console.error('API Tetikleme Hatası:', error);
+        handleError('ERR-AJN-RT-001', 'api/trigger-agents', error, 'yuksek');
         return NextResponse.json({
             success: false,
             message: error.message

@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
 import {
@@ -6,9 +6,9 @@ import {
     Clock, Download, AlertTriangle, Wifi, WifiOff,
     Activity, Video, Lock, Zap, Eye, TrendingUp, AlertCircle
 } from 'lucide-react';
-import { useAuth } from '@/lib/auth';
+import { useAuth } from '@/core/auth';
 import { useLang } from '@/lib/langContext';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/core/db/supabaseClient';
 import { telegramBildirim, telegramFotoGonder } from '@/lib/utils';
 import { logCatch } from '@/lib/errorCore';
 import CameraPlayer from './CameraPlayer';
@@ -267,6 +267,7 @@ export default function KameralarMainContainer() {
                 goster(`❌ Görüntü gönderilemedi!`, 'error');
             }
         } catch (error) {
+        handleError('ERR-KMR-CM-101', 'src/features/kameralar/components/KameralarMainContainer.js', error, 'orta');
             // Hata düşerse fallback (Eski yazılı usül)
             goster(`⚠️ Sadece metin uyarısı tetiklendi (Frame Hatası).`, 'error');
             telegramBildirim(`🚨 KAMERA (GÖRÜNTÜ ALINAMADI)\nKamera: ${kam.name}\nTarih: ${new Date().toLocaleString('tr-TR')}\nHata: NVR Frame timeout.`);

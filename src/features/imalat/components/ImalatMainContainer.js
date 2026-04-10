@@ -1,11 +1,12 @@
 ﻿'use client';
+import { handleError, logCatch } from '@/lib/errorCore';
 import { cevrimeKuyrugaAl } from '@/lib/offlineKuyruk';
 import { Camera, FileText, CheckCircle2, PlaySquare, PlusCircle, Save, Trash2, Edit, Mic, Video, Users, DollarSign, Clock, AlertTriangle, ShieldCheck, Play, Activity, CheckSquare, UploadCloud, Receipt, BarChart3, Database } from 'lucide-react';
 import { useState, useEffect } from 'react';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/core/db/supabaseClient';
 import { fetchIsEmriForImalat, updateIsEmriDurum } from '@/features/uretim/services/uretimApi';
 import { createGoster, telegramBildirim, formatTarih, yetkiKontrol } from '@/lib/utils';
-import { useAuth } from '@/lib/auth';
+import { useAuth } from '@/core/auth';
 import { useLang } from '@/lib/langContext';
 import { Lock } from 'lucide-react';
 import NextLink from 'next/link';
@@ -156,6 +157,7 @@ export default function ImalatMainContainer() {
                 yukleTeknikFoyler();
             } else throw error;
         } catch (error) {
+        handleError('ERR-URT-CM-101', 'src/features/imalat/components/ImalatMainContainer.js', error, 'orta');
             showMessage('Sunucu hatası: ' + error.message, 'error');
         }
         setLoading(false);
@@ -213,6 +215,7 @@ export default function ImalatMainContainer() {
             setVideoKayitAktif(false);
             yukleTeknikFoyler();
         } catch (error) {
+        handleError('ERR-URT-CM-101', 'src/features/imalat/components/ImalatMainContainer.js', error, 'orta');
             if (!navigator.onLine || error.message?.includes('fetch')) {
                 showMessage('İnternet Yok: Sistem üretim bandı işlemini çevrimdışı kuyruğa alamıyor.', 'error');
             } else showMessage('Bağlantı veya Yetki Hatası: ' + error.message, 'error');

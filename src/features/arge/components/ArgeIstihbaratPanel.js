@@ -1,6 +1,7 @@
-'use client';
+﻿'use client';
+import { handleError, logCatch } from '@/lib/errorCore';
 import { useState, useEffect, useCallback } from 'react';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/core/db/supabaseClient';
 import {
     TrendingUp, AlertTriangle, CheckCircle2, Clock, Zap,
     Target, BarChart3, Search, Brain, ArrowUpRight, Flame,
@@ -105,7 +106,7 @@ export default function ArgeIstihbaratPanel() {
             // Veri geldiğinde "Ajanlar yolda" uyarısını söndür
             setKuyrukUyari('');
         } catch (e) {
-            console.error('[ArgeIstihbarat] Veri çekme hatası:', e.message);
+            handleError('ERR-ARG-CM-101', 'src/features/arge/components/ArgeIstihbaratPanel.js', e, 'orta');
         }
         setLoading(false);
     }, []);
@@ -148,6 +149,7 @@ export default function ArgeIstihbaratPanel() {
             const data = await res.json();
             setSerpSonuc(data);
         } catch (e) {
+        handleError('ERR-ARG-CM-101', 'src/features/arge/components/ArgeIstihbaratPanel.js', e, 'orta');
             setSerpSonuc({ error: e.message });
         }
         setSerpYukleniyor(false);
@@ -167,6 +169,7 @@ export default function ArgeIstihbaratPanel() {
             const data = await res.json();
             setDeepSonuc(data);
         } catch (e) {
+        handleError('ERR-ARG-CM-101', 'src/features/arge/components/ArgeIstihbaratPanel.js', e, 'orta');
             setDeepSonuc({ error: e.message });
         }
         setDeepYukleniyor(false);
@@ -203,7 +206,7 @@ export default function ArgeIstihbaratPanel() {
             setTimeout(verileriCek, 2000);
             setManuelHedef('');
         } catch (e) {
-            console.error(e);
+            handleError('ERR-ARG-CM-101', 'src/features/arge/components/ArgeIstihbaratPanel.js', e, 'orta');
         }
         setOrstKosuYukleniyor(false);
     };

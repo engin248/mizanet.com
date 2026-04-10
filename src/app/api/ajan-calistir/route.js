@@ -1,5 +1,6 @@
 ﻿import { NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/lib/supabaseAdmin';
+import { handleError, logCatch } from '@/lib/errorCore';
 import { z } from 'zod'; // Kriter 144: Veri Doğrulama Süzgeci
 
 // Kriter 144: İnternetten veya veritabanından alınan raw dataların Validasyonu
@@ -74,6 +75,7 @@ async function perplexityAra(sorgu, supabase, gorevId) {
             kuyruk_id: data.id
         };
     } catch (e) {
+        handleError('ERR-AJN-RT-003', 'api/ajan-calistir', e, 'yuksek');
         return { ozet: `Hata: ${e.message}`, sonuclar: [] };
     }
 }
@@ -158,6 +160,7 @@ export async function POST(req) {
                     sonuc = { ozet: `"${gorev.gorev_tipi}" görevini izolasyon kurallarına göre ifa ettim.` };
             }
         } catch (islemHatasi) {
+        handleError('ERR-AJN-RT-003', 'api/ajan-calistir', islemHatasi, 'yuksek');
             // KRİTER 81: KOD ÇÖKTÜĞÜNDE SİSTEME BULAŞTIRMAYAN KALKAN (TRY CATCH)
             // Hata görev tablosunda kalır, karargah kitlenmez.
             await supabaseAdmin.from('b1_ajan_gorevler').update({
@@ -195,6 +198,7 @@ export async function POST(req) {
         return NextResponse.json({ basarili: true, sonuc });
 
     } catch (e) {
+        handleError('ERR-AJN-RT-003', 'api/ajan-calistir', e, 'yuksek');
         // Kriter 81 ve Kriter 142 (Rollback koruması sonrası API yanıtı)
         return NextResponse.json({ error: e.message, mesaj: "Kalkan Koruması Devrede" }, { status: 403 });
     }

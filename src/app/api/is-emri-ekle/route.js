@@ -1,7 +1,8 @@
-﻿import { NextResponse } from 'next/server';
-import { supabaseAdmin } from '@/lib/supabaseAdmin';
+import { NextResponse } from 'next/server';
+import { supabaseAdmin } from '@/core/db/supabaseAdmin';
 import { rateLimitKontrol } from '@/lib/rateLimit';
 import { isEmriSchema, veriDogrula } from '@/lib/zodSchemas';
+import { handleError } from '@/lib/errorCore';
 
 // ─── POST /api/is-emri-ekle ────────────────────────────────────
 export async function POST(request) {
@@ -62,7 +63,7 @@ export async function POST(request) {
         return NextResponse.json({ basarili: true, isEmri: data?.[0] }, { status: 201 });
 
     } catch (error) {
-        console.error('[/api/is-emri-ekle] Hata:', error.message);
+        handleError('ERR-URT-RT-001', 'api/is-emri-ekle', error, 'yuksek', { tablo: 'production_orders' });
         return NextResponse.json({ hata: 'Sunucu hatası: ' + error.message }, { status: 500 });
     }
 }

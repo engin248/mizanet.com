@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { handleError, logCatch } from '@/lib/errorCore';
 import { supabaseAdmin } from '@/lib/supabaseAdmin';
 
 // ═══════════════════════════════════════════════════════════
@@ -95,12 +96,12 @@ KURALLAR:
                 kaynak_tablo: 'b1_personel', sonuc: 'basarili',
                 mesaj: `${pData.length} personel analiz edildi.`,
             }]);
-        } catch (_) { console.error('[KÖR NOKTA ZIRHI - YUTULAN HATA] Dosya: route.js'); }
+        } catch (_) { logCatch('ERR-AJN-RT-002', 'api/ai-kahin-ajan', _); }
 
         return NextResponse.json({ success: true, aiCevap, personel_sayisi: pData.length });
 
     } catch (error) {
-        console.error('[Kâhin AI Hatası]', error);
-        return NextResponse.json({ error: error.message }, { status: 500 });
+        handleError('ERR-AJN-RT-002', 'api/ai-kahin-ajan', error, 'yuksek');
+        return NextResponse.json({ error: error.message, hataKodu: 'ERR-AJN-RT-002' }, { status: 500 });
     }
 }

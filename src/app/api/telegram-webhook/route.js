@@ -1,5 +1,6 @@
-﻿import { NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
+import { handleError, logCatch } from '@/lib/errorCore';
 
 // Supabase service key ile (storage yazma yetkisi için)
 const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
@@ -205,7 +206,8 @@ export async function POST(request) {
 
         return NextResponse.json({ ok: true });
     } catch (err) {
-        console.error('Telegram webhook hatası:', err);
+        handleError('ERR-HBR-RT-007', 'api/telegram-webhook', err, 'yuksek');
+        handleError('ERR-SYS-RT-008', 'api/telegram-webhook', err, 'yuksek');
         return NextResponse.json({ ok: true }); // Telegram'a her zaman 200 dön
     }
 }

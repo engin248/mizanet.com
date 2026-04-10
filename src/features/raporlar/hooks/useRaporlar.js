@@ -1,4 +1,5 @@
 ﻿'use client';
+import { handleError, logCatch } from '@/lib/errorCore';
 /**
  * features/raporlar/hooks/useRaporlar.js
  * M11 Raporlar & Analiz — Tüm State & İş Mantığı
@@ -7,7 +8,7 @@
  *   const { veriler, plRaporu, personelRapor, yukle, csvIndir ... } = useRaporlar(kullanici);
  */
 import { useState, useEffect, useCallback } from 'react';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/core/db/supabaseClient';
 import { formatTarih, telegramBildirim } from '@/lib/utils';
 
 // ── CSV Export yardımcısı ─────────────────────────────────────────────────────
@@ -145,6 +146,7 @@ export function useRaporlar(kullanici) {
 
             setVeriler({ modeller: m.count || 0, kumaslar: k.count || 0, siparis: s.count || 0, personel: p.count || 0, uretim: m.count || 0, aktifUretim: m.count || 0, siparislerListesi: s.data || [], malGrup, durumSay, toplamCiro, loading: false });
         } catch (e) {
+        handleError('ERR-RPR-HK-101', 'src/features/raporlar/hooks/useRaporlar.js', e, 'orta');
             goster('Veriler okunamadı: ' + e.message, 'error');
             setVeriler(p => ({ ...p, loading: false }));
         }

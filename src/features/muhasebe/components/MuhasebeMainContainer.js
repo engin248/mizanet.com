@@ -1,11 +1,12 @@
 ﻿'use client';
+import { handleError, logCatch } from '@/lib/errorCore';
 import { cevrimeKuyrugaAl } from '@/lib/offlineKuyruk';
 import { useState, useEffect } from 'react';
 import { FileCheck, CheckCircle2, AlertTriangle, TrendingDown, TrendingUp, Lock, Trash2, Edit2, Search, X } from 'lucide-react';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/core/db/supabaseClient';
 import { fetchIsEmriForMuhasebe, fetchIsEmriForRapor } from '@/features/uretim/services/uretimApi';
 import { createGoster, telegramBildirim, formatTarih, yetkiKontrol } from '@/lib/utils';
-import { useAuth } from '@/lib/auth';
+import { useAuth } from '@/core/auth';
 import { useLang } from '@/lib/langContext';
 import { silmeYetkiDogrula } from '@/lib/silmeYetkiDogrula';
 import Link from 'next/link';
@@ -175,7 +176,7 @@ export default function MuhasebeMainContainer() {
                     }]);
                 }
             } catch (stockErr) {
-                console.error('Doğrulama sızıntısı yakalandı:', stockErr);
+                handleError('ERR-MHS-CM-101', 'src/features/muhasebe/components/MuhasebeMainContainer.js', stockErr, 'orta');
             }
 
             goster('✅ Rapor kilitlendi. 2. Birime devir tamamlandı!'); yukle(); setSecilenRapor(null);

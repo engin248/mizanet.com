@@ -4,6 +4,7 @@
 // Her sabah 08:00 — tüm sistemi tarar, koordinatöre brifing verir
 // ============================================================
 import { sb, AJAN_ISIMLERI, logYaz, alarmYaz } from './_ortak';
+import { handleError, logCatch } from '@/lib/errorCore';
 
 export async function sabahSubayi() {
     const isim = AJAN_ISIMLERI.SABAH;
@@ -129,6 +130,7 @@ export async function sabahSubayi() {
         return { basarili: true, brifing, sonuc };
 
     } catch (e) {
+        handleError('ERR-AJN-LB-111', 'src/lib/agents/v2/sabahSubayi.js', e, 'orta');
         await logYaz(isim, 'sabah_brifing', `Hata: ${e.message}`, 'hata');
         return { basarili: false, hata: e.message };
     }

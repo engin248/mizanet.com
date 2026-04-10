@@ -4,8 +4,9 @@
  * features/ yapısına taşındı, mevcut src/hooks/usePersonel.js ile çakışmaması için V2
  */
 'use client';
+import { handleError, logCatch } from '@/lib/errorCore';
 import { useState, useEffect, useCallback } from 'react';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/core/db/supabaseClient';
 import { createGoster, telegramBildirim } from '@/lib/utils';
 import { cevrimeKuyrugaAl } from '@/lib/offlineKuyruk';
 import { silmeYetkiDogrula } from '@/lib/silmeYetkiDogrula';
@@ -50,7 +51,7 @@ export function usePersonelV2(kullanici) {
                 const parsed = JSON.parse(data.deger);
                 setSistemAyarlari({ dakika_basi_ucret: parsed.dakika_basi_ucret ?? 2.50, prim_orani: parsed.prim_orani ?? 0.15, yillik_izin_hakki: parsed.yillik_izin_hakki ?? 15 });
             }
-        } catch (e) { console.error('[KÖR NOKTA ZIRHI - SESSİZ YUTMA ENGELLENDİ] Dosya: usePersonelV2.js | Hata:', e ? e.message || e : 'Bilinmiyor'); }
+        } catch (e) { logCatch('ERR-PRS-HK-101', 'src/features/personel/hooks/usePersonelV2.js', e); }
     }, []);
 
     const yukle = useCallback(async () => {

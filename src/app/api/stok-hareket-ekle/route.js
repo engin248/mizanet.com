@@ -1,8 +1,9 @@
-﻿import { NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { rateLimitKontrol } from '@/lib/rateLimit';
 import { stokHareketiSchema, veriDogrula } from '@/lib/zodSchemas';
 import { hataBildir } from '@/lib/hataBildirim';
+import { handleError, logCatch } from '@/lib/errorCore';
 
 export async function POST(request) {
     const supabaseAdmin = createClient(
@@ -43,10 +44,11 @@ export async function POST(request) {
                 kullanici_adi: 'Server API (Otonom Zırh)',
                 eski_veri: { urun: payload.urun_id, islem: payload.hareket_tipi, adet: payload.adet }
             }]);
-        } catch (e) { console.error('[KÖR NOKTA ZIRHI - SESSİZ YUTMA ENGELLENDİ] Dosya: route.js | Hata:', e ? e.message || e : 'Bilinmiyor'); }
+        } catch (e) { logCatch('ERR-STK-RT-002', 'api/stok-hareket-ekle/kara-kutu-log', e); }
 
         return NextResponse.json({ mesaj: 'Başarılı', veri: data });
     } catch (error) {
+        handleError('ERR-STK-RT-001', 'api/stok-hareket-ekle', error, 'yuksek', { tablo: 'b2_stok_hareketleri' });
         hataBildir(error, 'stok-hareket-ekle_API');
         return NextResponse.json({ hata: 'Sunucu hatası: ' + error.message }, { status: 500 });
     }

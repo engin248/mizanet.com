@@ -1,3 +1,5 @@
+import { handleError, logCatch } from '@/lib/errorCore';
+
 ﻿/**
  * /src/lib/ai/visionAjanCore.js
  * Mizanet — KÖR NOKTA VİSİON (Görü) ANALİZ MOTORU
@@ -81,6 +83,7 @@ Kontrol noktaları:
             };
 
         } catch (err) {
+        handleError('ERR-KMR-LB-101', 'src/lib/ai/visionAjanCore.js', err, 'orta');
             // Gemini erişilemez → Hata açıkça bildir (sessiz simülasyon değil)
             return {
                 onay: false,

@@ -13,6 +13,7 @@
  *   });
  */
 import { NextResponse } from 'next/server';
+import { handleError, logCatch } from '@/lib/errorCore';
 import { hataBildir } from './hataBildirim';
 
 /**
@@ -28,6 +29,7 @@ export function apiHandler(handler, options = {}) {
         try {
             return await handler(request, context);
         } catch (error) {
+        handleError('ERR-SYS-LB-101', 'src/lib/apiWrapper.js', error, 'orta');
             // 1. Console'a logla — her zaman
             console.error(`[API HATA] ${modulAdi}:`, error?.message || error);
 
@@ -36,7 +38,7 @@ export function apiHandler(handler, options = {}) {
                 const ip = request.headers?.get('x-forwarded-for')?.split(',')[0]?.trim() || 'bilinmeyen';
                 await hataBildir(modulAdi, error, `IP: ${ip}`);
             } catch (bildirimHata) {
-                console.error('[API-WRAPPER] Hata bildirimi gönderilemedi:', bildirimHata?.message);
+                handleError('ERR-SYS-LB-101', 'src/lib/apiWrapper.js', bildirimHata, 'orta');
             }
 
             // 3. Kullanıcıya güvenli hata yanıtı dön

@@ -1,8 +1,9 @@
-// @ts-nocheck
+﻿// @ts-nocheck
 'use client';
+import { handleError, logCatch } from '@/lib/errorCore';
 import { useState, useEffect, useRef } from 'react';
 import { Scan, UserCheck, PackageOpen, CheckCircle, AlertTriangle, Clock, Hammer, X, Play, LogOut, Search } from 'lucide-react';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/core/db/supabaseClient';
 import { useLang } from '@/lib/langContext';
 import { fetchIsEmriById } from '@/features/uretim/services/uretimApi';
 
@@ -144,6 +145,7 @@ export default function KioskTerminal() {
             try {
                 ordData = await fetchIsEmriById(kod);
             } catch (e) {
+        handleError('ERR-URT-CM-102', 'src/features/uretim/components/KioskTerminal.js', e, 'orta');
                 ordErr = e;
             }
 
@@ -172,7 +174,7 @@ export default function KioskTerminal() {
                 }
             }
         } catch (err) {
-            console.error(err);
+            handleError('ERR-URT-CM-102', 'src/features/uretim/components/KioskTerminal.js', err, 'orta');
             goster('Hata: ' + err.message, 'error');
         }
         setBekliyor(false);
@@ -274,6 +276,7 @@ export default function KioskTerminal() {
             }, 5000);
 
         } catch (err) {
+        handleError('ERR-URT-CM-102', 'src/features/uretim/components/KioskTerminal.js', err, 'orta');
             goster('Kayıt Hatası: ' + err.message, 'error');
         }
         setBekliyor(false);

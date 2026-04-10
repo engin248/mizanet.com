@@ -1,10 +1,11 @@
 ﻿'use client';
+import { handleError, logCatch } from '@/lib/errorCore';
 /**
  * features/gorevler/hooks/useGorevler.js
  * M22 Görevler — Görev Takip Sistemi
  */
 import { useState, useEffect, useCallback } from 'react';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/core/db/supabaseClient';
 import { silmeYetkiDogrula } from '@/lib/silmeYetkiDogrula';
 import { telegramBildirim } from '@/lib/utils';
 
@@ -28,6 +29,7 @@ export function useGorevler(kullanici) {
             if (error) throw error;
             setGorevler(data || []);
         } catch (e) { goster('Görevler yüklenemedi: ' + e.message, 'error'); }
+            handleError('ERR-GRV-HK-101', 'src/features/gorevler/hooks/useGorevler.js', e, 'orta');
         setLoading(false);
     }, []);
 
@@ -56,6 +58,7 @@ export function useGorevler(kullanici) {
             }
             setForm(BOSH_FORM); setFormAcik(false); setDuzenleId(null); yukle();
         } catch (e) { goster(e.message, 'error'); }
+            handleError('ERR-GRV-HK-101', 'src/features/gorevler/hooks/useGorevler.js', e, 'orta');
         setLoading(false);
     };
 

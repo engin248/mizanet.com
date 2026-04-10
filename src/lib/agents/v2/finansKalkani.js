@@ -4,6 +4,7 @@
 // Eşik aşımında tetiklenir — parayı korur
 // ============================================================
 import { sb, AJAN_ISIMLERI, logYaz, alarmYaz } from './_ortak';
+import { handleError, logCatch } from '@/lib/errorCore';
 
 export async function finansKalkani() {
     const isim = AJAN_ISIMLERI.FINANS;
@@ -87,6 +88,7 @@ export async function finansKalkani() {
         return { basarili: true, sonuc };
 
     } catch (e) {
+        handleError('ERR-AJN-LB-108', 'src/lib/agents/v2/finansKalkani.js', e, 'orta');
         await logYaz(isim, 'finans_kontrol', `Hata: ${e.message}`, 'hata');
         return { basarili: false, hata: e.message };
     }

@@ -5,7 +5,7 @@
  * 
  * Tablo: b2_urun_katalogu
  */
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/core/db/supabaseClient';
 import { cevrimeKuyrugaAl } from '@/lib/offlineKuyruk';
 
 const TABLO = 'b2_urun_katalogu';

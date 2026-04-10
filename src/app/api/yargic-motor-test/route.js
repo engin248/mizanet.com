@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { handleError, logCatch } from '@/lib/errorCore';
 import { MizanetYargic } from '@/services/MizanetYargic';
 
 export async function POST(req) {
@@ -59,6 +60,7 @@ export async function POST(req) {
         });
 
     } catch (e) {
-        return NextResponse.json({ basarili: false, error: e.message }, { status: 500 });
+        handleError('ERR-DNT-RT-002', 'api/yargic-motor-test', e, 'yuksek');
+        return NextResponse.json({ basarili: false, error: e.message, hataKodu: 'ERR-DNT-RT-002' }, { status: 500 });
     }
 }

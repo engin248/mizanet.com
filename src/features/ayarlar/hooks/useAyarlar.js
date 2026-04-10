@@ -1,4 +1,5 @@
 ﻿'use client';
+import { handleError, logCatch } from '@/lib/errorCore';
 /**
  * features/ayarlar/hooks/useAyarlar.js
  * M17 Sistem Ayarları — Tüm State & İş Mantığı
@@ -7,7 +8,7 @@
  *   const { ayarlar, setAlt, kaydet, yetkiliMi, loading, mesaj } = useAyarlar(kullanici);
  */
 import { useState, useEffect, useCallback } from 'react';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/core/db/supabaseClient';
 import { telegramBildirim } from '@/lib/utils';
 import { cevrimeKuyrugaAl } from '@/lib/offlineKuyruk';
 import { silmeYetkiDogrula } from '@/lib/silmeYetkiDogrula';
@@ -97,6 +98,7 @@ export function useAyarlar(kullanici) {
             goster('✅ Ayarlar kaydedildi.');
             telegramBildirim(`⚙️ SİSTEM AYARLARI GÜNCELLENDİ\nPrim: %${(ayarlar.prim_orani * 100).toFixed(0)}\nDk Mlyt: ₺${ayarlar.dakika_basi_ucret}`);
         } catch (e) {
+        handleError('ERR-AYR-HK-101', 'src/features/ayarlar/hooks/useAyarlar.js', e, 'orta');
             if (!navigator.onLine || e.message?.includes('fetch')) {
                 await cevrimeKuyrugaAl({ tablo: 'b1_sistem_ayarlari', islem_tipi: 'UPSERT', veri: { anahtar: 'sistem_genel', deger: JSON.stringify(ayarlar) } });
                 goster('İnternet yok: Ayarlar kuyruğa alındı.', 'success');

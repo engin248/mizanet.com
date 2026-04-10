@@ -1,11 +1,12 @@
 ﻿'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
     Layers, Plus, Search, AlertTriangle, CheckCircle2, Package, Scissors,
-    Trash2, Eye, Lock, QrCode, Tag, ExternalLink, ChevronRight, Scale
+    Trash2, Eye, Lock, QrCode, Tag, ExternalLink, ChevronRight, Scale,
+    Bell, Globe, User, Clock, Info, HelpCircle, Activity, Users, Database
 } from 'lucide-react';
 import Link from 'next/link';
-import { useAuth } from '@/lib/auth';
+import { useAuth } from '@/core/auth';
 import { useKumas } from '@/features/kumas/hooks/useKumas';
 
 export default function KumasMainContainer() {
@@ -15,342 +16,362 @@ export default function KumasMainContainer() {
         loading, m3eAktar
     } = useKumas(kullanici);
 
-    // YENİ: Çevik Üretim Fizibilite Modal State'leri
+    const [currentTime, setCurrentTime] = useState(new Date());
+    useEffect(() => {
+        const timer = setInterval(() => setCurrentTime(new Date()), 1000);
+        return () => clearInterval(timer);
+    }, []);
+
     const [fizibiliteModalAcik, setFizibiliteModalAcik] = useState(false);
     const [seciliTalep, setSeciliTalep] = useState(null);
-    const [maliyetForm, setMaliyetForm] = useState({
-        kumasFiyat: '',
-        kumasMiktar: '',
-        iscilik: '',
-        rakipSatis: '499.90' // Otomatik veya Manuel Rakip Satış Fiyatı
-    });
+    const [maliyetForm, setMaliyetForm] = useState({ kumasFiyat: '', kumasMiktar: '', iscilik: '', rakipSatis: '499.90' });
+
+    const moduller = [
+        { id: 1, ad: 'Karargâh', durum: 'normal' },
+        { id: 2, ad: 'Ar-Ge', durum: 'dikkat' },
+        { id: 3, ad: 'Kumaş', durum: 'normal' },
+        { id: 4, ad: 'Modelhane', durum: 'normal' },
+        { id: 5, ad: 'Kalıp', durum: 'normal' },
+        { id: 6, ad: 'Kesimhane', durum: 'normal' },
+        { id: 7, ad: 'İmalat', durum: 'normal' },
+        { id: 8, ad: 'Maliyet', durum: 'normal' },
+        { id: 9, ad: 'Muhasebe', durum: 'normal' },
+        { id: 10, ad: 'Kasa', durum: 'normal' },
+        { id: 11, ad: 'Stok', durum: 'sorun' },
+        { id: 12, ad: 'Katalog', durum: 'normal' },
+        { id: 13, ad: 'Siparişler', durum: 'normal' },
+        { id: 14, ad: 'Müşteriler', durum: 'normal' },
+        { id: 15, ad: 'Personel', durum: 'normal' },
+        { id: 16, ad: 'Görevler', durum: 'normal' },
+        { id: 17, ad: 'Kameralar', durum: 'normal' },
+        { id: 18, ad: 'Ajanlar', durum: 'normal' },
+        { id: 19, ad: 'Denetmen', durum: 'normal' },
+        { id: 20, ad: 'Raporlar', durum: 'normal' },
+        { id: 21, ad: 'Tasarım', durum: 'normal' },
+        { id: 22, ad: 'Üretim', durum: 'normal' },
+        { id: 23, ad: 'Güvenlik', durum: 'normal' },
+        { id: 24, ad: 'Ayarlar', durum: 'normal' },
+        { id: 25, ad: 'Giriş', durum: 'none' }
+    ];
+
+    const getStatusColor = (durum) => {
+        if (durum === 'normal') return '#27AE60';
+        if (durum === 'dikkat') return '#F39C12';
+        if (durum === 'sorun') return '#E74C3C';
+        return '#BDC3C7';
+    };
+
+    if (loading) return <div className="h-screen w-screen flex items-center justify-center bg-[#F4F6F7] text-[#046A38] font-bold text-xl animate-pulse">SİSTEM YÜKLENİYOR...</div>;
+    if (!yetkiliMi) return <div className="h-screen w-screen flex items-center justify-center bg-[#F4F6F7]"><div className="bg-white p-12 rounded-3xl shadow-2xl text-center border-t-8 border-[#E74C3C]"><Lock size={64} className="mx-auto text-[#E74C3C] mb-4" /><h2 className="text-2xl font-black text-[#2D3436]">YETKİSİZ ERİŞİM</h2><p className="text-[#8b949e] mt-2 font-bold">M2 MODÜLÜNE ERİŞİM YETKİNİZ BULUNMAMAKTADIR.</p></div></div>;
 
     const toplamMaliyet = (parseFloat(maliyetForm.kumasFiyat || 0) * parseFloat(maliyetForm.kumasMiktar || 0)) + parseFloat(maliyetForm.iscilik || 0);
     const karMarjiTutar = parseFloat(maliyetForm.rakipSatis || 0) - toplamMaliyet;
     const karMarjiYuzde = parseFloat(maliyetForm.rakipSatis || 0) > 0 ? ((karMarjiTutar / parseFloat(maliyetForm.rakipSatis)) * 100).toFixed(1) : 0;
-    const karlilikUygun = karMarjiYuzde >= 40; // Patron %40 altı kârlılığı reddeder
-
-    const sekmeler = ['kumas', 'aksesuar', 'firsat', 'm1', 'risk'];
-    const sekmeIsimleri = ['Kumaş Arşivi', 'Aksesuar Deposu', 'Ölü Stok Radarı (AI)', "M1'den Gelen Talepler", 'Tedarik Risk Analizi'];
-
-    const setAktifSekme = (ind) => setSekme(sekmeler[ind]);
-    const aktifSekme = sekmeler.indexOf(sekme) !== -1 ? sekmeler.indexOf(sekme) : 0;
-
-    const kumasRaporu = kumaslar.map(k => ({
-        id: k.id, kodu: k.kumas_kodu, ad: k.kumas_adi, kompozisyon: k.kompozisyon,
-        stok: parseFloat(k.stok_mt) || 0, minStok: parseFloat(k.min_stok_mt) || 0, birimFiyat: k.birim_maliyet_tl,
-        tedarikci: k.tedarikci_adi || 'Bilinmiyor', riskSuresi: 'Bilinmiyor', alternatifVar: true,
-        durum: parseFloat(k.stok_mt) < parseFloat(k.min_stok_mt) ? 'riskli' : 'guvenli'
-    }));
-
-    if (loading) {
-        return <div className="p-12 text-center text-emerald-400 font-bold tracking-widest animate-pulse">SUPABASE M2 BAĞLANTISI KURULUYOR...</div>;
-    }
-
-    if (!yetkiliMi) {
-        return (
-            <div className="p-12 text-center bg-rose-950/20 shadow-2xl rounded-2xl m-8">
-                <Lock size={48} className="mx-auto mb-4 text-rose-500" />
-                <h2 className="text-xl font-black text-rose-500 uppercase">YETKİSİZ GİRİŞ (M2)</h2>
-            </div>
-        );
-    }
+    const karlilikUygun = karMarjiYuzde >= 40;
 
     return (
-        <div className="min-h-screen font-sans bg-[#0d1117] text-white">
-            <div className="max-w-[1600px] mx-auto px-6 lg:px-10 py-6" style={{ animation: 'fadeUp 0.4s ease-out' }}>
+        <div className="flex flex-col h-screen w-full bg-[#F4F6F7] font-sans selection:bg-[#C8A951] selection:text-white">
 
-                {/* 1. BAŞLIK VE HEDEF GÖSTERİCİ */}
-                <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4 border-b border-[#21262d] pb-6">
-                    <div className="flex items-center gap-4">
-                        <div className="w-12 h-12 bg-gradient-to-br from-emerald-600 to-emerald-900 rounded-xl flex items-center justify-center shadow-lg shadow-emerald-500/20 border border-emerald-500/30">
-                            <Layers size={24} className="text-emerald-50" />
-                        </div>
-                        <div>
-                            <h1 className="text-2xl font-black text-white tracking-tight m-0 uppercase flex items-center gap-3">
-                                M2: Malzeme & Kumaş Kütüphanesi
-                            </h1>
-                            <p className="text-xs font-bold text-emerald-300 mt-1 uppercase tracking-wider">
-                                Aşama 2: Tedarik Riski & Maliyet Filtresi (Kural: Tek Tedarikçi = RİSK)
-                            </p>
-                        </div>
-                    </div>
-                    <div className="flex items-center gap-4">
-                        <button className="bg-emerald-600 hover:bg-emerald-500 text-white px-5 py-2 rounded-lg text-xs font-bold transition-all shadow-lg flex items-center gap-2">
-                            <Plus size={16} /> YENİ MATERYAL GİRİŞİ
-                        </button>
+            {/* ÜST BİLGİ BAR */}
+            <header className="h-16 bg-[#046A38] flex items-center justify-between px-6 shadow-lg z-50 shrink-0">
+                <div className="flex items-center gap-4 text-white">
+                    <Layers className="text-[#C8A951]" size={28} />
+                    <div>
+                        <h1 className="text-lg font-black tracking-tight leading-none uppercase">Kumaş ve Malzeme</h1>
+                        <p className="text-[10px] font-bold text-[#C8A951] mt-1 space-x-2">
+                            <span>SİSTEM</span> <ChevronRight size={10} className="inline" /> <span>M2 TEDARİK</span>
+                        </p>
                     </div>
                 </div>
 
-                {/* 2. TEDARİK RİSK (4 NOKTA) KPI'LARI */}
-                <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-                    {[
-                        { label: 'Aktif Kod Sayısı', val: '412', desc: 'Sisteme Kayıtlı Materyal', color: 'text-emerald-400' },
-                        { label: 'Tek Tedarikçi (RİSK)', val: '14', desc: 'Alternatifi Yok (Ted. Riski)', color: 'text-rose-400' },
-                        { label: 'Sürekli Kumaş', val: '158', desc: 'Kesintisiz Tedarik Devamı', color: 'text-blue-400' },
-                        { label: 'Yüksek MOQ', val: '5', desc: 'Minimum Sipariş Riski', color: 'text-amber-400' }
-                    ].map((s, i) => (
-                        <div key={i} className="bg-[#161b22] border border-[#21262d] rounded-xl p-4 flex flex-col justify-between shadow-md">
-                            <span className={`text-[10px] font-bold uppercase tracking-wider ${s.color}`}>{s.label}</span>
-                            <div className="text-2xl font-black text-white mt-2 border-b border-[#30363d] pb-2">{s.val}</div>
-                            <div className="text-[10px] text-[#8b949e] font-semibold mt-2">{s.desc}</div>
-                        </div>
-                    ))}
+                <div className="flex-1 max-w-xl mx-8 relative hidden md:block">
+                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-[#F4F6F7]/50" size={16} />
+                    <input
+                        type="text"
+                        placeholder="Hızlı Materyal veya Kod Arama..."
+                        className="w-full bg-white/10 border border-white/20 rounded-full py-2 pl-12 pr-4 text-sm text-white placeholder:text-white/40 focus:bg-white/20 outline-none transition-all"
+                    />
                 </div>
 
-                {/* 3. İKİLİ PANE (SOL: M1'DEN GELEN TALEPLER, SAĞ: ENVANTER / DİJİTAL KÜTÜPHANE) */}
-                <div className="grid grid-cols-1 xl:grid-cols-4 gap-6 mb-6">
-
-                    {/* SOL PANEL (M1 ONAY BEKLEYENLER) */}
-                    <div className="xl:col-span-1 bg-[#161b22] border border-[#21262d] rounded-xl flex flex-col h-[600px]">
-                        <div className="p-4 border-b border-[#21262d]">
-                            <h2 className="text-xs font-bold text-emerald-400 uppercase tracking-widest flex items-center gap-2">
-                                <AlertTriangle size={14} /> M1'den Bekleyenler
-                            </h2>
+                <div className="flex items-center gap-6">
+                    <button className="relative text-[#C8A951] hover:scale-110 transition-transform">
+                        <Bell size={20} />
+                        <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-[#E74C3C] rounded-full border-2 border-[#046A38]"></span>
+                    </button>
+                    <div className="flex items-center gap-3 border-l border-white/20 pl-6 text-white text-right hidden lg:flex">
+                        <div className="flex flex-col">
+                            <span className="text-xs font-black uppercase">{kullanici?.ad || 'Admin'}</span>
+                            <span className="text-[9px] font-bold text-[#C8A951]">KARARGÂH YÖNETİCİSİ</span>
                         </div>
-                        <div className="flex-1 overflow-y-auto p-4 space-y-3">
-                            {m1Talepleri.length === 0 && <p className="text-[#8b949e] text-[10px] text-center mt-4">Henüz onaylanmış yeni bir M1 Karar talebi yok.</p>}
-                            {m1Talepleri.map(talep => (
-                                <div key={talep.id} className="bg-[#0d1117] border border-amber-500/30 p-3 rounded-lg flex flex-col gap-2">
-                                    <div className="flex justify-between items-center mb-1">
-                                        <span className="text-[10px] text-amber-400 font-bold uppercase">YENİ MODEL (AŞAMA 2)</span>
-                                        <span className="text-[10px] text-emerald-400 font-bold border border-emerald-500/30 px-2 py-0.5 rounded bg-emerald-500/10">M1 ONAYLI</span>
-                                    </div>
-                                    <h3 className="text-sm font-bold text-white">{talep.baslik}</h3>
-                                    {talep.aciklama && (
-                                        <div className="text-[10px] text-[#8b949e] border-l-2 border-amber-500/50 pl-2 bg-[#21262d] p-2 rounded italic">
-                                            {talep.aciklama.substring(0, 100)}...
-                                        </div>
-                                    )}
-                                    <button
-                                        onClick={() => {
-                                            setSeciliTalep(talep);
-                                            setFizibiliteModalAcik(true);
-                                        }}
-                                        className="w-full text-[10px] font-bold text-center py-2 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 rounded mt-2 text-white transition-all shadow-[0_0_10px_rgba(16,185,129,0.3)] flex items-center justify-center gap-2"
-                                    >
-                                        <Scale size={12} /> BİZ KAÇA MAL EDERİZ? (FİZİBİLİTE)
+                        <div className="w-10 h-10 rounded-full bg-[#C8A951] flex items-center justify-center text-[#046A38] border-2 border-white/50">
+                            <User size={24} />
+                        </div>
+                    </div>
+                    <div className="text-white text-xs font-mono font-bold border-l border-white/20 pl-6 flex flex-col items-end">
+                        <span>{currentTime.toLocaleDateString('tr-TR')}</span>
+                        <span className="text-[#C8A951]">{currentTime.toLocaleTimeString('tr-TR')}</span>
+                    </div>
+                </div>
+            </header>
+
+            <div className="flex flex-1 overflow-hidden">
+
+                {/* SOL MENÜ */}
+                <nav className="w-64 bg-white border-r border-[#046A38]/10 flex flex-col shrink-0">
+                    <div className="p-4 border-b border-[#F4F6F7] flex items-center justify-between">
+                        <span className="text-[10px] font-black tracking-widest text-[#046A38] uppercase">Modül Listesi</span>
+                        <span className="text-[9px] bg-[#046A38]/10 text-[#046A38] px-2 py-0.5 rounded font-bold">V 2.0</span>
+                    </div>
+                    <div className="flex-1 overflow-y-auto py-2 custom-scrollbar">
+                        {moduller.map((m) => (
+                            <button
+                                key={m.id}
+                                className={`w-full flex items-center justify-between px-4 py-3 hover:bg-[#F4F6F7] border-l-4 transition-all ${m.id === 3 ? 'bg-[#046A38]/5 border-[#046A38]' : 'border-transparent'}`}
+                            >
+                                <div className="flex items-center gap-3">
+                                    <span className="text-[10px] font-bold text-[#8b949e] w-4">{m.id}</span>
+                                    <span className={`text-xs font-bold ${m.id === 3 ? 'text-[#046A38]' : 'text-[#2D3436]'}`}>{m.ad}</span>
+                                </div>
+                                {m.durum !== 'none' && (
+                                    <div
+                                        className="w-2.5 h-2.5 rounded-full shadow-inner animate-pulse"
+                                        style={{ backgroundColor: getStatusColor(m.durum), boxShadow: `0 0 8px ${getStatusColor(m.durum)}` }}
+                                    ></div>
+                                )}
+                            </button>
+                        ))}
+                    </div>
+                </nav>
+
+                {/* ANA ÇALIŞMA ALANI */}
+                <main className="flex-1 flex flex-col bg-[#F4F6F7] p-6 lg:p-8 overflow-y-auto overflow-x-hidden">
+
+                    {/* KPI CARDS */}
+                    <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                        {[
+                            { title: 'Aktif Materyal', val: '412', icon: <Package size={20} />, color: '#046A38' },
+                            { title: 'Tedarik Riski', val: '14', icon: <AlertTriangle size={20} />, color: '#E74C3C' },
+                            { title: 'Piyasa Fırsatı', val: '8', icon: <Tag size={20} />, color: '#F39C12' },
+                            { title: 'Stok Verimliliği', val: '%88', icon: <Activity size={20} />, color: '#4F7CAC' }
+                        ].map((card, i) => (
+                            <div key={i} className="bg-white p-6 rounded-2xl shadow-sm border border-[#046A38]/5 hover:shadow-md transition-shadow relative overflow-hidden group">
+                                <div className="absolute -right-2 -bottom-2 text-[#F4F6F7] opacity-60 group-hover:scale-125 transition-transform">
+                                    {card.icon}
+                                </div>
+                                <span className="text-[10px] font-black uppercase text-[#8b949e] tracking-widest">{card.title}</span>
+                                <div className="text-3xl font-black mt-2" style={{ color: card.color }}>{card.val}</div>
+                                <div className="mt-2 text-[9px] text-[#27AE60] font-bold">↑ SON 7 GÜN: +%2.4</div>
+                            </div>
+                        ))}
+                    </div>
+
+                    <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
+
+                        {/* LİSTE / TABLO ALANI */}
+                        <div className="xl:col-span-2 space-y-6">
+                            <div className="bg-white rounded-2xl shadow-sm border border-[#046A38]/5 overflow-hidden">
+                                <div className="p-6 border-b border-[#F4F6F7] flex justify-between items-center">
+                                    <h2 className="text-sm font-black text-[#046A38] uppercase tracking-wider">M2 Materyal Kütüphanesi</h2>
+                                    <button className="bg-[#046A38] hover:bg-[#046A38]/90 text-[#F4F6F7] px-4 py-2 rounded-lg text-[10px] font-black shadow-sm flex items-center gap-2 transition-all">
+                                        <Plus size={14} /> YENİ KAYIT
                                     </button>
                                 </div>
-                            ))}
-                        </div>
-                    </div>
-
-                    {/* SAĞ PANEL (KÜTÜPHANE / RİSK ANALİZ LİSTESİ) */}
-                    <div className="xl:col-span-3 flex flex-col">
-                        <div className="flex gap-2 mb-4 overflow-x-auto pb-2">
-                            {sekmeIsimleri.map((s, i) => (
-                                <button key={i} onClick={() => setAktifSekme(i)} className={`px-4 py-2 rounded-lg text-xs font-bold transition-colors whitespace-nowrap ${aktifSekme === i ? 'bg-emerald-600/20 text-emerald-400 border border-emerald-500/50' : 'bg-[#161b22] text-[#8b949e] border border-[#21262d] hover:text-white'
-                                    }`}>
-                                    {s}
-                                </button>
-                            ))}
-                        </div>
-
-                        <div className="bg-[#161b22] border border-[#21262d] rounded-xl flex-1 p-4 overflow-y-auto">
-                            <div className="relative mb-4 w-full max-w-md">
-                                <Search className="absolute left-3 top-2.5 text-[#8b949e]" size={14} />
-                                <input type="text" placeholder="Kumaş Kodu, Adı veya Kompozisyon (Örn: Polyamid)..." className="w-full bg-[#0d1117] border border-[#30363d] rounded-lg pl-9 pr-3 py-2 text-xs text-white focus:border-emerald-500 outline-none transition-colors" />
+                                <div className="p-0 overflow-x-auto">
+                                    <table className="w-full text-left">
+                                        <thead className="bg-[#F4F6F7] text-[10px] font-black text-[#8b949e] uppercase">
+                                            <tr>
+                                                <th className="px-6 py-4">Kod</th>
+                                                <th className="px-6 py-4">Materyal Adı</th>
+                                                <th className="px-6 py-4">Stok</th>
+                                                <th className="px-6 py-4 text-right">Maliyet</th>
+                                                <th className="px-6 py-4 text-center">İşlem</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody className="divide-y divide-[#F4F6F7]">
+                                            {kumaslar.slice(0, 10).map((k) => (
+                                                <tr key={k.id} className="hover:bg-[#F4F6F7]/30 transition-colors">
+                                                    <td className="px-6 py-4 text-[11px] font-bold text-[#046A38]">{k.kumas_kodu}</td>
+                                                    <td className="px-6 py-4">
+                                                        <div className="text-xs font-bold text-[#2D3436]">{k.kumas_adi}</div>
+                                                        <div className="text-[9px] text-[#8b949e]">{k.kompozisyon}</div>
+                                                    </td>
+                                                    <td className="px-6 py-4">
+                                                        <span className={`text-[10px] font-black px-2 py-0.5 rounded ${parseFloat(k.stok_mt) < parseFloat(k.min_stok_mt) ? 'bg-[#E74C3C]/10 text-[#E74C3C]' : 'bg-[#27AE60]/10 text-[#27AE60]'}`}>
+                                                            {k.stok_mt} mt
+                                                        </span>
+                                                    </td>
+                                                    <td className="px-6 py-4 text-right text-xs font-mono font-bold text-[#2D3436]">
+                                                        ₺{parseFloat(k.birim_maliyet_tl || 0).toFixed(2)}
+                                                    </td>
+                                                    <td className="px-6 py-4 text-center">
+                                                        <button className="p-2 text-[#046A38] hover:bg-[#046A38]/5 rounded-md transition-colors"><Eye size={16} /></button>
+                                                    </td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
+                        </div>
 
-                            <div className="space-y-3">
-                                {sekme === 'firsat' ? (
-                                    <div className="bg-amber-950/20 border border-amber-500/30 rounded-xl p-6 text-center">
-                                        <h3 className="text-lg font-black text-amber-500 mb-2 uppercase tracking-wide">AI Fırsat Radarı (Upcycle) Devrede</h3>
-                                        <p className="text-sm text-amber-200/70 mb-6">Depoda bekleyen, hareketsiz kumaşlarınızı (Ölü Stok) sisteme yükleyin. M1 Trend İstihbarat motoru ile eşleşen güncel modelleri bulup, doğrudan M3 Modelhaneye üretim tavsiyesi ve marj analizi sunalım.</p>
+                        {/* M1 TALEPLERİ (ARGE’DEN GELENLER) */}
+                        <div className="space-y-6">
+                            <div className="bg-[#046A38] p-6 rounded-2xl shadow-xl text-white relative overflow-hidden">
+                                <div className="relative z-10">
+                                    <h2 className="text-xs font-black uppercase tracking-widest text-[#C8A951] mb-1">M1 Trend Alarmı</h2>
+                                    <div className="text-xl font-black mb-4">Ar-Ge'den Gelen Talepler</div>
+                                    <p className="text-[10px] font-bold text-white/70 leading-relaxed mb-6">M2 Tedarik birimi, bu modeller için alternatif kumaş/kartela maliyeti çalışmalıdır.</p>
 
-                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-left">
-                                            {firsatlar && firsatlar.length > 0 ? (
-                                                firsatlar.map((f, i) => {
-                                                    const aiVeri = f.ai_trend_eslesme || {};
-                                                    return (
-                                                        <div key={i} className="bg-[#0b121a] border border-[#21262d] rounded-xl p-4 flex gap-4">
-                                                            <div className="w-20 h-20 bg-[#161b22] rounded-lg border border-[#30363d] shrink-0 overflow-hidden flex items-center justify-center relative">
-                                                                {f.fotograf_urls && f.fotograf_urls[0] ? (
-                                                                    <img src={f.fotograf_urls[0]} alt="Kumas" className="w-full h-full object-cover opacity-80" />
-                                                                ) : (
-                                                                    <span className="text-[10px] text-[#8b949e]">FOTOĞRAF</span>
-                                                                )}
-                                                            </div>
-                                                            <div className="flex-1">
-                                                                <div className="flex justify-between items-start">
-                                                                    <h4 className="font-bold text-white text-sm">{f.ad} {f.kondisyon_notu ? `(${f.kondisyon_notu})` : ''}</h4>
-                                                                    <span className="text-[10px] bg-emerald-500/20 text-emerald-400 font-bold px-2 py-0.5 rounded">
-                                                                        %{aiVeri.beklenen_marj_yuzdesi || 65} TAHMİNİ MARJ
-                                                                    </span>
-                                                                </div>
-                                                                <p className="text-[11px] text-[#8b949e] mt-1 mb-2">
-                                                                    M1 Trend Eşleşmesi: {aiVeri.model_tavsiyesi || "Sistem eşleşme arıyor..."}. Stok: {f.stok_miktar} {f.stok_birimi}
-                                                                </p>
-                                                                <button className="text-[10px] font-bold text-black bg-amber-500 hover:bg-amber-400 px-3 py-1.5 rounded-md transition-colors w-full">
-                                                                    MODEL UYARLA VE M3'E YOLLA
-                                                                </button>
-                                                            </div>
-                                                        </div>
-                                                    );
-                                                })
-                                            ) : (
-                                                <div className="col-span-1 border border-dashed border-amber-500/30 p-4 text-center rounded-xl text-amber-500/50">
-                                                    Şu an için "is_firsat = true" olarak M2 veritabanına eklenmiş kayıt bulunmuyor.
+                                    <div className="space-y-3">
+                                        {m1Talepleri.map(talep => (
+                                            <div key={talep.id} className="bg-white/10 backdrop-blur-md rounded-xl p-4 border border-white/10 hover:bg-white/20 transition-all cursor-pointer">
+                                                <div className="flex justify-between items-center mb-2">
+                                                    <span className="text-[9px] font-black bg-[#C8A951] text-[#046A38] px-2 py-0.5 rounded uppercase tracking-wider">AŞAMA 2</span>
+                                                    <span className="text-[9px] text-white/50">{currentTime.toLocaleTimeString('tr-TR')}</span>
                                                 </div>
-                                            )}
-                                        </div>
-                                    </div>
-                                ) : (
-                                    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-                                        {kumasRaporu.map((k, idx) => (
-                                            <div key={idx} className={`rounded-xl border flex flex-col overflow-hidden transition-all hover:-translate-y-1 hover:shadow-[0_10px_30px_rgba(0,0,0,0.5)] ${k.durum === 'riskli' ? 'border-rose-500/30' : 'border-[#30363d]'}`}>
-
-                                                {/* GÖRSEL ALANI (ARŞİV) */}
-                                                <div className="h-40 bg-[#0b121a] relative flex items-center justify-center border-b border-[#21262d]">
-                                                    <div className="absolute inset-0 bg-gradient-to-t from-[#0d1117] to-transparent z-10"></div>
-                                                    <span className="text-[10px] text-[#8b949e] font-black tracking-widest uppercase">GÖRSEL EKLENMEDİ</span>
-                                                    {k.durum === 'riskli' && (
-                                                        <div className="absolute top-2 right-2 z-20 bg-rose-500/90 text-white text-[9px] font-black uppercase px-2 py-0.5 rounded shadow-[0_0_10px_rgba(244,63,94,0.5)]">
-                                                            RİSK
-                                                        </div>
-                                                    )}
-                                                </div>
-
-                                                <div className={`p-4 flex flex-col flex-1 bg-[#0d1117]`}>
-                                                    <div className="flex items-center gap-2 mb-2">
-                                                        <span className="text-[9px] font-black uppercase bg-[#21262d] text-emerald-400 px-2 py-0.5 rounded border border-[#30363d]">{k.kodu}</span>
-                                                    </div>
-                                                    <h3 className="text-sm font-bold text-white tracking-wide">{k.ad}</h3>
-                                                    <p className="text-[10px] text-[#8b949e] mt-1 mb-4 border-l-2 border-[#30363d] pl-2">{k.kompozisyon}</p>
-
-                                                    <div className="grid grid-cols-2 gap-3 mb-4 bg-[#161b22] p-3 rounded-lg border border-[#21262d]">
-                                                        <div className="flex flex-col gap-1 border-r border-[#30363d]">
-                                                            <span className="text-[9px] text-[#8b949e] font-bold uppercase tracking-wider">Maliyet</span>
-                                                            <span className="text-lg font-mono text-white">₺{k.birimFiyat.toFixed(2)}<span className="text-[10px] text-gray-500">/mt</span></span>
-                                                        </div>
-                                                        <div className="flex flex-col gap-1 pl-2">
-                                                            <span className="text-[9px] text-[#8b949e] font-bold uppercase tracking-wider">M11 Stok</span>
-                                                            <span className={`text-lg font-mono font-bold ${k.stok <= k.minStok ? 'text-rose-400' : 'text-emerald-400'}`}>
-                                                                {k.stok}<span className="text-[10px] text-gray-500">mt</span>
-                                                            </span>
-                                                        </div>
-                                                    </div>
-
-                                                    <div className="flex justify-between items-center text-[10px] font-bold uppercase tracking-widest border-t border-[#30363d] pt-3 mb-4">
-                                                        <span className="text-[#8b949e]">Alternatif:</span>
-                                                        <span className={k.alternatifVar ? 'text-[#c9d1d9]' : 'text-rose-400'}>{k.tedarikci}</span>
-                                                    </div>
-
-                                                    <div className="flex gap-2 mt-auto">
-                                                        <button className="flex-1 text-[10px] font-bold text-[#c9d1d9] bg-[#21262d] hover:bg-[#30363d] py-2.5 rounded-lg transition-colors flex items-center justify-center gap-1 uppercase tracking-widest border border-[#30363d]">
-                                                            <Eye size={14} /> KARTELA
-                                                        </button>
-                                                        <Link href="/kalip" className="flex-1">
-                                                            <button className="w-full text-[10px] font-black text-emerald-400 bg-emerald-500/10 hover:bg-emerald-500/20 py-2.5 rounded-lg transition-colors border border-emerald-500/30 shadow-[0_0_15px_rgba(16,185,129,0.1)] uppercase tracking-widest flex items-center justify-center gap-1">
-                                                                M3'E AT
-                                                            </button>
-                                                        </Link>
-                                                    </div>
-                                                </div>
+                                                <div className="text-xs font-bold text-white mb-2">{talep.baslik}</div>
+                                                <button
+                                                    onClick={() => { setSeciliTalep(talep); setFizibiliteModalAcik(true); }}
+                                                    className="w-full py-2 bg-white text-[#046A38] rounded-lg text-[10px] font-black uppercase hover:bg-[#C8A951] transition-all"
+                                                >
+                                                    FİZİBİLİTE ÇALIŞ
+                                                </button>
                                             </div>
                                         ))}
                                     </div>
-                                )}
+                                </div>
+                                <div className="absolute -right-8 -top-8 text-white/10 rotate-12"><Activity size={160} /></div>
                             </div>
+                        </div>
 
+                    </div>
+                </main>
+
+                {/* SAĞ YARDIM PANELİ */}
+                <aside className="w-80 bg-white border-l border-[#046A38]/10 p-6 shrink-0 hidden 2xl:flex flex-col">
+                    <div className="flex items-center gap-3 mb-8">
+                        <HelpCircle size={20} className="text-[#C8A951]" />
+                        <h2 className="text-sm font-black text-[#046A38] uppercase tracking-widest">Yardım Merkezi</h2>
+                    </div>
+
+                    <div className="space-y-6 flex-1 overflow-y-auto custom-scrollbar">
+                        <div className="bg-[#F4F6F7] p-4 rounded-xl">
+                            <h3 className="text-[10px] font-black text-[#046A38] uppercase mb-2">Maliyet Kuralı</h3>
+                            <p className="text-[11px] text-[#2D3436] leading-relaxed">
+                                Patron talimatı gereği, brüt kâr marjı **%40'ın altında** olan hiçbir kumaş talebi Kalıphaneye (M3) gönderilemez.
+                            </p>
+                        </div>
+                        <div className="bg-[#F4F6F7] p-4 rounded-xl">
+                            <h3 className="text-[10px] font-black text-[#046A38] uppercase mb-2">Tedarikçi Risk Notu</h3>
+                            <p className="text-[11px] text-[#2D3436] leading-relaxed italic">
+                                "Tek tedarikçisi olan kumaşlarda 'sorun' ışığı yanar. Mutlaka bir alternatif kartela bulunmalıdır."
+                            </p>
                         </div>
                     </div>
 
-                </div>
+                    <div className="mt-8 pt-6 border-t border-[#F4F6F7]">
+                        <button className="w-full p-4 bg-[#F4F6F7] border border-[#046A38]/5 rounded-2xl flex items-center gap-4 hover:bg-[#046A38]/5 transition-all text-left">
+                            <div className="bg-[#C8A951]/20 p-2 rounded-lg text-[#C8A951]"><Info size={20} /></div>
+                            <div>
+                                <div className="text-[11px] font-black text-[#046A38]">DÖKÜMANTASYON</div>
+                                <div className="text-[9px] text-[#8B949E]">Kullanım Klavuzu ve SOP</div>
+                            </div>
+                        </button>
+                    </div>
+                </aside>
+
             </div>
 
-            {/* FİZİBİLİTE VE KARTELA MODALI */}
+            {/* ALT DURUM BAR */}
+            <footer className="h-10 bg-white border-t border-[#046A38]/10 flex items-center justify-between px-6 shrink-0">
+                <div className="flex items-center gap-6">
+                    <div className="flex items-center gap-2">
+                        <div className="w-2 h-2 bg-[#27AE60] rounded-full animate-pulse"></div>
+                        <span className="text-[9px] font-black text-[#8b949e] uppercase">Sistem: Çevrimiçi</span>
+                    </div>
+                    <div className="flex items-center gap-2 border-l border-[#F4F6F7] pl-6 text-[#8b949e]">
+                        <Users size={12} />
+                        <span className="text-[9px] font-bold">12 Aktif Kullanıcı</span>
+                    </div>
+                </div>
+                <div className="flex items-center gap-4">
+                    <span className="text-[9px] font-black text-[#046A38] bg-[#046A38]/5 px-3 py-1 rounded-full flex items-center gap-2">
+                        <Database size={10} /> GERÇEK ZAMANLI VERİ SENKRONİZASYONU AKTİF
+                    </span>
+                    <span className="text-[9px] font-bold text-[#8b949e]">MIZANET V2026.04.06</span>
+                </div>
+            </footer>
+
+            {/* MODALS */}
             {fizibiliteModalAcik && seciliTalep && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
-                    <div className="bg-[#0d1117] border border-emerald-500/30 rounded-2xl w-full max-w-xl shadow-[0_0_50px_rgba(16,185,129,0.2)] overflow-hidden">
-
-                        <div className="bg-[#161b22] p-5 border-b border-[#30363d] flex justify-between items-center">
-                            <div>
-                                <h2 className="text-lg font-black text-emerald-400 uppercase tracking-widest flex items-center gap-2">
-                                    <Scale size={18} /> M2 FİZİBİLİTE KONTROLÜ
-                                </h2>
-                                <p className="text-xs text-[#8b949e] mt-1 font-semibold">Tedarikçi/Kartela Kumaşıyla Kârlılık Testi</p>
-                            </div>
-                            <button onClick={() => setFizibiliteModalAcik(false)} className="text-[#8b949e] hover:text-white">✕</button>
-                        </div>
-
-                        <div className="p-6">
-                            <div className="bg-[#161b22] border border-[#30363d] p-3 rounded-xl mb-6 flex justify-between items-center">
+                <div className="fixed inset-0 z-[100] flex items-center justify-center bg-[#2D3436]/80 backdrop-blur-md p-4 animate-fade-in">
+                    <div className="bg-[#F4F6F7] rounded-3xl w-full max-w-2xl shadow-2xl overflow-hidden border-t-8 border-[#C8A951]">
+                        <div className="p-8 border-b border-white bg-white">
+                            <div className="flex justify-between items-start">
                                 <div>
-                                    <div className="text-[10px] text-[#8b949e] font-bold uppercase mb-1">AR-GE'NİN BULDUĞU HEDEF (BİNGO)</div>
-                                    <div className="text-sm font-black text-white">{seciliTalep.baslik}</div>
+                                    <span className="text-[10px] font-black text-[#C8A951] tracking-[0.2em] uppercase">Fizibilite Analizi</span>
+                                    <h2 className="text-2xl font-black text-[#046A38] uppercase mt-2">{seciliTalep.baslik}</h2>
+                                </div>
+                                <button onClick={() => setFizibiliteModalAcik(false)} className="text-[#8B949E] hover:rotate-90 transition-transform"><Plus size={32} style={{ transform: 'rotate(45deg)' }} /></button>
+                            </div>
+                        </div>
+                        <div className="p-8">
+                            <div className="grid grid-cols-2 gap-8 mb-8">
+                                <div className="space-y-4">
+                                    <div>
+                                        <label className="text-[9px] font-black text-[#8B949E] uppercase mb-2 block">Kumaş Metre Fiyatı (₺)</label>
+                                        <input type="number" value={maliyetForm.kumasFiyat} onChange={e => setMaliyetForm({ ...maliyetForm, kumasFiyat: e.target.value })} className="w-full bg-white border border-[#046A38]/10 rounded-xl px-4 py-3 outline-none focus:border-[#C8A951] font-mono text-sm" placeholder="100.00" />
+                                    </div>
+                                    <div>
+                                        <label className="text-[9px] font-black text-[#8B949E] uppercase mb-2 block">Kullanım Miktarı (mt)</label>
+                                        <input type="number" value={maliyetForm.kumasMiktar} onChange={e => setMaliyetForm({ ...maliyetForm, kumasMiktar: e.target.value })} className="w-full bg-white border border-[#046A38]/10 rounded-xl px-4 py-3 outline-none focus:border-[#C8A951] font-mono text-sm" placeholder="2.50" />
+                                    </div>
+                                </div>
+                                <div className="space-y-4">
+                                    <div>
+                                        <label className="text-[9px] font-black text-[#8B949E] uppercase mb-2 block">İşçilik & Aksesuar (₺)</label>
+                                        <input type="number" value={maliyetForm.iscilik} onChange={e => setMaliyetForm({ ...maliyetForm, iscilik: e.target.value })} className="w-full bg-white border border-[#046A38]/10 rounded-xl px-4 py-3 outline-none focus:border-[#C8A951] font-mono text-sm" placeholder="50.00" />
+                                    </div>
+                                    <div className="bg-white p-4 rounded-xl border border-[#046A38]/10 shadow-inner">
+                                        <span className="text-[9px] font-black text-[#8B949E] uppercase block mb-1">Toplam Maliyet</span>
+                                        <span className="text-xl font-black text-[#046A38] font-mono">₺ {toplamMaliyet.toFixed(2)}</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className={`p-8 rounded-3xl flex justify-between items-center mb-8 transition-colors ${karlilikUygun ? 'bg-[#27AE60]/10 border border-[#27AE60]/30' : 'bg-[#E74C3C]/10 border border-[#E74C3C]/30'}`}>
+                                <div>
+                                    <div className="text-[10px] font-black uppercase text-[#8B949E] mb-1">Tahmini Kar Marjı</div>
+                                    <div className={`text-4xl font-black font-mono ${karlilikUygun ? 'text-[#27AE60]' : 'text-[#E74C3C]'}`}>%{karMarjiYuzde}</div>
                                 </div>
                                 <div className="text-right">
-                                    <div className="text-[10px] text-amber-500 font-bold uppercase mb-1">Rakip Pazar Satış Fiyatı</div>
-                                    <input
-                                        type="number"
-                                        value={maliyetForm.rakipSatis}
-                                        onChange={e => setMaliyetForm({ ...maliyetForm, rakipSatis: e.target.value })}
-                                        className="bg-[#0b121a] text-amber-400 font-mono text-right border border-amber-500/30 rounded px-2 py-1 w-24 text-sm outline-none focus:border-amber-500"
-                                    /> ₺
+                                    <div className="text-[10px] font-black text-[#8B949E] uppercase mb-1">Birim Karı</div>
+                                    <div className="text-2xl font-black font-mono text-[#2D3436]">₺ {karMarjiTutar.toFixed(2)}</div>
+                                    <span className={`text-[9px] font-black uppercase px-3 py-1 rounded-full mt-2 inline-block ${karlilikUygun ? 'bg-[#27AE60] text-white' : 'bg-[#E74C3C] text-white'}`}>
+                                        {karlilikUygun ? '✓ FİZİBİLİTE ONAYI' : '⚠ ZARAR KESME RİSKİ'}
+                                    </span>
                                 </div>
                             </div>
-
-                            <div className="grid grid-cols-2 gap-4 mb-6">
-                                <div className="space-y-4">
-                                    <div>
-                                        <label className="block text-[10px] font-bold text-[#8b949e] uppercase mb-1">Bulunan Kartela Metre Fiyatı (₺)</label>
-                                        <input type="number" placeholder="Örn: 85" value={maliyetForm.kumasFiyat} onChange={e => setMaliyetForm({ ...maliyetForm, kumasFiyat: e.target.value })} className="w-full bg-[#161b22] border border-[#30363d] rounded-lg px-3 py-2 text-white outline-none focus:border-emerald-500" />
-                                    </div>
-                                    <div>
-                                        <label className="block text-[10px] font-bold text-[#8b949e] uppercase mb-1">Takıma Kaç Metre Gider?</label>
-                                        <input type="number" placeholder="Örn: 2.5" value={maliyetForm.kumasMiktar} onChange={e => setMaliyetForm({ ...maliyetForm, kumasMiktar: e.target.value })} className="w-full bg-[#161b22] border border-[#30363d] rounded-lg px-3 py-2 text-white outline-none focus:border-emerald-500" />
-                                    </div>
-                                </div>
-                                <div className="space-y-4">
-                                    <div>
-                                        <label className="block text-[10px] font-bold text-[#8b949e] uppercase mb-1">Toplam İşçilik/Aksesuar (₺)</label>
-                                        <input type="number" placeholder="Örn: 75" value={maliyetForm.iscilik} onChange={e => setMaliyetForm({ ...maliyetForm, iscilik: e.target.value })} className="w-full bg-[#161b22] border border-[#30363d] rounded-lg px-3 py-2 text-white outline-none focus:border-emerald-500" />
-                                    </div>
-
-                                    <div className={`p-4 rounded-xl border-2 flex flex-col justify-center items-center h-[66px] transition-colors ${toplamMaliyet > 0 ? (karlilikUygun ? 'bg-emerald-500/10 border-emerald-500/50' : 'bg-rose-500/10 border-rose-500/50') : 'bg-[#161b22] border-[#30363d]'}`}>
-                                        <div className="text-[10px] font-bold uppercase tracking-widest text-[#8b949e] mb-1">BİZİM MALİYETİMİZ</div>
-                                        <div className="text-xl font-black font-mono text-white">₺ {toplamMaliyet.toFixed(2)}</div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            {toplamMaliyet > 0 && (
-                                <div className={`p-5 rounded-xl border flex justify-between items-center mb-6 transition-all ${karlilikUygun ? 'bg-emerald-950/20 border-emerald-500' : 'bg-rose-950/20 border-rose-500'}`}>
-                                    <div>
-                                        <div className={`text-xs font-bold uppercase tracking-widest ${karlilikUygun ? 'text-emerald-400' : 'text-rose-400'}`}>Tahmini Kâr Marjı</div>
-                                        <div className={`text-3xl font-black font-mono mt-1 ${karlilikUygun ? 'text-emerald-400' : 'text-rose-500'}`}>
-                                            %{karMarjiYuzde}
-                                        </div>
-                                    </div>
-                                    <div className="text-right">
-                                        <div className="text-[10px] text-[#8b949e] uppercase font-bold">Adet Başı Net Kâr</div>
-                                        <div className={`text-xl font-black font-mono ${karlilikUygun ? 'text-white' : 'text-rose-400'}`}>₺ {karMarjiTutar.toFixed(2)}</div>
-                                        {karlilikUygun ? (
-                                            <div className="text-[10px] text-emerald-400 font-bold uppercase mt-1">✓ Fizibilite Onaylandı</div>
-                                        ) : (
-                                            <div className="text-[10px] text-rose-500 font-bold uppercase mt-1">⚠ Zarar Kes (Uzak Dur)</div>
-                                        )}
-                                    </div>
-                                </div>
-                            )}
 
                             <button
-                                disabled={!karlilikUygun || toplamMaliyet === 0}
-                                onClick={() => {
-                                    setFizibiliteModalAcik(false);
-                                    m3eAktar({ ...seciliTalep, maliyet: toplamMaliyet, kar_marji: karMarjiYuzde });
-                                }}
-                                className={`w-full py-4 rounded-xl font-black text-sm uppercase tracking-widest flex items-center justify-center gap-3 transition-all ${karlilikUygun && toplamMaliyet > 0 ? 'bg-emerald-600 hover:bg-emerald-500 text-white shadow-[0_0_20px_rgba(16,185,129,0.4)]' : 'bg-[#21262d] text-[#64748b] cursor-not-allowed'}`}
+                                disabled={!karlilikUygun}
+                                onClick={() => { setFizibiliteModalAcik(false); m3eAktar({ ...seciliTalep, maliyet: toplamMaliyet, kar_marji: karMarjiYuzde }); }}
+                                className={`w-full py-5 rounded-2xl text-sm font-black uppercase tracking-[0.2em] shadow-xl transition-all ${karlilikUygun ? 'bg-[#046A38] text-white hover:bg-[#046A38]/90 shadow-[#046A38]/20' : 'bg-[#BDC3C7] text-white cursor-not-allowed'}`}
                             >
-                                <Scissors size={18} />
-                                {karlilikUygun && toplamMaliyet > 0 ? "BİNGO! ONAYLANDI -> M3 KALIPHANEYE GÖNDER" : "KÂRLILIK YETERSİZ (BEKLİYOR)"}
+                                <Scissors className="inline-block mr-3" size={18} /> M3 KALIPHANEYE GÖNDER
                             </button>
                         </div>
                     </div>
                 </div>
             )}
+
+            <style jsx global>{`
+                .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+                .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+                .custom-scrollbar::-webkit-scrollbar-thumb { background: #046A3822; border-radius: 10px; }
+                .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #046A3844; }
+                @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+            `}</style>
         </div>
     );
 }

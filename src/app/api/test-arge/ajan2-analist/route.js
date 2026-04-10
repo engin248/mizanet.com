@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { handleError, logCatch } from '@/lib/errorCore';
 
 /**
  * NİZAM KUM HAVUZU (SANDBOX) - AJAN 2: ANALİST (KANTAR & TERZİ BİRLEŞİMİ)
@@ -79,6 +80,7 @@ export async function POST(req) {
         });
 
     } catch (err) {
+        handleError('ERR-DNT-RT-001', 'api/test-arge/ajan2-analist', err, 'yuksek');
         return NextResponse.json({ error: 'Analist Ajan çökmesi', detay: err.message }, { status: 500 });
     }
 }

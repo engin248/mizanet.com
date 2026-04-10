@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { handleError, logCatch } from '@/lib/errorCore';
 import { supabaseAdmin } from '@/lib/supabaseAdmin';
 
 // ═══════════════════════════════════════════════════════════
@@ -155,7 +156,7 @@ export async function POST(req) {
         });
 
     } catch (e) {
-        console.error(`[WORKER HATA]`, e);
-        return NextResponse.json({ error: e.message }, { status: 500 });
+        handleError('ERR-AJN-RT-009', 'api/worker-ajan', e, 'yuksek');
+        return NextResponse.json({ error: e.message, hataKodu: 'ERR-AJN-RT-009' }, { status: 500 });
     }
 }

@@ -1,3 +1,5 @@
+import { handleError, logCatch } from '@/lib/errorCore';
+
 /**
  * Mizanet SİBER KARARGAH — AES-256-GCM MESAJ ŞİFRELEME MODÜLÜ
  * ─────────────────────────────────────────────────────────────
@@ -68,7 +70,7 @@ export async function mesajSifrele(metin) {
         // Format: SFR (Şifreli) prefix + salt + iv + ciphertext (hepsi hex)
         return `SFR:${bytesToHex(salt)}:${bytesToHex(iv)}:${bytesToHex(new Uint8Array(sifreli))}`;
     } catch (e) {
-        console.error('[ŞİFRELEME HATASI]', e);
+        handleError('ERR-GVN-LB-102', 'src/lib/mesajSifrele.js', e, 'orta');
         return metin; // Hata durumunda düz metni gönder (güvenli fallback)
     }
 }
@@ -100,7 +102,7 @@ export async function mesajCoz(sifreliMetin) {
 
         return new TextDecoder().decode(cozulmus);
     } catch (e) {
-        console.error('[ÇÖZME HATASI]', e);
+        handleError('ERR-GVN-LB-102', 'src/lib/mesajSifrele.js', e, 'orta');
         return '[ŞİFRELİ MESAJ — Yetkiniz yok veya anahtar hatalı]';
     }
 }

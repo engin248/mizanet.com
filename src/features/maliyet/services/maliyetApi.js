@@ -2,7 +2,7 @@
  * features/maliyet/services/maliyetApi.js
  * Tablo: b1_maliyet_kayitlari, b1_model_taslaklari
  */
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/core/db/supabaseClient';
 import { cevrimeKuyrugaAl } from '@/lib/offlineKuyruk';
 
 export async function maliyetleriGetir(orderId = null) {

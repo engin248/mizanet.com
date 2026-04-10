@@ -1,3 +1,5 @@
+import { handleError, logCatch } from '@/lib/errorCore';
+
 /**
  * silmeYetkiDogrula — Tüm Modüllerde Güvenli Silme Doğrulaması
  *
@@ -50,7 +52,8 @@ export async function silmeYetkiDogrula(kullanici, mesajMetni = null) {
         } else {
             return { yetkili: false, mesaj: 'Hatalı PIN. Yetkisiz işlem engellendi.' };
         }
-    } catch {
+    } catch (e) {
+        logCatch('ERR-GVN-LB-103', 'src/lib/silmeYetkiDogrula.js', e);
         return { yetkili: false, mesaj: 'Sunucuya ulaşılamadı. Silme işlemi iptal edildi.' };
     }
 }

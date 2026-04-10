@@ -1,10 +1,11 @@
 ﻿'use client';
+import { handleError, logCatch } from '@/lib/errorCore';
 /**
  * features/kalip/hooks/useKalip.js
  * M16 Kalıp Arşivi — Beden & Desen Yönetimi
  */
 import { useState, useEffect, useCallback } from 'react';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/core/db/supabaseClient';
 import { silmeYetkiDogrula } from '@/lib/silmeYetkiDogrula';
 import {
     kaliplariGetir, kalipKaydet as apiKaydet,
@@ -27,6 +28,7 @@ export function useKalip(kullanici) {
         setLoading(true);
         try { setKalipler(await kaliplariGetir()); }
         catch (e) { goster('Kalıplar yüklenemedi: ' + e.message, 'error'); }
+            handleError('ERR-MDL-HK-101', 'src/features/kalip/hooks/useKalip.js', e, 'orta');
         setLoading(false);
     }, []);
 
@@ -50,6 +52,7 @@ export function useKalip(kullanici) {
             }
             setForm(BOSH_FORM); setFormAcik(false); setDuzenleId(null); yukle();
         } catch (e) { goster(e.message, 'error'); }
+            handleError('ERR-MDL-HK-101', 'src/features/kalip/hooks/useKalip.js', e, 'orta');
         setLoading(false);
     };
 
@@ -59,6 +62,7 @@ export function useKalip(kullanici) {
         if (!confirm('Pasif arşive kaldırılsın mı?')) return;
         try { await apiSil(id, kullanici?.label); goster('Arşive kaldırıldı.'); yukle(); }
         catch (e) { goster(e.message, 'error'); }
+            handleError('ERR-MDL-HK-101', 'src/features/kalip/hooks/useKalip.js', e, 'orta');
     };
 
     const duzenleAc = (k) => { setForm({ kalip_kodu: k.kalip_kodu, kalip_adi: k.kalip_adi, model_kodu: k.model_kodu || '', bedenler: k.bedenler || [], gorsel_url: k.gorsel_url || '', notlar: k.notlar || '' }); setDuzenleId(k.id); setFormAcik(true); };

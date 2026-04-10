@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 /**
  * features/ayarlar/components/AyarlarRefactored.jsx
  *
@@ -12,7 +12,7 @@ import {
 } from 'lucide-react';
 import { useAyarlar, VARSAYILAN_AYARLAR } from '../hooks/useAyarlar';
 import { logoYukle } from '../services/ayarlarApi';
-import { useAuth } from '@/lib/auth';
+import { useAuth } from '@/core/auth';
 
 // ─── Toggle bileşeni ─────────────────────────────────────────────
 function Toggle({ aktif, onClick, etiket }) {

@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { handleError, logCatch } from '@/lib/errorCore';
 import { supabaseAdmin } from '@/lib/supabaseAdmin';
 
 // ESKİ GEMINI VE MOCK ANALİZ METOTLARI BATCH SİSTEMİNE TAŞINMIŞTIR.
@@ -61,7 +62,7 @@ export async function POST(req) {
             const urun = hamUrunler[i];
 
             let parsedHamVeri = {};
-            try { parsedHamVeri = typeof urun.ham_veri === 'string' ? JSON.parse(urun.ham_veri) : urun.ham_veri || {}; } catch (e) { console.error('[CATCH ajan-yargic]', e?.message || e); }
+            try { parsedHamVeri = typeof urun.ham_veri === 'string' ? JSON.parse(urun.ham_veri) : urun.ham_veri || {}; } catch (e) { logCatch('ERR-AJN-RT-007', 'api/ajan-yargic', e); }
             const urunAdi = parsedHamVeri.isim || 'Bilinmeyen Ürün';
             const fiyatSayi = parsedHamVeri.fiyatSayi || 0;
             const kaynak = urun.veri_kaynagi || 'Trendyol';
@@ -98,6 +99,7 @@ export async function POST(req) {
         return NextResponse.json({ basarili: true, sonuc: OzetStr });
 
     } catch (e) {
+        handleError('ERR-AJN-RT-006', 'api/ajan-yargic', e, 'yuksek');
         if (req.body?.gorev_id) {
             await supabaseAdmin.from('b1_ajan_gorevler').update({
                 durum: 'hata', hata_mesaji: e.message

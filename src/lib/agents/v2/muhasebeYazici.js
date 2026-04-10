@@ -4,6 +4,7 @@
 // Aylık + manuel — kapsamlı finansal rapor
 // ============================================================
 import { sb, AJAN_ISIMLERI, logYaz } from './_ortak';
+import { handleError, logCatch } from '@/lib/errorCore';
 
 export async function muhasebeYazici() {
     const isim = AJAN_ISIMLERI.MUHASEBE;
@@ -78,6 +79,7 @@ export async function muhasebeYazici() {
         return { basarili: true, rapor: raporMetni, sonuc };
 
     } catch (e) {
+        handleError('ERR-AJN-LB-109', 'src/lib/agents/v2/muhasebeYazici.js', e, 'orta');
         await logYaz(isim, 'aylik_rapor', `Hata: ${e.message}`, 'hata');
         return { basarili: false, hata: e.message };
     }

@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { handleError, logCatch } from '@/lib/errorCore';
 import { M1GelistirilmisTrendMotoru } from '@/services/M1TrendAnalizMotoru';
 
 export async function POST(req) {
@@ -70,6 +71,7 @@ export async function POST(req) {
         });
 
     } catch (e) {
+        handleError('ERR-ARG-RT-002', 'api/m1-motor-test', e, 'yuksek');
         return NextResponse.json({ basarili: false, error: e.message }, { status: 500 });
     }
 }

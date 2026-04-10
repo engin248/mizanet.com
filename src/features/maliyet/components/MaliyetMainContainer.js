@@ -1,11 +1,12 @@
 ﻿'use client';
+import { handleError, logCatch } from '@/lib/errorCore';
 import { cevrimeKuyrugaAl } from '@/lib/offlineKuyruk';
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { DollarSign, Plus, Trash2, BarChart2, Edit2, X, TrendingUp, Package, Calculator, Upload, ChevronDown, Lock } from 'lucide-react';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/core/db/supabaseClient';
 import { fetchIsEmriForMaliyet } from '@/features/uretim/services/uretimApi';
 import { createGoster, telegramBildirim, formatTarih, yetkiKontrol } from '@/lib/utils';
-import { useAuth } from '@/lib/auth';
+import { useAuth } from '@/core/auth';
 import { useLang } from '@/lib/langContext';
 import { silmeYetkiDogrula } from '@/lib/silmeYetkiDogrula';
 import Link from 'next/link';
@@ -80,6 +81,7 @@ export default function MaliyetMainContainer() {
                 setOrderler([]);
             }
         } catch (error) {
+        handleError('ERR-MLY-CM-101', 'src/features/maliyet/components/MaliyetMainContainer.js', error, 'orta');
             goster('Yükleme hatası: ' + error.message, 'error');
         }
         setLoading(false);

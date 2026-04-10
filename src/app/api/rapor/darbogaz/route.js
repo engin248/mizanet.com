@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { handleError, logCatch } from '@/lib/errorCore';
 import { supabaseAdmin as sb } from '@/lib/supabaseAdmin';
 
 // ============================================================
@@ -135,6 +136,7 @@ export async function GET(req) {
         });
 
     } catch (e) {
+        handleError('ERR-RPR-RT-002', 'api/rapor/darbogaz', e, 'yuksek');
         return NextResponse.json({ error: e.message }, { status: 500 });
     }
 }
@@ -205,6 +207,7 @@ Sadece şu JSON formatında yanıt ver:
                     kaynak = 'gemini_vision';
                 }
             } catch (visionErr) {
+        handleError('ERR-RPR-RT-002', 'api/rapor/darbogaz', visionErr, 'yuksek');
                 // Vision başarısız → mock
             }
         }
@@ -270,6 +273,7 @@ Sadece şu JSON formatında yanıt ver:
         });
 
     } catch (e) {
+        handleError('ERR-RPR-RT-002', 'api/rapor/darbogaz', e, 'yuksek');
         return NextResponse.json({ error: e.message }, { status: 500 });
     }
 }

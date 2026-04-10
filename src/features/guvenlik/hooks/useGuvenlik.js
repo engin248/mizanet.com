@@ -1,10 +1,11 @@
 ﻿'use client';
+import { handleError, logCatch } from '@/lib/errorCore';
 /**
  * features/guvenlik/hooks/useGuvenlik.js
  * M24 Güvenlik — RBAC + Audit Log + Giriş Kilidi
  */
 import { useState, useEffect, useCallback } from 'react';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/core/db/supabaseClient';
 
 export function useGuvenlik(kullanici) {
     const [loglar, setLoglar] = useState([]);
@@ -25,6 +26,7 @@ export function useGuvenlik(kullanici) {
             if (logRes.status === 'fulfilled') setLoglar(logRes.value.data || []);
             if (girisRes.status === 'fulfilled') setGirisGirisimleri(girisRes.value.data || []);
         } catch (e) { goster('Log yüklenemedi: ' + e.message, 'error'); }
+            handleError('ERR-GVN-HK-101', 'src/features/guvenlik/hooks/useGuvenlik.js', e, 'orta');
         setLoading(false);
     }, []);
 

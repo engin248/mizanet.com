@@ -4,6 +4,7 @@
 // Her 2 saatte — anlık tehlike sinyali izler
 // ============================================================
 import { sb, AJAN_ISIMLERI, logYaz, alarmYaz } from './_ortak';
+import { handleError, logCatch } from '@/lib/errorCore';
 
 export async function nabiz() {
     const isim = AJAN_ISIMLERI.NABIZ;
@@ -98,6 +99,7 @@ export async function nabiz() {
         return { basarili: true, sonuc };
 
     } catch (e) {
+        handleError('ERR-AJN-LB-110', 'src/lib/agents/v2/nabiz.js', e, 'orta');
         await logYaz(isim, 'nabiz_kontrol', `Hata: ${e.message}`, 'hata');
         return { basarili: false, hata: e.message };
     }

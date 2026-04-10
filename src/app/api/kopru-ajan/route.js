@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { handleError, logCatch } from '@/lib/errorCore';
 import { supabaseAdmin } from '@/lib/supabaseAdmin';
 
 // GUI'DE TRACE GÖSTERİMİ İÇİN
@@ -32,6 +33,7 @@ _Karargah panelinden onaylayın._`;
         });
         return res.ok;
     } catch (err) {
+        handleError('ERR-AJN-RT-011', 'api/kopru-ajan', err, 'yuksek');
         return false;
     }
 }
@@ -127,6 +129,7 @@ export async function POST(req) {
         return NextResponse.json({ basarili: true, sonuc: sonucMesaji });
 
     } catch (e) {
+        handleError('ERR-AJN-RT-011', 'api/kopru-ajan', e, 'yuksek');
         if (req.body?.gorev_id) {
             await supabaseAdmin.from('b1_ajan_gorevler').update({
                 durum: 'hata', hata_mesaji: e.message

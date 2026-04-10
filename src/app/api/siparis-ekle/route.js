@@ -1,8 +1,9 @@
-﻿import { NextResponse } from 'next/server';
-import { supabaseAdmin } from '@/lib/supabaseAdmin';
+import { NextResponse } from 'next/server';
+import { supabaseAdmin } from '@/core/db/supabaseAdmin';
 import { rateLimitKontrol } from '@/lib/rateLimit';
 import { siparisSchema, siparisKalemSchema, veriDogrula } from '@/lib/zodSchemas';
 import { hataBildir } from '@/lib/hataBildirim';
+import { handleError, logCatch } from '@/lib/errorCore';
 
 // ─── POST /api/siparis-ekle ────────────────────────────────────
 export async function POST(request) {
@@ -77,7 +78,7 @@ export async function POST(request) {
                 kullanici_adi: 'Server API (Güvenli Sipariş)',
                 eski_veri: { siparis_no: siparisDog.data.siparis_no, kalem_sayisi: kalemler.length }
             }]);
-        } catch (e) { console.error('[KÖR NOKTA ZIRHI - SESSİZ YUTMA ENGELLENDİ] Dosya: route.js | Hata:', e ? e.message || e : 'Bilinmiyor'); }
+        } catch (e) { logCatch('ERR-SPR-RT-002', 'api/siparis-ekle/kara-kutu-log', e); }
 
         // [M9 - ZIRH #2]: Müşteri Cari Bakiyesi ve M7 Kasa Entegrasyonu (Finans Zırhı)
         if (siparisDog.data.musteri_id) {
@@ -118,7 +119,7 @@ export async function POST(request) {
         return NextResponse.json({ basarili: true, siparis: sipData }, { status: 201 });
 
     } catch (error) {
-        console.error('[/api/siparis-ekle] Hata:', error.message);
+        handleError('ERR-SPR-RT-001', 'api/siparis-ekle', error, 'yuksek', { tablo: 'b2_siparisler' });
         await hataBildir('/api/siparis-ekle', error);
         return NextResponse.json({ hata: 'Sunucu hatası: ' + error.message }, { status: 500 });
     }

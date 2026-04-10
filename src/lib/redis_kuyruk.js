@@ -1,3 +1,5 @@
+import { handleError, logCatch } from '@/lib/errorCore';
+
 const { Redis } = require('@upstash/redis');
 require('dotenv').config({ path: '.env.local' });
 const crypto = require('crypto');
@@ -23,7 +25,7 @@ async function KuyrugaEkle(queueName, jobData) {
         console.log(`[REDIS] Görev eklendi. Kuyruk: ${queueName}, Uzunluk: ${length}`);
         return length;
     } catch (error) {
-        console.error(`[REDIS ERROR] KuyrugaEkle başarısız:`, error);
+        handleError('ERR-SYS-LB-105', 'src/lib/redis_kuyruk.js', error, 'orta');
         throw error;
     }
 }
@@ -38,7 +40,7 @@ async function KuyruktanAl(queueName) {
         if (!jobString) return null;
         return JSON.parse(jobString);
     } catch (error) {
-        console.error(`[REDIS ERROR] KuyruktanAl başarısız:`, error);
+        handleError('ERR-SYS-LB-105', 'src/lib/redis_kuyruk.js', error, 'orta');
         return null;
     }
 }
@@ -47,6 +49,7 @@ async function KuyrukUzunlugu(queueName) {
     try {
         return await redis.llen(queueName);
     } catch (error) {
+        handleError('ERR-SYS-LB-105', 'src/lib/redis_kuyruk.js', error, 'orta');
         return 0;
     }
 }

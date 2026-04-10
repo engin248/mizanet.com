@@ -44,6 +44,7 @@ export const telegramFotoGonder = async (blob, mesaj) => {
         });
         return await res.json();
     } catch (e) {
+        handleError('ERR-SYS-LB-106', 'src/lib/utils.js', e, 'orta');
         logCatch('utils.telegramFotoGonder', e);
         return { success: false };
     }
@@ -73,6 +74,7 @@ export const yetkiKontrol = (kullanici) => {
     try {
         return !!sessionStorage.getItem('sb47_uretim_token');
     } catch (e) {
+        handleError('ERR-SYS-LB-106', 'src/lib/utils.js', e, 'orta');
         logCatch('utils.yetkiKontrol', e);
         return false;
     }

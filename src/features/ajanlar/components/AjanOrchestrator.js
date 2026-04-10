@@ -1,4 +1,5 @@
 'use client';
+import { handleError, logCatch } from '@/lib/errorCore';
 import { useState, useCallback } from 'react';
 import { Bot, Play, CheckCircle2, AlertTriangle, Loader2, Zap, ShieldCheck, RefreshCw, ChevronRight, Users } from 'lucide-react';
 
@@ -143,6 +144,7 @@ export default function AjanOrchestrator() {
                 logEkle('❌ Tarama hatası', 'error');
             }
         } catch (e) {
+        handleError('ERR-AJN-CM-102', 'src/features/ajanlar/components/AjanOrchestrator.js', e, 'orta');
             setMesaj('❌ Bağlantı hatası: ' + e.message);
             logEkle('❌ ' + e.message, 'error');
         }
@@ -195,6 +197,7 @@ export default function AjanOrchestrator() {
                 logEkle('❌ Dağıtım başarısız', 'error');
             }
         } catch (e) {
+        handleError('ERR-AJN-CM-102', 'src/features/ajanlar/components/AjanOrchestrator.js', e, 'orta');
             setWorkerADurum('hata'); setWorkerBDurum('hata');
             logEkle('❌ ' + e.message, 'error');
         }
@@ -225,6 +228,7 @@ export default function AjanOrchestrator() {
                 logEkle('❌ Doğrulama başarısız', 'error');
             }
         } catch (e) {
+        handleError('ERR-AJN-CM-102', 'src/features/ajanlar/components/AjanOrchestrator.js', e, 'orta');
             logEkle('❌ ' + e.message, 'error');
         }
         setAsama('tamamlandi');

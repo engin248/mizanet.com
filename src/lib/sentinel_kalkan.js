@@ -9,14 +9,30 @@ const supabase = createClient(
 
 /**
  * Karargaha (M1) anlık telemetri (hayatta kalma sinyali ve yüzdelik) basar.
+ * Dosya: src/lib/sentinel_kalkan.js
+ * Hata Kodu: ERR-SYS-LB-010
+ *
+ * @param {string} job_id
+ * @param {number} ilerleme
+ * @param {string} mesaj
+ * @param {string} [durum]
+ * @param {string} [hataKodu] - ERR-{MODUL}-{KATMAN}-{NUMARA}
  */
-async function telemetriGuncelle(job_id, ilerleme, mesaj, durum = 'çalışıyor') {
+async function telemetriGuncelle(job_id, ilerleme, mesaj, durum = 'çalışıyor', hataKodu = null) {
     try {
+        const guncelleme = {
+            ilerleme_yuzdesi: ilerleme,
+            son_mesaj: hataKodu ? `[${hataKodu}] ${mesaj}` : mesaj,
+            durum: durum,
+            son_guncelleme: new Date().toISOString(),
+        };
+        if (hataKodu) guncelleme.hata_kodu = hataKodu;
+
         await supabase.from('bot_tracking_logs')
-            .update({ ilerleme_yuzdesi: ilerleme, son_mesaj: mesaj, durum: durum, son_guncelleme: new Date().toISOString() })
+            .update(guncelleme)
             .eq('job_id', job_id);
     } catch (err) {
-        console.error("[TELEMETRİ HATASI]:", err.message);
+        console.error("[ERR-SYS-LB-010] [TELEMETRİ HATASI]:", err.message);
     }
 }
 
@@ -37,9 +53,10 @@ async function SentinelZirhi(job_id, hedef, botFonksiyonu, zamanAsimiSaniye = 45
         // İNFAZ (KILL SWITCH) MANTIGI: Zombi Bot Süresi Dolduğunda Parçalanır
         const infazZamanlayici = setTimeout(async () => {
             killSwitchTetiklendi = true;
-            console.error(`[SENTINEL İNFAZ TİMİ] ⚡ Ajan ${zamanAsimiSaniye} saniyeyi aştı. Hedefte kayboldu. Kellesi Alındı!`);
+            const infazKodu = 'ERR-SYS-LB-010';
+            console.error(`[${infazKodu}] [SENTINEL İNFAZ TİMİ] ⚡ Ajan ${zamanAsimiSaniye} saniyeyi aştı. Hedefte kayboldu. Kellesi Alındı!`);
 
-            await telemetriGuncelle(job_id, 0, `[İNFAZ] Ajan kontrolden çıktığı için Sentinel tarafından (Zaman Aşımı) mermi ile öldürüldü.`, 'INFAZ_EDILDI');
+            await telemetriGuncelle(job_id, 0, `Ajan kontrolden çıktığı için Sentinel tarafından (Zaman Aşımı) mermi ile öldürüldü.`, 'INFAZ_EDILDI', infazKodu);
 
             // Yeni Asker (Reincarnation) için Error fırlat
             reject(new Error("SENTINEL_KILL_SWITCH_TETIKLENDI"));
@@ -59,8 +76,9 @@ async function SentinelZirhi(job_id, hedef, botFonksiyonu, zamanAsimiSaniye = 45
         } catch (botHatasi) {
             clearTimeout(infazZamanlayici); // İç hata varsa infaz sayacını iptal et, çünkü bot kendi öldü
             if (!killSwitchTetiklendi) {
-                console.error("[SENTINEL HATA TESPİTİ] Ajan iç çökme ile parçalandı:", botHatasi.message);
-                await telemetriGuncelle(job_id, 0, `[ÇÖKME] Ajan iç hatadan dolayı kalbinden patladı: ${botHatasi.message}`, 'INFAZ_EDILDI');
+                const cokmeKodu = 'ERR-SYS-LB-010';
+                console.error(`[${cokmeKodu}] [SENTINEL HATA TESPİTİ] Ajan iç çökme ile parçalandı:`, botHatasi.message);
+                await telemetriGuncelle(job_id, 0, `Ajan iç hatadan dolayı kalbinden patladı: ${botHatasi.message}`, 'INFAZ_EDILDI', cokmeKodu);
                 reject(botHatasi);
             }
         }

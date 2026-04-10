@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { handleError, logCatch } from '@/lib/errorCore';
 import { createClient } from '@supabase/supabase-js';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -90,6 +91,7 @@ export async function POST(req) {
         });
 
     } catch (error) {
+        handleError('ERR-KMR-RT-001', 'api/kamera-sayac', error, 'yuksek');
         return NextResponse.json({ success: false, error: error.message }, { status: 500 });
     }
 }

@@ -1,8 +1,8 @@
-'use client';
+﻿'use client';
 import { useState, useEffect, useCallback } from 'react';
 import { Bell, X, CheckCheck, AlertTriangle, Package, Clock, ShieldAlert } from 'lucide-react';
-import { supabase } from '@/lib/supabase';
-import { useAuth } from '@/lib/auth';
+import { supabase } from '@/core/db/supabaseClient';
+import { useAuth } from '@/core/auth';
 
 const TIP_IKON = {
     risk_ihlali: { ikon: ShieldAlert, renk: '#ef4444', bg: '#fef2f2' },

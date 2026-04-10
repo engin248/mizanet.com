@@ -1,8 +1,8 @@
-/**
+﻿/**
  * features/karargah/services/karargahApi.js
  * Dashboard — Tüm tablolardan özet metrikler
  */
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/core/db/supabaseClient';
 
 export async function karargahMetrikleriGetir() {
     const [sipRes, uretimRes, stokRes, muhasRes, argeRes, ajanRes] = await Promise.allSettled([

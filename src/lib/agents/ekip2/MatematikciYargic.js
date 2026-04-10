@@ -21,6 +21,7 @@
  */
 
 import { createClient } from '@supabase/supabase-js';
+import { handleError, logCatch } from '@/lib/errorCore';
 
 // NİZAM Veritabanı (M1 Ar-Ge Tabloları)
 const supabase = createClient(
@@ -105,7 +106,7 @@ export class Ekip2_MatematikciYargic {
             const text = data.candidates?.[0]?.content?.parts?.[0]?.text || "{}";
             llmAnaliz = JSON.parse(text);
         } catch (e) {
-            console.error(`[EKİP 2] LLM Analiz Motoru Bağlantı Hatası (${urun.product_name}):`, e.message);
+            handleError('ERR-AJN-LB-102', 'src/lib/agents/ekip2/MatematikciYargic.js', e, 'orta');
             return; // Hata durumunda atla, çöp veri basma.
         }
 
@@ -176,7 +177,7 @@ export class Ekip2_MatematikciYargic {
             });
 
         } catch (dbError) {
-            console.error(`     [HATA] Veritabanına mühür basılamadı:`, dbError.message);
+            handleError('ERR-AJN-LB-102', 'src/lib/agents/ekip2/MatematikciYargic.js', dbError, 'orta');
         }
     }
 }

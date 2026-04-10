@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { handleError, logCatch } from '@/lib/errorCore';
 
 /**
  * /api/serp-trend
@@ -138,6 +139,7 @@ export async function POST(req) {
         });
 
     } catch (err) {
+        handleError('ERR-ARG-RT-005', 'api/serp-trend', err, 'yuksek');
         if (err.name === 'AbortError') {
             return NextResponse.json({ error: 'SerpAPI zaman aşımı (12sn).' }, { status: 504 });
         }

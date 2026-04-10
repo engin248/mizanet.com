@@ -1,5 +1,6 @@
 ﻿import { NextResponse } from 'next/server';
 import { spamKontrol } from '@/lib/ApiZirhi';
+import { handleError, logCatch } from '@/lib/errorCore';
 
 export const dynamic = 'force-dynamic';
 export const maxDuration = 5;
@@ -43,6 +44,7 @@ export async function GET(request) {
         return NextResponse.json({ durum: 'hata', mesaj: `HTTP ${res.status}` }, { status: 200 });
 
     } catch (error) {
+        handleError('ERR-KMR-RT-003', 'api/stream-durum', error, 'yuksek');
         return NextResponse.json({
             durum: 'kapali',
             mesaj: 'Baglanti koptu'

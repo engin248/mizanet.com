@@ -1,5 +1,6 @@
-﻿import { NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/lib/supabaseAdmin';
+import { handleError, logCatch } from '@/lib/errorCore';
 
 
 const MAX_ISTEK = 5;              // [C2-THROTTLE] Dakikada maksimum 5 mesaj
@@ -62,15 +63,15 @@ export async function POST(request) {
                     engellendi = true;
                 } else {
                     const { error: updErr } = await supabaseAdmin.from('b0_api_spam_kalkani').update({ spam_sayaci: dbKayit.spam_sayaci + 1 }).eq('ip_adresi', ip);
-                    if (updErr) console.error("Spam Update Error:", updErr.message);
+                    if (updErr) logCatch('ERR-SYS-RT-006', 'api/telegram-bildirim', new Error("Spam Update Error:", updErr.message));
                 }
             } else {
                 const { error: updErr2 } = await supabaseAdmin.from('b0_api_spam_kalkani').update({ spam_sayaci: 1, son_vurus_saati: new Date().toISOString() }).eq('ip_adresi', ip);
-                if (updErr2) console.error("Spam Reset Error:", updErr2.message);
+                if (updErr2) logCatch('ERR-SYS-RT-006', 'api/telegram-bildirim', new Error("Spam Reset Error:", updErr2.message));
             }
         } else {
             const { error: insErr } = await supabaseAdmin.from('b0_api_spam_kalkani').insert([{ ip_adresi: ip, spam_sayaci: 1 }]);
-            if (insErr) console.error("Spam Insert Error:", insErr.message);
+            if (insErr) logCatch('ERR-SYS-RT-006', 'api/telegram-bildirim', new Error("Spam Insert Error:", insErr.message));
         }
         if (engellendi) {
             return NextResponse.json({ success: false, error: 'Telegram zirhi devrede. Cok fazla istek.' }, { status: 429 });
@@ -88,7 +89,7 @@ export async function POST(request) {
                     .eq('son_mesaj_ozeti', mesajOnizleme)
                     .single();
                 dupCheck = data;
-            } catch (dupErr) { console.error('[TELEGRAM DUP-CHECK HATASI]', dupErr?.message); /* Duplicate check fail - yine de gonder */ }
+            } catch (dupErr) { logCatch('ERR-SYS-RT-006', 'api/telegram-bildirim', dupErr); /* Duplicate check fail - yine de gonder */ }
 
             if (dupCheck) {
                 const gecenSn = (new Date().getTime() - new Date(dupCheck.son_vurus_saati).getTime()) / 1000;
@@ -140,6 +141,7 @@ export async function POST(request) {
         return NextResponse.json({ success: res.ok, data: veri }, { status: res.ok ? 200 : 500 });
 
     } catch (error) {
+        handleError('ERR-HBR-RT-005', 'api/telegram-bildirim', error, 'yuksek');
         return NextResponse.json({ success: false, error: error.message }, { status: 500 });
     }
 }

@@ -1,8 +1,8 @@
-/**
+﻿/**
  * features/imalat/services/imalatApi.js
  * Tablo: b1_imalat_emirleri, b1_model_taslaklari
  */
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/core/db/supabaseClient';
 import { telegramBildirim } from '@/lib/utils';
 import { cevrimeKuyrugaAl } from '@/lib/offlineKuyruk';
 

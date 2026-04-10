@@ -1,9 +1,9 @@
-/**
+﻿/**
  * features/modelhane/services/modelhaneApi.js
  * Tablo: b1_model_taslaklari, b1_modelhane_videolari
  * [B-09c FIX] Servis dosyası oluşturuldu
  */
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/core/db/supabaseClient';
 import { cevrimeKuyrugaAl } from '@/lib/offlineKuyruk';
 
 export async function modelleriGetir() {

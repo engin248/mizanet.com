@@ -1,10 +1,11 @@
-/**
+﻿/**
  * usePersonel — Personel CRUD + Devam Hook
  * Kullanım: const { personeller, devamlar, yukle, kaydet, sil, loading, mesaj } = usePersonel(kullanici);
  */
 'use client';
+import { handleError, logCatch } from '@/lib/errorCore';
 import { useState, useCallback } from 'react';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/core/db/supabaseClient';
 import { createGoster, telegramBildirim } from '@/lib/utils';
 
 export function usePersonel(kullanici) {
@@ -34,6 +35,7 @@ export function usePersonel(kullanici) {
             setPersoneller(pRes.data || []);
             setDevamlar(dRes.data || []);
         } catch (e) {
+        handleError('ERR-PRS-HK-102', 'src/hooks/usePersonel.js', e, 'orta');
             goster('Personel verileri alınamadı: ' + e.message, 'error');
         }
         setLoading(false);

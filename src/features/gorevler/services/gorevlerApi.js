@@ -1,9 +1,9 @@
-/**
+﻿/**
  * features/gorevler/services/gorevlerApi.js
  * Tablo: b1_gorevler (Mizanet sistemi b1_ prefix standardı)
  * [DÜZELTİLDİ] b0_gorevler → b1_gorevler tablo adı tutarlı hale getirildi
  */
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/core/db/supabaseClient';
 import { cevrimeKuyrugaAl } from '@/lib/offlineKuyruk';
 
 export async function gorevleriGetir(filtre = {}) {

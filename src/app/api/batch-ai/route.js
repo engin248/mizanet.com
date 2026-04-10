@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { handleError, logCatch } from '@/lib/errorCore';
 import { supabaseAdmin } from '@/lib/supabaseAdmin';
 
 // ─── BATCH GEMİNİ ANALİZ MOTORU ─────────────────────────────────────
@@ -40,6 +41,7 @@ ${JSON.stringify(pazar_urunleri)}`;
 
         return { error: null, results: sonuclarListesi, resultTokenCost };
     } catch (err) {
+        handleError('ERR-AJN-RT-012', 'api/batch-ai', err, 'yuksek');
         return { error: err.message, results: [] };
     }
 }
@@ -153,6 +155,7 @@ export async function POST(req) {
         });
 
     } catch (e) {
+        handleError('ERR-AJN-RT-012', 'api/batch-ai', e, 'yuksek');
         return NextResponse.json({ error: e.message }, { status: 500 });
     }
 }

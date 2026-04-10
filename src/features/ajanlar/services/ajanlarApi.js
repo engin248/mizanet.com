@@ -1,10 +1,10 @@
-/**
+﻿/**
  * features/ajanlar/services/ajanlarApi.js
  * M19 AI Ajanlar — Supabase Servis Katmanı
  * Kapsam: Görev oluştur, çalıştır, sil, logla
  * KAPSAM DIŞI: e-Fatura (GİB), SSK/SGK otomasyonu
  */
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/core/db/supabaseClient';
 import { telegramBildirim } from '@/lib/utils';
 
 // ── Veri Çekme ───────────────────────────────────────────────────────────────

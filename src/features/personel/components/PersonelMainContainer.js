@@ -1,4 +1,5 @@
 ﻿'use client';
+import { handleError, logCatch } from '@/lib/errorCore';
 /**
  * features/personel/components/PersonelMainContainer.js
  * Kaynak: app/personel/page.js → features mimarisine taşındı
@@ -8,9 +9,9 @@
 import { cevrimeKuyrugaAl } from '@/lib/offlineKuyruk';
 import { useState, useEffect } from 'react';
 import { Users, Plus, Search, Award, Clock, TrendingUp, Trash2, AlertCircle, CheckCircle2, Star, Lock } from 'lucide-react';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/core/db/supabaseClient';
 import { createGoster, telegramBildirim, formatTarih } from '@/lib/utils';
-import { useAuth } from '@/lib/auth';
+import { useAuth } from '@/core/auth';
 import { useLang } from '@/lib/langContext';
 import { silmeYetkiDogrula } from '@/lib/silmeYetkiDogrula';
 import Link from 'next/link';
@@ -89,7 +90,7 @@ export default function PersonelMainContainer() {
                         prim_orani: parsed.prim_orani ?? 0.15,
                         yillik_izin_hakki: parsed.yillik_izin_hakki ?? 15,
                     });
-                } catch (e) { console.error('[PERSONEL] Ayar JSON parse hatası:', e?.message); }
+                } catch (e) { logCatch('ERR-PRS-CM-101', 'src/features/personel/components/PersonelMainContainer.js', e); }
             }
         } catch (error) { goster('Ayarlar Oku Hatası: ' + error.message, 'error'); }
     };
@@ -215,7 +216,7 @@ export default function PersonelMainContainer() {
                     kullanici_adi: 'Saha Yetkilisi (Otonom Log)',
                     eski_veri: { durum: 'Veri kalici silinmeden once loglandi.' }
                 }]);
-            } catch (e) { console.error('[KÖR NOKTA ZIRHI - SESSİZ YUTMA ENGELLENDİ] Dosya: PersonelMainContainer.js | Hata:', e ? e.message || e : 'Bilinmiyor'); }
+            } catch (e) { logCatch('ERR-PRS-CM-101', 'src/features/personel/components/PersonelMainContainer.js', e); }
 
             const { error } = await supabase.from('b1_personel').delete().eq('id', id);
             if (error) throw error;
@@ -293,7 +294,7 @@ export default function PersonelMainContainer() {
                     kullanici_adi: 'Saha Yetkilisi (Otonom Log)',
                     eski_veri: { durum: 'Veri kalici silinmeden once loglandi.' }
                 }]);
-            } catch (e) { console.error('[KÖR NOKTA ZIRHI - SESSİZ YUTMA ENGELLENDİ] Dosya: PersonelMainContainer.js | Hata:', e ? e.message || e : 'Bilinmiyor'); }
+            } catch (e) { logCatch('ERR-PRS-CM-101', 'src/features/personel/components/PersonelMainContainer.js', e); }
 
             const { error } = await supabase.from('b1_personel_devam').delete().eq('id', id);
             if (error) throw error;

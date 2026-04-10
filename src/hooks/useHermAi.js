@@ -1,4 +1,5 @@
 'use client';
+import { handleError, logCatch } from '@/lib/errorCore';
 /**
  * src/hooks/useHermAi.js — HermAI Kullanım Hook'u
  *
@@ -53,6 +54,7 @@ export function useHermAi() {
             setHermSonuc(sonuc);
             return sonuc;
         } catch (err) {
+        handleError('ERR-ARG-HK-102', 'src/hooks/useHermAi.js', err, 'orta');
             const hata = { status: 'error', sebep: err.message };
             setHermHata(hata);
             setHermSonuc(null);

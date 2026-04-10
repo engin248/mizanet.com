@@ -1,235 +1,133 @@
+/**
+ * src/middleware.js
+ * Hata Kodu: ERR-SYS-PG-004
+ * ─────────────────────────────────────────────────────────────────
+ * MİZANET — Middleware Orkestratör
+ *
+ * Bu dosya YALNIZCA koordinasyon yapar.
+ * Tüm iş mantığı core/security/ modüllerindedir:
+ *   · botBlocker.js  → bot/honeypot tespiti
+ *   · jwtHelper.js   → JWT doğrulama
+ *   · routeGuard.js  → route listesi ve yetki kararı
+ *
+ * Hata Kodları:
+ *   ERR-SYS-PG-004 → Middleware iç hata
+ *   ERR-AUTH-RT-*   → Kimlik doğrulama hataları
+ *   ERR-GVN-RT-*    → Güvenlik hataları
+ *
+ * Toplam: ~100 satır (önceki: 244 satır)
+ * ─────────────────────────────────────────────────────────────────
+ */
 import { NextResponse } from 'next/server';
-
-// ─── BOT/CRAWLER İMZALARI ──────────────────────────────────────
-const BOT_IMZALARI = [
-    'sqlmap', 'nikto', 'nmap', 'masscan', 'zgrab',
-    'python-requests', 'go-http-client', 'curl/',
-    'wget/', 'libwww-perl', 'scrapy', 'ahrefsbot',
-    'semrushbot', 'dotbot', 'mj12bot', 'petalbot',
-];
-
-// ─── İMZASIZ JWT DOĞRULAMA (Edge Runtime — SubtleCrypto) ────────
-async function jwtDogrula(token, sirri) {
-    if (!token || !sirri) return null;
-    try {
-        const parts = token.split('.');
-        if (parts.length !== 3) return null;
-
-        const header = parts[0];
-        const payload = parts[1];
-        const signature = parts[2];
-
-        // İmza doğrulama
-        const encoder = new TextEncoder();
-        const key = await crypto.subtle.importKey(
-            'raw',
-            encoder.encode(sirri),
-            { name: 'HMAC', hash: 'SHA-256' },
-            false,
-            ['verify']
-        );
-
-        const veri = encoder.encode(`${header}.${payload}`);
-        const imzaBuf = Uint8Array.from(
-            atob(signature.replace(/-/g, '+').replace(/_/g, '/')),
-            c => c.charCodeAt(0)
-        );
-
-        const gecerli = await crypto.subtle.verify('HMAC', key, imzaBuf, veri);
-        if (!gecerli) return null;
-
-        // Payload çözümle
-        const payloadJson = JSON.parse(
-            atob(payload.replace(/-/g, '+').replace(/_/g, '/'))
-        );
-
-        // Süre kontrolü
-        if (payloadJson.exp && Date.now() / 1000 > payloadJson.exp) return null;
-
-        return payloadJson;
-    } catch (e) {
-        console.error('🔴 [MİZANET MIDDLEWARE] JWT doğrulama hatası:', e?.message || e);
-        return null;
-    }
-}
-
-// ─── PUBLIC (korumasız) API ROUTE'LAR ──────────────────────────
-const PUBLIC_API_ROTALAR = [
-    '/api/pin-dogrula',
-    '/api/telegram-bildirim',
-    // [GÜVENLİK A4]: /api/cron-ajanlar PUBLIC listesinden çıkarıldı
-    // Artık x-internal-api-key header'ı zorunlu (aşağıdaki korunanApiRotalar'a eklendi)
-];
-
-// ─── HONEYPOT / WORDPRESS BOT ENGELİ ────────────────────────────
-const HONEYPOT_YOLLARI = [
-    '/wp-admin', '/wp-login', '/wp-content', '/wp-includes',
-    '/wordpress', '/backup', '/old', '/new', '/blog',
-    '/.env', '/.git', '/config.php', '/setup-config.php',
-];
+import { honeypotMu, botMu, statikMi } from '@/core/security/botBlocker';
+import { jwtDogrula, tokenCikar } from '@/core/security/jwtHelper';
+import { apiKorumalıMi, korumaliSayfaMi, yetkiKontrol } from '@/core/security/routeGuard';
+import { csrfTokenUret, csrfDogrula, csrfCookieEkle, CSRF_COOKIE_NAME } from '@/lib/csrf';
 
 export async function middleware(request) {
     const url = request.nextUrl.pathname;
 
-    // ─── [KÖKSEL FİX] PUBLIC STATİK ASSETLERİ MIDDLEWARE'DEN MUAF TUT ──────
-    // Matcher'da hariç tutulsa bile bazı Vercel edge durumlarında buraya düşebilir.
-    // Bu early-return ile sitemap, favicon gibi public dosyalar LOGIN'e yönlendirilmez.
-    const PUBLIC_STATIK = [
-        '/sitemap.xml', '/robots.txt', '/favicon.ico', '/favicon.png',
-        '/sw.js', '/service-worker.js', '/manifest.json', '/offline.html',
-        '/icon.png', '/adalet_muhuru.png',
-    ];
-    if (PUBLIC_STATIK.includes(url) || url.startsWith('/icons/')) {
-        return NextResponse.next();
-    }
+    // [0] Statik public dosyalar — dokunma
+    if (statikMi(url)) return NextResponse.next();
 
-    // ─── [0] HONEYPOT: WordPress/bot tarama yollarını anında engelle ──
-    const honeypotEslesti = HONEYPOT_YOLLARI.some(hp => url.startsWith(hp));
-    if (honeypotEslesti) {
+    // [1] Honeypot yolları — anında reddet
+    if (honeypotMu(url)) {
+        console.warn(`[ERR-GVN-RT-001] Honeypot tuzağı tetiklendi: ${url}`);
         return new NextResponse(null, { status: 403 });
     }
 
-    // ─── [S1] JWT_SIRRI ENV ALARM GUARD ─────────────────────────
-    // SPF: Bu iki değişken yoksa auth sistemi tamamen çöker → 503 ver
-    const sirriKontrol = process.env.JWT_SIRRI || process.env.INTERNAL_API_KEY;
-    if (!sirriKontrol) {
-        console.error('[MİZANET KRİTİK] JWT_SIRRI ve INTERNAL_API_KEY ENV eksik — sistem kilitlendi!');
+    // [2] ENV sağlık kontrolü — kritik eksik ise sistemi kilitle
+    const sirri = process.env.JWT_SIRRI || process.env.INTERNAL_API_KEY;
+    if (!sirri) {
+        console.error('[ERR-SYS-PG-004] JWT_SIRRI ve INTERNAL_API_KEY eksik — sistem kilitlendi!');
         return new NextResponse(
-            JSON.stringify({ hata: 'Sistem yapılandırma hatası. Yöneticiye başvurun.' }),
+            JSON.stringify({ hata: 'Sistem yapılandırma hatası. Yöneticiye başvurun.', hata_kodu: 'ERR-SYS-PG-004' }),
             { status: 503, headers: { 'Content-Type': 'application/json' } }
         );
     }
 
-    const ip = request.headers.get('x-forwarded-for')?.split(',')[0].trim() || 'bilinmeyen';
-    const userAgent = (request.headers.get('user-agent') || '').toLowerCase();
+    const userAgent = request.headers.get('user-agent') || '';
 
-    // ─── 0. SALDIRI YOL ENGELİ (WordPress/CMS Tarama Botu) ────
-    const ENGELLENEN_YOLLAR = [
-        '/wp-admin', '/wp-login', '/wp-content', '/wp-includes',
-        '/wordpress', '/wp-json', '/xmlrpc.php', '/wp-cron.php',
-        '/phpmyadmin', '/pma', '/admin/config', '/setup-config.php',
-        '/.env', '/.git', '/.htaccess', '/config.php',
-        '/backup', '/old', '/new', '/blog', '/tmp',
-    ];
-    const saldiriYolu = ENGELLENEN_YOLLAR.some(yol =>
-        url === yol || url.startsWith(yol + '/') || url.startsWith(yol + '.')
-    );
-    if (saldiriYolu) {
-        console.warn(`[GÜVENLİK] Engellenen yol: ${url} | IP: ${ip}`);
-        return new NextResponse(null, { status: 403 });
+    // [3] API route — bot engeli
+    if (url.startsWith('/api/') && botMu(userAgent)) {
+        console.warn(`[ERR-GVN-RT-001] Bot erişimi engellendi: ${userAgent.slice(0, 50)}`);
+        return new NextResponse(
+            JSON.stringify({ hata: 'Bot erişimi engellendi.', hata_kodu: 'ERR-GVN-RT-001' }),
+            { status: 403, headers: { 'Content-Type': 'application/json' } }
+        );
     }
 
-    // ─── 1. BOT/CRAWLER TESPİTİ ───────────────────────────────
-    if (url.startsWith('/api/')) {
-        const botTespitEdildi = BOT_IMZALARI.some(imza => userAgent.includes(imza));
-        if (botTespitEdildi) {
-            return new NextResponse(
-                JSON.stringify({ hata: 'Bot erişimi engellendi.' }),
-                { status: 403, headers: { 'Content-Type': 'application/json' } }
-            );
-        }
-    }
-
-    // ─── 2. KORUNAN API ROUTE'LAR — JWT Zorunlu ───────────────
-    const korunanApiRotalar = [
-        '/api/ajan-calistir',
-        '/api/ajan-tetikle',
-        '/api/musteri-ekle',
-        '/api/siparis-ekle',
-        '/api/stok-hareket-ekle',
-        '/api/gorev-ekle',
-        '/api/is-emri-ekle',
-        '/api/kumas-ekle',
-        '/api/personel-ekle',
-        '/api/stok-alarm',
-        '/api/cron-ajanlar', // [A4]: Cron artık x-internal-api-key zorunlu
-        '/api/rapor',        // [AUDIT-FIX]: Tüm rapor endpoint'leri korunuyor
-        '/api/batch-ai',     // [AUDIT-FIX]: Gemini batch AI korunuyor
-        '/api/deepseek-analiz', // [AUDIT-FIX]: DeepSeek AI korunuyor
-        '/api/perplexity-arama', // [AUDIT-FIX]: Perplexity AI korunuyor
-        '/api/trend-ara',    // [AUDIT-FIX]: Trend araştırma korunuyor
-    ];
-    const apiKorumalı = korunanApiRotalar.some(r => url.startsWith(r));
-
-    if (apiKorumalı) {
-        // İç servis anahtarı varsa — geç (cron, sunucu-sunucu çağrıları, edge-watcher)
+    // [4] Korunan API route'lar — JWT zorunlu
+    if (apiKorumalıMi(url)) {
+        // Sunucu-sunucu çağrısı (cron, edge-watcher): key ile bypass
         const dahiliKey = request.headers.get('x-internal-api-key');
-        // ─── MİMARİ DÜZELTME: Hardcoded fallback kaldırıldı ───────────────────
-        // ESKİ: process.env.INTERNAL_API_KEY || 'NIZAM_LOKAL_GIZLI_ANAHTAR_47'
-        // Bu plain-text değer herkes tarafından bilinebilirdi → tüm API bypass.
-        const sunucuGecerliKey = process.env.INTERNAL_API_KEY?.replace(/[\\r\\n'"]/g, '').trim();
+        const sunucuKey = process.env.INTERNAL_API_KEY?.replace(/[\r\n'"]/g, '').trim();
+        const dahiliGecerli = dahiliKey && sunucuKey && dahiliKey === sunucuKey;
 
-        if (dahiliKey && sunucuGecerliKey && dahiliKey === sunucuGecerliKey) {
-            // ─── İç servis çağrısı (cron, edge-watcher) — JWT atla ───
-        } else {
-            // ─── Dışarıdan gelen istek — JWT doğrulama zorunlu ────────
-            const authHeader = request.headers.get('authorization') || '';
-            const cookieToken = request.cookies.get('sb47_jwt_token')?.value;
-            const token = authHeader.replace('Bearer ', '') || cookieToken;
-
-            const sirri = process.env.JWT_SIRRI || process.env.INTERNAL_API_KEY;
+        if (!dahiliGecerli) {
+            const token = tokenCikar(request);
             const payload = await jwtDogrula(token, sirri);
-
-            const sadeceTamRotalar = ['/api/ajan-calistir', '/api/ajan-tetikle'];
-            const sadeceTam = sadeceTamRotalar.some(r => url.startsWith(r));
-            const yetkiliGrup = sadeceTam
-                ? payload?.grup === 'tam'
-                : (payload?.grup === 'tam' || payload?.grup === 'uretim');
-
-            if (!payload || !yetkiliGrup) {
+            if (!payload || !yetkiKontrol(payload, url)) {
+                console.warn(`[ERR-AUTH-RT-001] Yetkisiz API erişimi: ${url}`);
                 return NextResponse.json(
-                    { hata: 'Yetkisiz — JWT geçersiz veya süresi dolmuş.' },
+                    { hata: 'Yetkisiz — JWT geçersiz veya süresi dolmuş.', hata_kodu: 'ERR-AUTH-RT-001' },
                     { status: 401 }
                 );
             }
         }
     }
 
-    // ─── 3. KORUNAN SAYFA ROUTE'LAR — Cookie Auth ─────────────
-    const korunanSayfaRotalar = [
-        '/imalat', '/kesim', '/modelhane', '/muhasebe', '/kasa',
-        '/ayarlar', '/guvenlik', '/denetmen', '/personel', '/arge',
-        '/kumas', '/kalip', '/maliyet', '/uretim', '/musteriler',
-        '/siparisler', '/stok', '/katalog', '/gorevler', '/raporlar', '/ajanlar',
-        '/haberlesme', '/tasarim', '/kameralar', // ← EKLENDİ: daha önce korumasızdı
-    ];
-
-    const eslesenRota = korunanSayfaRotalar.find(rota => url.startsWith(rota));
-
-    if (eslesenRota) {
-        const authCookie = request.cookies.get('sb47_auth_session');
-        const uretimPin = request.cookies.get('sb47_uretim_pin');
-        const genelPin = request.cookies.get('sb47_genel_pin');
-
-        let yetkiliMi = false;
-
-        // Önce JWT token cookie'sini dene (güvenli yol)
+    // [5] Korunan sayfa route'ları — JWT cookie zorunlu
+    const eslesenSayfa = korumaliSayfaMi(url);
+    if (eslesenSayfa) {
         const jwtCookie = request.cookies.get('sb47_jwt_token')?.value;
-        if (jwtCookie) {
-            const sirri = process.env.JWT_SIRRI || process.env.INTERNAL_API_KEY;
-            const payload = await jwtDogrula(jwtCookie, sirri);
-            if (payload?.grup) yetkiliMi = true;
-        }
-
-        // ─── GÜVENLİK: Legacy JSON cookie fallback KALDIRILDI ─────────────────
-        // Eski sb47_auth_session cookie'si (imzasız JSON) yetki veremez.
-        // Tek geçerli yetkilendirme: HMAC-SHA256 imzalı JWT token (sb47_jwt_token).
-        // Eski session cookie'si olan kullanıcılar giris sayfasına yönlendirilir.
-
-        if (!yetkiliMi) {
+        const payload = await jwtDogrula(jwtCookie, sirri);
+        if (!payload?.grup) {
+            console.warn(`[ERR-AUTH-PG-001] Yetkisiz sayfa erişimi: ${url}`);
             const geriDonusUrl = new URL('/giris?hata=yetkisiz', request.url);
             return NextResponse.redirect(geriDonusUrl);
         }
     }
 
-    // ─── 4. GÜVENLİK BAŞLIKLARI ───────────────────────────────
+    // [6] CSRF Koruması — Mutasyon isteklerinde token doğrula
+    const method = request.method;
+    const csrfMuafYollar = ['/api/pin-dogrula', '/api/telegram-webhook', '/api/health'];
+    const csrfMuaf = csrfMuafYollar.some(y => url.startsWith(y));
+
+    if (['POST', 'PUT', 'DELETE', 'PATCH'].includes(method) && url.startsWith('/api/') && !csrfMuaf) {
+        // Sunucu-sunucu çağrıları CSRF'den muaf (internal key ile geliyorsa)
+        const dahiliKey = request.headers.get('x-internal-api-key');
+        const sunucuKey = process.env.INTERNAL_API_KEY?.replace(/[\r\n'"]/g, '').trim();
+        const dahiliGecerli = dahiliKey && sunucuKey && dahiliKey === sunucuKey;
+
+        if (!dahiliGecerli) {
+            const csrfSonuc = csrfDogrula(request);
+            if (!csrfSonuc.gecerli) {
+                console.warn(`[ERR-GVN-LB-001] CSRF doğrulama başarısız: ${url} — ${csrfSonuc.hata}`);
+                return NextResponse.json(
+                    { hata: csrfSonuc.hata, hata_kodu: 'ERR-GVN-LB-001' },
+                    { status: 403 }
+                );
+            }
+        }
+    }
+
+    // [7] Güvenlik başlıkları — her yanıta ekle
     const response = NextResponse.next();
     response.headers.set('X-Content-Type-Options', 'nosniff');
     response.headers.set('X-Frame-Options', 'DENY');
     response.headers.set('X-XSS-Protection', '1; mode=block');
     response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
     response.headers.set('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
-    response.headers.set('X-Powered-By', 'Mizanet v3.7');
+    response.headers.set('X-Powered-By', 'Mizanet v4.0');
+
+    // [8] CSRF Cookie — Yoksa üret ve ekle
+    const mevcutCsrf = request.cookies.get(CSRF_COOKIE_NAME)?.value;
+    if (!mevcutCsrf) {
+        const yeniToken = csrfTokenUret();
+        const isProd = process.env.NODE_ENV === 'production';
+        csrfCookieEkle(response, yeniToken, isProd);
+    }
 
     return response;
 }
@@ -239,5 +137,3 @@ export const config = {
         '/((?!_next/static|_next/image|favicon.ico|manifest.json|sw.js|icons/).*)',
     ],
 };
-
-

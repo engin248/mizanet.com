@@ -4,6 +4,7 @@
 // Haftalık + manuel — internet araştırması yapar
 // ============================================================
 import { sb, AJAN_ISIMLERI, logYaz } from './_ortak';
+import { handleError, logCatch } from '@/lib/errorCore';
 
 export async function trendKasifi(gorevEmri = null) {
     const isim = AJAN_ISIMLERI.KASIF;
@@ -92,6 +93,7 @@ export async function trendKasifi(gorevEmri = null) {
         return { basarili: true, ozet, sonuc };
 
     } catch (e) {
+        handleError('ERR-AJN-LB-112', 'src/lib/agents/v2/trendKasifi.js', e, 'orta');
         await logYaz(isim, 'trend_arastirma', `Hata: ${e.message}`, 'hata');
         return { basarili: false, hata: e.message };
     }

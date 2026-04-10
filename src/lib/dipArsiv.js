@@ -8,6 +8,7 @@
  * Kullanım: await dipArsiveKaldir(tablo, id, kullanici)
  */
 import { supabase } from './supabase';
+import { handleError, logCatch } from '@/lib/errorCore';
 
 export async function dipArsiveKaldir(tablo, id, kullanici = 'Sistem') {
     try {
@@ -35,6 +36,7 @@ export async function dipArsiveKaldir(tablo, id, kullanici = 'Sistem') {
         }]);
 
     } catch (e) {
+        handleError('ERR-SYS-LB-103', 'src/lib/dipArsiv.js', e, 'orta');
         // Sessiz fail — arşivleme kritik değilse silmeyi engellemez
 
     }

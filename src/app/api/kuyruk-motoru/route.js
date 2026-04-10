@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { handleError, logCatch } from '@/lib/errorCore';
 import { KuyruktanAl, KuyrukUzunlugu } from '@/lib/redis_kuyruk';
 import { exec } from 'child_process';
 import util from 'util';
@@ -40,7 +41,7 @@ export async function POST(req) {
                 if (gorev.data?.hedef === 'trendyol_indirim') {
                     // Not: Windows/Linux VPS farketmeksizin asenkron çalışır
                     execAsync(`node src/scripts/scrapers/oluisci.js`).catch(err => {
-                        console.error("[SHIELD_LOG] Bağımsız Ajan Çökmesi İnfazla Bastırıldı:", err.message);
+                        logCatch('ERR-SYS-RT-004', 'api/kuyruk-motoru/ajan-crash', err);
                     });
                 } else {
                     // Diğer ajan hedefleri için
@@ -56,6 +57,7 @@ export async function POST(req) {
         });
 
     } catch (error) {
+        handleError('ERR-SYS-RT-007', 'api/kuyruk-motoru', error, 'yuksek');
         return NextResponse.json({ success: false, error: error.message }, { status: 500 });
     }
 }

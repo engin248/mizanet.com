@@ -1,9 +1,10 @@
-/**
+﻿/**
  * useKumas — Kumaş ve Aksesuar Hook
  */
 'use client';
+import { handleError, logCatch } from '@/lib/errorCore';
 import { useState, useCallback } from 'react';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/core/db/supabaseClient';
 import { createGoster } from '@/lib/utils';
 
 export function useKumas(kullanici) {
@@ -25,6 +26,7 @@ export function useKumas(kullanici) {
             setKumaslar(kRes.data || []);
             setAksesuarlar(aRes.data || []);
         } catch (e) {
+        handleError('ERR-KMS-HK-102', 'src/hooks/useKumas.js', e, 'orta');
             goster('Kumaş verileri alınamadı: ' + e.message, 'error');
         }
         setLoading(false);

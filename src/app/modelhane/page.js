@@ -4,7 +4,7 @@
  * Tüm UI   → features/modelhane/components/ModelhaneMainContainer.js
  * Route    : /modelhane
  */
-import ModelhaneMainContainer from '@/features/modelhane/components/ModelhaneMainContainer';
+import { ModelhaneMainContainer } from '@/features/modelhane';
 import ErrorBoundary from '@/components/ErrorBoundary';
 
 export default function ModelhanePage() {

@@ -1,8 +1,9 @@
-'use client';
+﻿'use client';
 
+import { handleError, logCatch } from '@/lib/errorCore';
 import React, { useState, useEffect } from 'react';
-import { supabase } from '@/lib/supabase';
-import { useAuth } from '@/lib/auth';
+import { supabase } from '@/core/db/supabaseClient';
+import { useAuth } from '@/core/auth';
 import { Save, RefreshCw, Monitor, Type, Palette, Layout, Lock, Globe, FileCheck, Plus, Trash2, AlignLeft, Box, Bell, Minus } from 'lucide-react';
 import { createGoster } from '@/lib/utils';
 import { useRouter } from 'next/navigation';
@@ -185,7 +186,7 @@ export default function TasarimMainContainer() {
             } else {
                 setAyarlar({ ...VARSAYILAN_AYAR }); setBloklar([]);
             }
-        } catch (e) { console.error(e); }
+        } catch (e) { logCatch('ERR-TSR-CM-101', 'src/features/tasarim/components/TasarimMainContainer.js', e); }
         finally { setYukleniyor(false); }
     };
 

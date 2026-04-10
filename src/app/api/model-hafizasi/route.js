@@ -13,6 +13,7 @@
  */
 
 import { createClient } from '@supabase/supabase-js';
+import { handleError, logCatch } from '@/lib/errorCore';
 
 export async function GET(request) {
     if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !(process.env.SUPABASE_SERVICE_ROLE_KEY || 'mock-key')) {
@@ -124,6 +125,7 @@ export async function GET(request) {
         });
 
     } catch (err) {
+        handleError('ERR-ARG-RT-009', 'api/model-hafizasi', err, 'yuksek');
         return Response.json(
             { hata: 'Sorgu hatası: ' + err.message },
             { status: 500 }

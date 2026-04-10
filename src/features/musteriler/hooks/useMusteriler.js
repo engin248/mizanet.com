@@ -1,10 +1,11 @@
 ﻿'use client';
+import { handleError, logCatch } from '@/lib/errorCore';
 /**
  * features/musteriler/hooks/useMusteriler.js
  * M9 Müşteriler & CRM — Sipariş Geçmişi Dahil
  */
 import { useState, useEffect, useCallback } from 'react';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/core/db/supabaseClient';
 import { silmeYetkiDogrula } from '@/lib/silmeYetkiDogrula';
 import { cevrimeKuyrugaAl } from '@/lib/offlineKuyruk';
 
@@ -29,6 +30,7 @@ export function useMusteriler(kullanici) {
             if (error) throw error;
             setMusteriler(data || []);
         } catch (e) { goster('Müşteriler yüklenemedi: ' + e.message, 'error'); }
+            handleError('ERR-MST-HK-101', 'src/features/musteriler/hooks/useMusteriler.js', e, 'orta');
         setLoading(false);
     }, []);
 
@@ -48,6 +50,7 @@ export function useMusteriler(kullanici) {
                 .eq('musteri_id', musteri.id).order('created_at', { ascending: false }).limit(50);
             setSiparisGecmisi(data || []);
         } catch (e) { goster('Sipariş geçmişi alınamadı.', 'error'); }
+            handleError('ERR-MST-HK-101', 'src/features/musteriler/hooks/useMusteriler.js', e, 'orta');
     };
 
     const kaydet = async () => {
@@ -68,6 +71,7 @@ export function useMusteriler(kullanici) {
             }
             setForm(BOSH_FORM); setFormAcik(false); setDuzenleId(null); yukle();
         } catch (e) { goster(e.message, 'error'); }
+            handleError('ERR-MST-HK-101', 'src/features/musteriler/hooks/useMusteriler.js', e, 'orta');
         setLoading(false);
     };
 

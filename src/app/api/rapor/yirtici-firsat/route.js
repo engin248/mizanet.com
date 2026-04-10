@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { handleError, logCatch } from '@/lib/errorCore';
 import { supabaseAdmin as sb } from '@/lib/supabaseAdmin';
 
 // ============================================================
@@ -36,7 +37,7 @@ export async function GET(req) {
         for (const stokItem of (stokUrunler || [])) {
             for (const trendItem of (trendyolVerisi || [])) {
                 let hamVeri = {};
-                try { hamVeri = typeof trendItem.ham_veri === 'string' ? JSON.parse(trendItem.ham_veri) : trendItem.ham_veri || {}; } catch (e) { console.error('[CATCH yirtici-firsat]', e?.message || e); }
+                try { hamVeri = typeof trendItem.ham_veri === 'string' ? JSON.parse(trendItem.ham_veri) : trendItem.ham_veri || {}; } catch (e) { logCatch('ERR-RPR-RT-008', 'api/rapor/yirtici-firsat', e); }
 
                 // Stok durumu: 0 veya çok az = Arz açığı sinyali
                 const trendStok = Number(hamVeri.stokAdedi || hamVeri.stok || 99);

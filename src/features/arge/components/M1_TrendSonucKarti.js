@@ -1,4 +1,5 @@
 ﻿'use client';
+import { handleError, logCatch } from '@/lib/errorCore';
 import { useState } from 'react';
 import { TrendingUp, Plus, ExternalLink, Bot, Zap, AlertTriangle, CheckCircle2, Search } from 'lucide-react';
 
@@ -44,6 +45,7 @@ export default function M1_TrendSonucKarti({ sonuc, onKaydet, isAR }) {
             setKasifSonucu(data);
             setKasifAcik(true);
         } catch (e) {
+        handleError('ERR-ARG-CM-103', 'src/features/arge/components/M1_TrendSonucKarti.js', e, 'orta');
             clearTimeout(timeoutId);
             if (e.name === 'AbortError') {
                 setKasifSonucu({ error: 'Kaşif bağlantısı zaman aşımına uğradı. Veri boyutu büyük olabilir veya ajan meşgul.' });

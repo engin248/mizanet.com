@@ -1,4 +1,5 @@
 ﻿'use client';
+import { handleError, logCatch } from '@/lib/errorCore';
 /**
  * features/siparisler/components/SiparislerMainContainer.js
  * Kaynak: app/siparisler/page.js → features mimarisine taşındı
@@ -8,8 +9,8 @@
 import { cevrimeKuyrugaAl } from '@/lib/offlineKuyruk';
 import { useState, useEffect } from 'react';
 import { ShoppingCart, Plus, CheckCircle2, AlertTriangle, Trash2, ChevronRight, Package, Truck, X, Printer, Lock } from 'lucide-react';
-import { supabase } from '@/lib/supabase';
-import { useAuth } from '@/lib/auth';
+import { supabase } from '@/core/db/supabaseClient';
+import { useAuth } from '@/core/auth';
 import { useLang } from '@/lib/langContext';
 import { silmeYetkiDogrula } from '@/lib/silmeYetkiDogrula';
 import { telegramBildirim, formatTarih } from '@/lib/utils';
@@ -275,7 +276,7 @@ export default function SiparislerSayfasi() {
                         }]);
                     }
                 } catch (e) {
-                    console.error('Kasa yazma hatası:', e);
+                    handleError('ERR-SPR-CM-101', 'src/features/siparisler/components/SiparislerMainContainer.js', e, 'orta');
                 }
 
                 goster('🎉 Sipariş teslim edildi ve tahsilat (Gelir) Kasa modülüne aktarıldı!');

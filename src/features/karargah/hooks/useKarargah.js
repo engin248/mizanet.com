@@ -1,6 +1,6 @@
-'use client';
+﻿'use client';
 import { useState, useEffect, useCallback } from 'react';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/core/db/supabaseClient';
 import { logCatch } from '@/lib/errorCore';
 import { komutSchema } from '../schemas/komutSchema';
 
@@ -79,6 +79,7 @@ export function useKarargah() {
                 goster('AI yanıt veremedi: ' + (data?.error || 'Sunucu hatası'), 'error');
             }
         } catch (err) {
+        handleError('ERR-KRG-HK-101', 'src/features/karargah/hooks/useKarargah.js', err, 'orta');
             goster('AI bağlantı hatası: ' + /** @type {any} */(err).message, 'error');
         } finally {
             setIsAiLoading(false);
@@ -166,7 +167,7 @@ export function useKarargah() {
 
             setStats({ ciro, ciroArtis: 12, maliyet, personel: ortalamaSkor, fire: 0, yukleniyor: false });
         } catch (err) {
-            console.error('Karargah veri hatası:', err);
+            handleError('ERR-KRG-HK-101', 'src/features/karargah/hooks/useKarargah.js', err, 'orta');
             setStats(prev => ({ ...prev, yukleniyor: false }));
         }
     }, [ALARM_AKTIF]);

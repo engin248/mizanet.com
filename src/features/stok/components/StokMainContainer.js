@@ -1,15 +1,15 @@
 ﻿'use client';
+import { handleError, logCatch } from '@/lib/errorCore';
 /**
  * features/stok/components/StokMainContainer.js
  * Kaynak: app/stok/page.js → features mimarisine taşındı
  * UI logic burada, state/data → hooks/useStok.js
  */
-'use client';
 import { cevrimeKuyrugaAl } from '@/lib/offlineKuyruk';
 import { useState, useEffect } from 'react';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/core/db/supabaseClient';
 import { createGoster, telegramBildirim, formatTarih, yetkiKontrol } from '@/lib/utils';
-import { useAuth } from '@/lib/auth';
+import { useAuth } from '@/core/auth';
 import { useLang } from '@/lib/langContext';
 import { silmeYetkiDogrula } from '@/lib/silmeYetkiDogrula';
 import { Package, Plus, Search, ArrowUpRight, ArrowDownRight, AlertTriangle, ShieldAlert, Boxes, Database, Trash2, ArrowRightLeft } from 'lucide-react';
@@ -88,6 +88,7 @@ export default function StokDepoKarargahi() {
                 setHareketler(hareketRes.value.data);
             }
         } catch (error) {
+        handleError('ERR-STK-CM-101', 'src/features/stok/components/StokMainContainer.js', error, 'orta');
             showMessage('Ağ veya Zaman Aşımı: ' + error.message, 'error');
         }
         setLoading(false);
@@ -151,6 +152,7 @@ export default function StokDepoKarargahi() {
             setFormAcik(false);
             yukle();
         } catch (error) {
+        handleError('ERR-STK-CM-101', 'src/features/stok/components/StokMainContainer.js', error, 'orta');
             showMessage('Sunucu hatası: ' + error.message, 'error');
         }
         finally { setLoading(false); setIslemdeId(null); }
@@ -181,6 +183,7 @@ export default function StokDepoKarargahi() {
             telegramBildirim(`🚨 KRİTİK İŞLEM!\nDepodan bir stok hareketi kaydı tamamen silindi! Kodu: ${urun_kodu}`);
             yukle();
         } catch (error) {
+        handleError('ERR-STK-CM-101', 'src/features/stok/components/StokMainContainer.js', error, 'orta');
             showMessage('Hata: ' + error.message, 'error');
         }
         finally { setIslemdeId(null); }

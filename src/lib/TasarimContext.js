@@ -1,7 +1,8 @@
-'use client';
+﻿'use client';
 
+import { handleError, logCatch } from '@/lib/errorCore';
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/core/db/supabaseClient';
 import { usePathname } from 'next/navigation';
 
 const TasarimContext = createContext();
@@ -54,6 +55,7 @@ export function TasarimProvider({ children }) {
                     });
                 }
             } catch (error) {
+        handleError('ERR-TSR-LB-101', 'src/lib/TasarimContext.js', error, 'orta');
                 // Hata durumunda varsayılan temada kal
                 setTema(prev => ({ ...prev, yukleniyor: false }));
             }

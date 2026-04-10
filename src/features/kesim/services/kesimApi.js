@@ -1,9 +1,9 @@
-/**
+﻿/**
  * features/kesim/services/kesimApi.js
  * Tablolar: b1_kesim_operasyonlari, b1_model_taslaklari
  * (MainContainer'dan doğrulanan gerçek tablo adları)
  */
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/core/db/supabaseClient';
 import { telegramBildirim } from '@/lib/utils';
 import { cevrimeKuyrugaAl } from '@/lib/offlineKuyruk';
 

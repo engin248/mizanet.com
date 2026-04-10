@@ -1,12 +1,14 @@
-﻿/**
+/**
  * features/kumas/services/kumasApi.js
+ * Hata Kodu: ERR-KMS-SV-001
  * Tablolar: b1_kumas_arsivi, b1_aksesuar_arsivi, b2_tedarikciler
  */
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/core/db/supabaseClient';
+import { handleError, logCatch } from '@/lib/errorCore';
 import { telegramBildirim } from '@/lib/utils';
 import { cevrimeKuyrugaAl } from '@/lib/offlineKuyruk';
 
-// ─── OKUMA ────────────────────────────────────────────────────────
+// -- OKUMA --
 export async function kumaslariGetir() {
     const [kumasRes, tedarikciRes] = await Promise.allSettled([
         supabase.from('b1_kumas_arsivi')
@@ -59,7 +61,7 @@ export async function firsatlariGetir() {
     return data || [];
 }
 
-// ─── YAZMA (API route üzerinden + offline fallback) ───────────────
+// -- YAZMA (API route uzerinden + offline fallback) --
 export async function kumasKaydet(payload) {
     if (!navigator.onLine) {
         await cevrimeKuyrugaAl('b1_kumas_arsivi', 'INSERT', payload);
@@ -69,11 +71,11 @@ export async function kumasKaydet(payload) {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ tip: 'kumas', veri: payload }),
     });
-    const sonuc = await res.json().catch(() => ({}));
-    if (res.status === 409) throw new Error('⚠️ ' + sonuc.hata);
-    if (res.status === 429) throw new Error('⏳ Çok fazla istek!');
-    if (!res.ok) throw new Error(sonuc.hata || 'Sunucu hatası');
-    telegramBildirim(`📦 YENİ KUMAŞ\n${payload.kumas_adi} (${payload.kumas_kodu})\n₺${payload.birim_maliyet_tl}/mt | ${payload.stok_mt}mt`);
+    const sonuc = await res.json().catch((e) => { logCatch('ERR-KMS-SV-001', 'kumasApi.kumasKaydet', e); });
+    if (res.status === 409) throw new Error('Cakisma: ' + sonuc.hata);
+    if (res.status === 429) throw new Error('Cok fazla istek!');
+    if (!res.ok) throw new Error(sonuc.hata || 'Sunucu hatasi');
+    telegramBildirim(`YENI KUMAS\n${payload.kumas_adi} (${payload.kumas_kodu})\n${payload.birim_maliyet_tl}/mt | ${payload.stok_mt}mt`);
     return { offline: false };
 }
 
@@ -96,9 +98,9 @@ export async function aksesuarKaydet(payload, duzenleId) {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ tip: 'aksesuar', veri: payload }),
     });
-    const sonuc = await res.json().catch(() => ({}));
-    if (res.status === 409) throw new Error('⚠️ ' + sonuc.hata);
-    if (!res.ok) throw new Error(sonuc.hata || 'Sunucu hatası');
+    const sonuc = await res.json().catch((e) => { logCatch('ERR-KMS-SV-001', 'kumasApi.aksesuarKaydet', e); });
+    if (res.status === 409) throw new Error('Cakisma: ' + sonuc.hata);
+    if (!res.ok) throw new Error(sonuc.hata || 'Sunucu hatasi');
     return { offline: false };
 }
 
@@ -106,28 +108,28 @@ export async function kumasSil(tablo, id) {
     await supabase.from('b0_sistem_loglari').insert([{
         tablo_adi: tablo, islem_tipi: 'SILME',
         kullanici_adi: 'Saha Yetkilisi',
-        eski_veri: { durum: 'Soft delete öncesi log' }
+        eski_veri: { durum: 'Soft delete oncesi log' }
     }]);
     const { error } = await supabase.from(tablo).update({ aktif: false }).eq('id', id);
     if (error) throw error;
-    telegramBildirim(`📂 ARŞİVE KALDIRILDI\nTablo: ${tablo} | ID: ${id}`);
+    telegramBildirim(`ARSIVE KALDIRILDI\nTablo: ${tablo} | ID: ${id}`);
 }
 
-// ─── REALTIME ─────────────────────────────────────────────────────
+// -- REALTIME --
 export function kumasKanaliKur(onChange) {
     return supabase.channel('kumas-realtime')
         .on('postgres_changes', { event: '*', schema: 'public' }, onChange)
         .subscribe();
 }
 
-// ─── SABİTLER ─────────────────────────────────────────────────────
+// -- SABITLER --
 export const KUMAS_TIPLERI = ['dokuma', 'orgu', 'denim', 'keten', 'ipek', 'sentetik', 'pamuk', 'polar', 'kase', 'viskon', 'diger'];
 export const AKSESUAR_TIPLERI = ['dugme', 'fermuar', 'iplik', 'etiket', 'yikama_talimati', 'uti_malzeme', 'baski', 'nakis', 'lastik', 'biye', 'diger'];
 export const BIRIMLER = ['adet', 'metre', 'kg', 'litre'];
 export const BOSH_KUMAS = { kumas_kodu: '', kumas_adi: '', kumas_adi_ar: '', kumas_tipi: 'pamuk', kompozisyon: '', birim_maliyet_tl: '', genislik_cm: '', gramaj_gsm: '', esneme_payi_yuzde: '0', fotograf_url: '', tedarikci_adi: '', tedarikci_id: '', stok_mt: '', min_stok_mt: '10' };
 export const BOSH_AKS = { aksesuar_kodu: '', aksesuar_adi: '', aksesuar_adi_ar: '', tip: 'dugme', birim: 'adet', birim_maliyet_tl: '', stok_adet: '', min_stok: '100', fotograf_url: '', tedarikci_adi: '' };
 
-// ─── ALIAS (useKumas.js uyumluluğu için) ─────────────────────────
+// -- ALIAS (useKumas.js uyumlulugu icin) --
 export const fetchKumas = kumaslariGetir;
 export const fetchAksesuar = aksesuarlariGetir;
 export const fetchM1Talepleri = m1TalepleriGetir;

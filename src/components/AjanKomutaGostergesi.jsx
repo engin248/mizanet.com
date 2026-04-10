@@ -1,6 +1,6 @@
-'use client';
+﻿'use client';
 import { useState, useEffect } from 'react';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/core/db/supabaseClient';
 import { Bot, Cpu, Search, Zap, Camera, Shield, Network, Loader2, CheckCircle2, Clock, XCircle, Play, Server, Boxes, Wallet, Factory } from 'lucide-react';
 import { formatTarih } from '@/lib/utils';
 

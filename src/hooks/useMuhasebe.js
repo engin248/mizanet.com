@@ -1,9 +1,10 @@
-/**
+﻿/**
  * useMuhasebe — Muhasebe Giriş ve Özet Hook
  */
 'use client';
+import { handleError, logCatch } from '@/lib/errorCore';
 import { useState, useCallback } from 'react';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/core/db/supabaseClient';
 import { createGoster, telegramBildirim } from '@/lib/utils';
 
 export function useMuhasebe(kullanici) {
@@ -29,6 +30,7 @@ export function useMuhasebe(kullanici) {
             const gider = tum.filter(k => k.tip === 'gider').reduce((a, k) => a + (parseFloat(k.tutar) || 0), 0);
             setOzet({ gelir, gider, net: gelir - gider });
         } catch (e) {
+        handleError('ERR-MHS-HK-102', 'src/hooks/useMuhasebe.js', e, 'orta');
             goster('Muhasebe verileri alınamadı: ' + e.message, 'error');
         }
         setLoading(false);

@@ -1,7 +1,8 @@
 ﻿'use client';
+import { handleError, logCatch } from '@/lib/errorCore';
 import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-import { useAuth } from '@/lib/auth';
+import { useAuth } from '@/core/auth';
 import { Lock, Eye, EyeOff, LogIn, ShieldAlert } from 'lucide-react';
 import { T, langDir } from '@/lib/lang';
 
@@ -34,7 +35,7 @@ export default function GirisSayfasi() {
             }
             const localDil = localStorage.getItem('sb47_dil') || 'tr';
             setDil(localDil);
-        } catch (e) { console.error('[GIRIS] localStorage okuma hatası:', e?.message); }
+        } catch (e) { logCatch('ERR-AUTH-CM-101', 'src/features/giris/components/GirisMainContainer.js', e); }
     }, []);
 
     const handleDilDegis = (yeniDil) => {

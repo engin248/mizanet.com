@@ -1,5 +1,6 @@
 ﻿import { GoogleGenAI } from '@google/genai';
 import { hataBildir } from '@/lib/hataBildirim';
+import { handleError, logCatch } from '@/lib/errorCore';
 
 const AI_MODEL_VERSION = 'gemini-2.5-flash'; // Kriter 139: Model Versiyon Kontrolü
 
@@ -78,10 +79,12 @@ export async function GuvenliYapayZekaMotoru(prompt, context_data = null, tip = 
                 model_versiyonu: AI_MODEL_VERSION // Kriter 139
             };
         } catch (e) {
+        handleError('ERR-ARG-LB-101', 'src/lib/ai/aiKararMotoru.js', e, 'orta');
             return { hata: true, mesaj: 'AI yanıtı JSON formatına uymuyor.', guven_skoru: 0, ham_yanit: aiKarari };
         }
 
     } catch (e) {
+        handleError('ERR-ARG-LB-101', 'src/lib/ai/aiKararMotoru.js', e, 'orta');
         // 🚨 KORUMA 3: Hata anında Telegram'a otomatik uyarı
         const hataKodu = e.message?.includes('500') ? '500 Dahili Hata' :
             e.message?.includes('429') ? '429 Rate Limit / Kota Doldu' :

@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { handleError, logCatch } from '@/lib/errorCore';
 
 /**
  * /api/deepseek-analiz
@@ -112,6 +113,7 @@ Aşağıdaki JSON formatında yanıt ver (başka hiçbir şey yazma):
         });
 
     } catch (err) {
+        handleError('ERR-ARG-RT-001', 'api/deepseek-analiz', err, 'yuksek');
         if (err.name === 'AbortError') {
             return NextResponse.json({ error: 'DeepSeek zaman aşımı (15sn).' }, { status: 504 });
         }

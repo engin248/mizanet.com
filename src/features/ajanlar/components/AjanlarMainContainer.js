@@ -1,10 +1,11 @@
 ﻿'use client';
+import { handleError, logCatch } from '@/lib/errorCore';
 import { cevrimeKuyrugaAl } from '@/lib/offlineKuyruk';
 import { useState, useEffect, useRef } from 'react';
 import { Bot, Plus, Play, Square, CheckCircle2, XCircle, Clock, Loader2, AlertTriangle, Settings, Database, Globe, Cpu, FileText, Trash2, RefreshCw, Zap, Send, ToggleLeft, ToggleRight, Lock } from 'lucide-react';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/core/db/supabaseClient';
 import { createGoster, telegramBildirim, formatTarih, yetkiKontrol } from '@/lib/utils';
-import { useAuth } from '@/lib/auth';
+import { useAuth } from '@/core/auth';
 import { useLang } from '@/lib/langContext';
 import { silmeYetkiDogrula } from '@/lib/silmeYetkiDogrula';
 import AjanKomutaGostergesi from '@/components/AjanKomutaGostergesi';
@@ -228,6 +229,7 @@ export default function AjanlarMainContainer() {
             setForm(BOS_FORM); setFormAcik(false); yukle();
             if (form.oncelik === 'acil') setTimeout(() => gorevCalistir(data.id), 500);
         } catch (error) {
+        handleError('ERR-AJN-CM-101', 'src/features/ajanlar/components/AjanlarMainContainer.js', error, 'orta');
             // SİSTEM OPTİMİZASYONU: Offline guard (Kriter J)
             if (!navigator.onLine || error.message?.includes('fetch')) {
                 const { cevrimeKuyrugaAl } = await import('@/lib/offlineKuyruk');

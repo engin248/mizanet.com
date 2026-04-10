@@ -3,7 +3,7 @@
  * Tablolar: b1_arge_trendler, b1_agent_loglari
  * Hook: useArge.js (165 satır, zaten tam)
  */
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/core/db/supabaseClient';
 import { cevrimeKuyrugaAl } from '@/lib/offlineKuyruk';
 
 const SAYFA_BOYUTU = 50;

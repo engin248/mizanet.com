@@ -1,9 +1,9 @@
-/**
+﻿/**
  * features/guvenlik/services/guvenlikApi.js
  * Tablo: b0_sistem_loglari
  * [B-09b FIX] Servis dosyası oluşturuldu
  */
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/core/db/supabaseClient';
 
 export async function sistemLoglariniGetir(limit = 100) {
     const { data, error } = await supabase

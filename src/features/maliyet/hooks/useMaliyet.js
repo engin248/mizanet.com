@@ -1,11 +1,12 @@
 ﻿'use client';
+import { handleError, logCatch } from '@/lib/errorCore';
 /**
  * features/maliyet/hooks/useMaliyet.js
  * B-06 FIX: maliyetApi.js'e bağlandı — artık boş şablon değil
  * Tablo: b1_maliyet_kayitlari, b1_model_taslaklari
  */
 import { useState, useEffect, useCallback } from 'react';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/core/db/supabaseClient';
 import {
     maliyetleriGetir, modelleriGetir, maliyetKaydet as apiKaydet,
     maliyetGuncelle, maliyetSil as apiSil,
@@ -39,6 +40,7 @@ export function useMaliyet(kullanici) {
             setMaliyetler(mal);
             setModeller(mod);
         } catch (e) {
+        handleError('ERR-MLY-HK-101', 'src/features/maliyet/hooks/useMaliyet.js', e, 'orta');
             goster('Maliyet verileri yüklenemedi: ' + e.message, 'error');
         }
         setLoading(false);
@@ -77,6 +79,7 @@ export function useMaliyet(kullanici) {
             setDuzenleId(null);
             yukle();
         } catch (e) {
+        handleError('ERR-MLY-HK-101', 'src/features/maliyet/hooks/useMaliyet.js', e, 'orta');
             goster(e.message, 'error');
         }
         setLoading(false);
@@ -91,6 +94,7 @@ export function useMaliyet(kullanici) {
             goster('Silindi.');
             yukle();
         } catch (e) {
+        handleError('ERR-MLY-HK-101', 'src/features/maliyet/hooks/useMaliyet.js', e, 'orta');
             goster(e.message, 'error');
         }
     };

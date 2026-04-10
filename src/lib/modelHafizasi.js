@@ -1,3 +1,5 @@
+import { handleError, logCatch } from '@/lib/errorCore';
+
 /**
  * Mizanet MODEL HAFIZASI — Ajan Yardımcı Fonksiyonu
  * 
@@ -18,8 +20,9 @@
  * @returns {Promise<ModelHafizasi>}
  */
 export async function modelHafizasiOku({ model_id, model_kodu, sadece_kritik = false }) {
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || process.env.NEXT_PUBLIC_APP_URL || '';
     const params = new URLSearchParams();
+
 
     if (model_id) params.set('model_id', model_id);
     if (model_kodu) params.set('model_kodu', model_kodu);
@@ -75,6 +78,7 @@ export async function uretimOncesiModelKontrolu({ model_kodu, model_id }, telegr
         };
 
     } catch (err) {
+        handleError('ERR-ARG-LB-102', 'src/lib/modelHafizasi.js', err, 'orta');
         // Hafıza okunamasa bile üretim durmamalı — silent fail
         console.error('[modelHafizasi] Okuma hatası:', err.message);
         return { devamEdebilir: true, uyariMesaji: null, hata: err.message };

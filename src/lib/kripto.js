@@ -1,4 +1,5 @@
 import crypto from 'crypto';
+import { handleError, logCatch } from '@/lib/errorCore';
 
 const ALGORITHM = 'aes-256-gcm';
 
@@ -60,7 +61,7 @@ export function mesajCoz(sifreliMesaj, ivHex, authTagHex) {
 
         return decrypted;
     } catch (error) {
-        console.error('[KRIPTO_HATA] Paket Çözülemedi:', error);
+        handleError('ERR-GVN-LB-101', 'src/lib/kripto.js', error, 'orta');
         return "⚠️ Hata: GÜVENLİK İHLALİ (Mesaj çözülemedi)";
     }
 }

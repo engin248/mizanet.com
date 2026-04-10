@@ -1,10 +1,10 @@
-/**
+﻿/**
  * useSupabaseYetki — Evrensel Yetki + Realtime Hook
  * Kullanım: const { yetkiliMi, yukleniyor } = useSupabaseYetki(kullanici, 'b1_tablo', () => yukle());
  */
 'use client';
 import { useState, useEffect } from 'react';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/core/db/supabaseClient';
 import { yetkiKontrol } from '@/lib/utils';
 
 /**

@@ -1,4 +1,5 @@
-'use client';
+﻿'use client';
+import { handleError, logCatch } from '@/lib/errorCore';
 /**
  * ModelMesajGecmisi.js
  * Bir model/ürün koduna ait tüm iç mesajları gösteren widget.
@@ -14,8 +15,8 @@
  */
 import { useState, useEffect } from 'react';
 import { MessageSquare, Hash, Clock, User, ChevronDown, ChevronUp, ExternalLink, Lock } from 'lucide-react';
-import { supabase } from '@/lib/supabase';
-import { useAuth } from '@/lib/auth';
+import { supabase } from '@/core/db/supabaseClient';
+import { useAuth } from '@/core/auth';
 import { useLang } from '@/lib/langContext';
 import { formatTarih } from '@/lib/utils';
 
@@ -66,7 +67,7 @@ export function ModelMesajGecmisi({ modelKodu, modelId, modelAdi }) {
             if (error) throw error;
             setMesajlar(data || []);
         } catch (err) {
-            console.error('Model mesaj yükleme hatası:', err.message);
+            handleError('ERR-HBR-CM-102', 'src/components/mesaj/ModelMesajGecmisi.js', err, 'orta');
         }
         setLoading(false);
     };

@@ -1,4 +1,5 @@
-'use client';
+﻿'use client';
+import { handleError, logCatch } from '@/lib/errorCore';
 /**
  * features/stok/hooks/useStok.js
  * M11 Stok & Depo — Tüm State & İş Mantığı
@@ -6,7 +7,7 @@
  *   import { useStok } from '@/features/stok';
  */
 import { useState, useEffect, useCallback } from 'react';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/core/db/supabaseClient';
 import { silmeYetkiDogrula } from '@/lib/silmeYetkiDogrula';
 import {
     stokVeriGetir, stokHareketiKaydet as apiKaydet,
@@ -35,6 +36,7 @@ export function useStok(kullanici, erisim) {
             setStokEnvanteri(s);
             setHareketler(h);
         } catch (e) { goster('Ağ veya zaman aşımı: ' + e.message, 'error'); }
+            handleError('ERR-STK-HK-101', 'src/features/stok/hooks/useStok.js', e, 'orta');
         setLoading(false);
     }, []);
 
@@ -74,6 +76,7 @@ export function useStok(kullanici, erisim) {
             setYeniHareket(BOSH_HAREKET);
             setFormAcik(false);
         } catch (e) { goster(e.message, 'error'); }
+            handleError('ERR-STK-HK-101', 'src/features/stok/hooks/useStok.js', e, 'orta');
         setLoading(false);
     };
 
@@ -86,6 +89,7 @@ export function useStok(kullanici, erisim) {
             goster('Kayıt silindi ve B0\'a raporlandı.');
             yukle();
         } catch (e) { goster(e.message, 'error'); }
+            handleError('ERR-STK-HK-101', 'src/features/stok/hooks/useStok.js', e, 'orta');
     };
 
     const filtrelenmisStok = stokEnvanteri.filter(s =>

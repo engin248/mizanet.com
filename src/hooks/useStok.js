@@ -1,9 +1,10 @@
-/**
+﻿/**
  * useStok — Stok Yönetim Hook
  */
 'use client';
+import { handleError, logCatch } from '@/lib/errorCore';
 import { useState, useCallback } from 'react';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/core/db/supabaseClient';
 import { createGoster, telegramBildirim } from '@/lib/utils';
 
 export function useStok(kullanici) {
@@ -30,6 +31,7 @@ export function useStok(kullanici) {
                 telegramBildirim(`⚠️ KRİTİK STOK UYARISI\n${kritik.map(s => `${s.urun_adi}: ${s.miktar} ${s.birim}`).join('\n')}`);
             }
         } catch (e) {
+        handleError('ERR-STK-HK-102', 'src/hooks/useStok.js', e, 'orta');
             goster('Stok verileri alınamadı: ' + e.message, 'error');
         }
         setLoading(false);

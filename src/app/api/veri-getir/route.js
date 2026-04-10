@@ -1,5 +1,6 @@
 ﻿import { NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/lib/supabaseAdmin';
+import { handleError, logCatch } from '@/lib/errorCore';
 
 // ─── GÜVENLİK YAMASI: Parametre Doğrulama ───────────────────────────
 // SQL injection ve tehlikeli select kalıplarını engelle
@@ -90,6 +91,7 @@ export async function POST(request) {
 
         return NextResponse.json({ data });
     } catch (error) {
+        handleError('ERR-ARG-RT-008', 'api/veri-getir', error, 'yuksek');
         return NextResponse.json({ hata: error.message }, { status: 500 });
     }
 }

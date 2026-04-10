@@ -1,10 +1,11 @@
 ﻿'use client';
+import { handleError, logCatch } from '@/lib/errorCore';
 import { cevrimeKuyrugaAl } from '@/lib/offlineKuyruk';
 import { useState, useEffect } from 'react';
 import { BookOpen, Plus, CheckCircle2, AlertTriangle, Ruler, ChevronRight, Trash2, Lock, Tag, Box, Layers, Scissors, Settings } from 'lucide-react';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/core/db/supabaseClient';
 import { telegramBildirim, formatTarih, yetkiKontrol } from '@/lib/utils';
-import { useAuth } from '@/lib/auth';
+import { useAuth } from '@/core/auth';
 import { silmeYetkiDogrula } from '@/lib/silmeYetkiDogrula';
 import Link from 'next/link';
 
@@ -89,6 +90,7 @@ export default function KalipMainContainer() {
                 if (modellerRes.data) setModeller(modellerRes.data);
             }
         } catch (error) {
+        handleError('ERR-MDL-CM-101', 'src/features/kalip/components/KalipMainContainer.js', error, 'orta');
             goster('Bağlantı Hatası: ' + error.message, 'error');
         }
         setLoading(false);
@@ -132,6 +134,7 @@ export default function KalipMainContainer() {
                 } else throw error;
             }
         } catch (error) {
+        handleError('ERR-MDL-CM-101', 'src/features/kalip/components/KalipMainContainer.js', error, 'orta');
             if (!navigator.onLine || error.message.includes('fetch')) {
                 await cevrimeKuyrugaAl({
                     tablo: 'b1_model_taslaklari', islem_tipi: 'INSERT', veri: { ...formModel, model_kodu: formModel.model_kodu.toUpperCase().trim(), durum: 'taslak' }
@@ -178,6 +181,7 @@ export default function KalipMainContainer() {
                 } else throw error;
             }
         } catch (error) {
+        handleError('ERR-MDL-CM-101', 'src/features/kalip/components/KalipMainContainer.js', error, 'orta');
             if (!navigator.onLine || error.message.includes('fetch')) {
                 await cevrimeKuyrugaAl({ tablo: 'b1_model_kaliplari', islem_tipi: 'INSERT', veri: { ...formKalip } });
                 goster('İnternet Yok: Sistem kalıbı çevrimdışı kuyruğa aldı.', 'success');

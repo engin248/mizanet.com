@@ -1,8 +1,9 @@
-﻿import { NextResponse } from 'next/server';
-import { supabaseAdmin } from '@/lib/supabaseAdmin';
+import { NextResponse } from 'next/server';
+import { supabaseAdmin } from '@/core/db/supabaseAdmin';
 import { rateLimitKontrol } from '@/lib/rateLimit';
 import { personelSchema, veriDogrula } from '@/lib/zodSchemas';
 import { hataBildir } from '@/lib/hataBildirim';
+import { handleError } from '@/lib/errorCore';
 
 // ─── POST /api/personel-ekle ───────────────────────────────────
 export async function POST(request) {
@@ -50,7 +51,7 @@ export async function POST(request) {
         return NextResponse.json({ basarili: true, personel: data?.[0] }, { status: 201 });
 
     } catch (error) {
-        console.error('[/api/personel-ekle] Hata:', error.message);
+        handleError('ERR-PRS-RT-001', 'api/personel-ekle', error, 'yuksek', { tablo: 'b1_personel' });
         await hataBildir('/api/personel-ekle', error);
         return NextResponse.json({ hata: 'Sunucu hatası: ' + error.message }, { status: 500 });
     }

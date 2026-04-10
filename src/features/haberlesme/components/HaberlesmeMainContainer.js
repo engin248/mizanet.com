@@ -1,4 +1,5 @@
-'use client';
+﻿'use client';
+import { handleError, logCatch } from '@/lib/errorCore';
 import React, { useState, useEffect } from 'react';
 import {
     MessageSquare, Send, Inbox, AlertTriangle, CheckCircle2,
@@ -6,8 +7,8 @@ import {
     Shield, Eye, EyeOff, Filter, Trash2, Archive, Hash, RefreshCcw,
     Camera, Mic, MicOff, ImagePlus
 } from 'lucide-react';
-import { supabase } from '@/lib/supabase';
-import { useAuth } from '@/lib/auth';
+import { supabase } from '@/core/db/supabaseClient';
+import { useAuth } from '@/core/auth';
 import { useLang } from '@/lib/langContext';
 import { formatTarih, telegramBildirim } from '@/lib/utils';
 import { mesajSifrele, mesajCoz, sifreliMi } from '@/lib/mesajSifrele';
@@ -125,11 +126,15 @@ export default function HaberlesmeMainContainer() {
     useEffect(() => {
         if (!kullanici) return;
         yukle();
-        const kanal = supabase.channel('haberlesme-rt')
-            .on('postgres_changes', { event: '*', schema: 'public', table: 'b1_ic_mesajlar' }, () => yukle())
+        // ASKERİ HABERLEŞME REALTIME LEHİMLEME
+        const kanal = supabase.channel('askeri-haberlesme-rt')
+            .on('postgres_changes', { event: '*', schema: 'public', table: 'b1_askeri_haberlesme' }, () => yukle())
             .subscribe();
-        return () => supabase.removeChannel(kanal);
+        return () => {
+            supabase.removeChannel(kanal);
+        };
     }, [kullanici, sekme]);
+
 
     const goster = (text, type = 'success') => {
         setBildirim({ text, type });
@@ -141,66 +146,32 @@ export default function HaberlesmeMainContainer() {
         if (!kullanici) return;
         setLoading(true);
         try {
-            let query = supabase
-                .from('b1_ic_mesajlar')
-                .select('*')
-                .order('created_at', { ascending: false })
-                .limit(200);
+            // ARTIK DOĞRUDAN SUPABASE YERİNE GÜVENLİ ASKERİ API KULLANILIYOR
+            const res = await fetch(`/api/haberlesme/oku?oda=${kullaniciModul}`);
+            const result = await res.json();
 
-            if (sekme === 'gelen') {
-                // Gelen kutusu: grubuma gönderilen + herkese gönderilen
-                // + üretim birimi isem model geçmişi (urun_id dolu mesajlar)
-                const temelFiltre = `alici_grup.eq.${kullaniciModul},alici_grup.eq.hepsi`;
-                if (uretimBirimiMi(kullaniciModul)) {
-                    query = query.or(`${temelFiltre},urun_id.not.is.null`);
-                } else {
-                    query = query.or(temelFiltre);
-                }
-            } else if (sekme === 'gonderilen') {
-                // Kendi gönderdikleri: gonderen_modul veya gonderen_adi ile filtrele
-                query = query.eq('gonderen_modul', kullaniciModul);
-                if (kullaniciAdi !== 'Bilinmeyen') {
-                    query = query.eq('gonderen_adi', kullaniciAdi);
-                }
-            } else if (sekme === 'arsiv') {
-                // Tam Arşiv: koordinatör/yönetim → tüm kayıtlar
-                // Üretim birimi → kendi modulu + model geçmişi
-                // Genel → yalnızca kendi modulu
-                if (tamArsivYetkisi) {
-                    // tüm kayıtlar — ek filtre yok
-                } else if (uretimBirimiMi(kullaniciModul)) {
-                    query = query.or(
-                        `gonderen_modul.eq.${kullaniciModul},` +
-                        `alici_grup.eq.${kullaniciModul},urun_id.not.is.null`
-                    );
-                } else {
-                    query = query.or(
-                        `gonderen_modul.eq.${kullaniciModul},alici_grup.eq.${kullaniciModul}`
-                    );
-                }
-            } else if (sekme === 'cop') {
-                // Sadece Çöp Kovası (Sadece KOORDİNATÖR görür)
-                query = query.eq('copte', true);
-            }
+            if (result.error) throw new Error(result.error);
 
-            const { data, error } = await query;
-            if (error) throw error;
+            const veri = result.mesajlar || [];
 
-            setMesajlar(data || []);
+            // UI uyumluluğu için map'leme (API'den gelen veriye göre)
+            const mapliMesajlar = veri.map(m => ({
+                ...m,
+                icerik: m.metin, // API 'metin' olarak dönüyor, UI 'icerik' bekliyor olabilir
+                gonderen_modul: m.gonderen_rutbe,
+                created_at: m.created_at || new Date().toISOString()
+            }));
 
-            // Gizleme listesi: UUID yerine grup bazlı — simdilik boş set dönülüyor
-            // (b1_mesaj_gizli tablosu UUID bazlı — ileriki sürümde profil entegrasyonu ile geliştirilebilir)
+            setMesajlar(mapliMesajlar);
             setGizliIdler(new Set());
 
-            // Okunmamis sayı (gelen sekme icin) - Çöpte olmayanlar!
             if (sekme === 'gelen') {
-                const okunmamis = (data || []).filter(m =>
-                    !m.okundu_at && m.gonderen_modul !== kullaniciModul && !m.copte
-                ).length;
+                const okunmamis = mapliMesajlar.filter(m => !m.okundu_mu && m.gonderen_modul !== kullaniciModul).length;
                 setOkunmamisSayi(okunmamis);
             }
         } catch (err) {
-            goster('Yükleme hatası: ' + err.message, 'error');
+        handleError('ERR-HBR-CM-101', 'src/features/haberlesme/components/HaberlesmeMainContainer.js', err, 'orta');
+            goster('Haberleşme Hattı Hatası: ' + err.message, 'error');
         }
         setLoading(false);
     };
@@ -265,39 +236,27 @@ export default function HaberlesmeMainContainer() {
 
         setGonderiliyor(true);
         try {
-            // SHA-256 — içerik + gönderen + zaman damgası
-            const zamanDamgasi = new Date().toISOString();
-            const hashGirdisi = `${form.icerik.trim()}|${kullaniciAdi}|${zamanDamgasi}`;
-            const hash = await sha256(hashGirdisi);
+            // ARTIK İŞLEM GÜVENLİ ASKERİ API ÜZERİNDEN YÜRÜTÜLÜYOR
+            // Şifreleme Sunucu Tarafında (kripto.js) yapılıyor - Client Key sızıntısı önlendi.
+            const res = await fetch('/api/haberlesme/gonder', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    gonderen_rutbe: kullaniciModul,
+                    hedef_oda: form.alici_grup,
+                    mesaj_metni: form.icerik.trim(),
+                    konu: form.konu.trim(),
+                    oncelik: form.oncelik,
+                    tip: form.tip,
+                    urun_id: form.urun_id,
+                    urun_kodu: form.urun_kodu,
+                    urun_adi: form.urun_adi,
+                    gonderen_adi: kullaniciAdi
+                })
+            });
 
-            // [MODEL-KODU] prefix — her mesaj model koduyla başlar
-            const konuPrefix = form.urun_kodu.trim() ? `[${form.urun_kodu.trim()}] ` : '';
-            const sonKonu = konuPrefix + form.konu.trim();
-
-            // 🔐 AES-256-GCM ŞİFRELEME — içerik Supabase'e gitmeden şifrelenir
-            const sifreliIcerik = await mesajSifrele(form.icerik.trim());
-
-            const { error } = await supabase.from('b1_ic_mesajlar').insert([{
-                konu: sonKonu,
-                icerik: sifreliIcerik,
-                mesaj_hash: hash,             // içerik bütünlüğü damgası
-                gonderen_id: null,                // PIN sistemi UUID üretmiyor — grup bazlı kimlik
-                gonderen_adi: kullaniciAdi,
-                gonderen_modul: kullaniciModul,
-                alici_grup: form.alici_grup,
-                oncelik: form.oncelik,
-                tip: form.tip,
-                durum: 'gonderildi',
-                ilgili_modul: form.ilgili_modul || null,
-                ilgili_kayit_ozet: form.ilgili_kayit_ozet.trim() || null,
-                // Ürün/Model ortak anahtar (snapshot — değiştirilemeyen kanıt)
-                urun_id: form.urun_id.trim() || null,
-                urun_kodu: form.urun_kodu.trim() || null,
-                urun_adi: form.urun_adi.trim() || null,
-                onay_durumu: form.tip === 'onay_bekleniyor' ? 'bekliyor' : null,
-                created_at: zamanDamgasi,
-            }]);
-            if (error) throw error;
+            const result = await res.json();
+            if (result.error) throw new Error(result.error);
 
             if (form.oncelik === 'kritik' || form.oncelik === 'acil') {
                 const alici = MODULLER.find(m => m.key === form.alici_grup)?.label || form.alici_grup;
@@ -305,16 +264,17 @@ export default function HaberlesmeMainContainer() {
                     `📨 ${form.oncelik === 'kritik' ? '🔴 KRİTİK' : '🟡 ACİL'} MESAJ\n` +
                     `Gönderen: ${kullaniciAdi} (${kullaniciModul})\n` +
                     `Alıcı: ${alici}\n` +
-                    `Konu: ${sonKonu}`
+                    `Konu: ${form.konu.trim()}`
                 );
             }
 
-            goster('✅ Mesaj gönderildi ve SHA-256 damgalandı.', 'success');
+            goster('✅ Askeri Hat: Mesaj şifrelendi ve Karargâh mühürüyle gönderildi.', 'success');
             setForm(BOŞ_FORM);
             setSekme('gonderilen');
             yukle();
         } catch (err) {
-            goster('Gönderme hatası: ' + err.message, 'error');
+        handleError('ERR-HBR-CM-101', 'src/features/haberlesme/components/HaberlesmeMainContainer.js', err, 'orta');
+            goster('Haberleşme Hattı Hatası: ' + err.message, 'error');
         }
         setGonderiliyor(false);
     };
@@ -410,6 +370,7 @@ export default function HaberlesmeMainContainer() {
             goster('🗑️ Mesaj Çöp Kovasına taşındı.', 'success');
             yukle();
         } catch (err) {
+        handleError('ERR-HBR-CM-101', 'src/features/haberlesme/components/HaberlesmeMainContainer.js', err, 'orta');
             goster('Çöpe atma hatası: ' + err.message, 'error');
         }
     };
@@ -427,6 +388,7 @@ export default function HaberlesmeMainContainer() {
             setAcikMesaj(null);
             yukle();
         } catch (err) {
+        handleError('ERR-HBR-CM-101', 'src/features/haberlesme/components/HaberlesmeMainContainer.js', err, 'orta');
             goster('Geri yükleme hatası: ' + err.message, 'error');
         }
     };

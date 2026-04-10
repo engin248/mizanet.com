@@ -2,7 +2,8 @@
  * features/muhasebe/services/muhasebeApi.js
  * M14 Muhasebe & Final Rapor — Supabase Servis Katmanı
  */
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/core/db/supabaseClient';
+import { handleError, logCatch } from '@/lib/errorCore';
 import { cevrimeKuyrugaAl } from '@/lib/offlineKuyruk';
 import { telegramBildirim } from '@/lib/utils';
 
@@ -107,7 +108,7 @@ export async function devirKapat(rapor, kullaniciLabel = '') {
             }
         }
     } catch (e) {
-        console.error('Stok otonomu hatası (Kritik değil ama loglandı):', e);
+        handleError('ERR-MHS-SV-101', 'src/features/muhasebe/services/muhasebeApi.js', e, 'orta');
     }
 
     telegramBildirim(`🔒 2. BİRİME DEVİR ONAYLANDI & STOK GÜNCELLENDİ!\nBir üretim raporu KİLİTLENDİ.`);

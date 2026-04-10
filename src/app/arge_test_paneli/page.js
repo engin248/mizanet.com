@@ -1,6 +1,7 @@
-'use client';
+﻿'use client';
+import { handleError, logCatch } from '@/lib/errorCore';
 import { useState, useEffect, useRef } from 'react';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/core/db/supabaseClient';
 import { ShieldCheck, TrendingUp, AlertTriangle, Calculator, Factory, CheckCircle2, Radar, Cpu, Zap, Activity } from 'lucide-react';
 
 // MOCK VERİ (Veritabanı boşken tasarımın görünmesi için Geçici Simülasyon)
@@ -57,6 +58,7 @@ export default function ArgeTestPaneli() {
                 setStrategyData(data);
             }
         } catch (error) {
+        handleError('ERR-ARG-PG-101', 'src/app/arge_test_paneli/page.js', error, 'orta');
             setStrategyData(MOCK_STRATEGY);
         }
         setLoading(false);

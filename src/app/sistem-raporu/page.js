@@ -1,4 +1,5 @@
 'use client';
+import { handleError, logCatch } from '@/lib/errorCore';
 /**
  * /sistem-raporu — Gerçek Hata Analiz Raporu
  * Müfettiş: ANTİGRAVİTY | Tarih: 19 Mart 2026

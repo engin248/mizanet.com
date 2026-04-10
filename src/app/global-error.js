@@ -1,4 +1,5 @@
 ﻿'use client';
+import { handleError, logCatch } from '@/lib/errorCore';
 import { useEffect } from 'react';
 
 // --- KURESEL COKME VE ZIRH KALKANI (GLOBAL ERROR BOUNDARY) ---
@@ -16,7 +17,7 @@ export default function GlobalError({ error, reset }) {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ mesaj: '\u26a0\ufe0f GLOBAL CRASH!\n\nUrl: /app/global-error.js\nHata: ' + error.message }),
             }).catch(e => console.error('[GLOBAL-ERROR] Telegram bildirim gonderilemedi:', e?.message));
-        } catch (e) { console.error('[GLOBAL-ERROR] Telegram bildirim gonderilemedi:', e?.message); }
+        } catch (e) { logCatch('ERR-SYS-CM-102', 'src/app/global-error.js', e); }
     }, [error]);
 
     return (

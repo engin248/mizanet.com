@@ -1,6 +1,7 @@
 // /api/2fa-dogrula/route.js
 // TOTP kodu doğrulama — PIN doğrulandıktan sonra çağrılır
 import { NextResponse } from 'next/server';
+import { handleError, logCatch } from '@/lib/errorCore';
 import { createClient } from '@supabase/supabase-js';
 import { totpDogrula } from '@/lib/totp';
 
@@ -85,6 +86,7 @@ export async function POST(request) {
 
         return NextResponse.json({ basarili: true, mesaj: '2FA doğrulandı.' });
     } catch (err) {
+        handleError('ERR-AUTH-RT-001', 'api/2fa-dogrula', err, 'yuksek');
         return NextResponse.json({ hata: err.message }, { status: 500 });
     }
 }

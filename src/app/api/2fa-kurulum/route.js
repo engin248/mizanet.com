@@ -1,6 +1,7 @@
 // /api/2fa-kurulum/route.js
 // Koordinatör için TOTP 2FA QR kod kurulumu
 import { NextResponse } from 'next/server';
+import { handleError, logCatch } from '@/lib/errorCore';
 import { createClient } from '@supabase/supabase-js';
 import { secretOlustur, qrUrlOlustur } from '@/lib/totp';
 
@@ -52,6 +53,7 @@ export async function POST(request) {
             mesaj: 'Google Authenticator ile QR kodu okutun',
         });
     } catch (err) {
+        handleError('ERR-AUTH-RT-002', 'api/2fa-kurulum', err, 'yuksek');
         return NextResponse.json({ hata: err.message }, { status: 500 });
     }
 }

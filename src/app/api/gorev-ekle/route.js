@@ -1,7 +1,8 @@
-﻿import { NextResponse } from 'next/server';
-import { supabaseAdmin } from '@/lib/supabaseAdmin';
+import { NextResponse } from 'next/server';
+import { supabaseAdmin } from '@/core/db/supabaseAdmin';
 import { rateLimitKontrol } from '@/lib/rateLimit';
 import { gorevSchema, veriDogrula } from '@/lib/zodSchemas';
+import { handleError } from '@/lib/errorCore';
 
 // ─── POST /api/gorev-ekle ─────────────────────────────────────
 // NOT: Eski gorev-ekle varsa bunu ona birleştirin veya eski route'u silin
@@ -56,7 +57,7 @@ export async function POST(request) {
         return NextResponse.json({ basarili: true, gorev: data?.[0] }, { status: 201 });
 
     } catch (error) {
-        console.error('[/api/gorev-ekle] Hata:', error.message);
+        handleError('ERR-GRV-RT-001', 'api/gorev-ekle', error, 'yuksek', { tablo: 'b1_gorevler' });
         return NextResponse.json({ hata: 'Sunucu hatası: ' + error.message }, { status: 500 });
     }
 }

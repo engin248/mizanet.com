@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { handleError, logCatch } from '@/lib/errorCore';
 
 // ─── AJAN / AI ÇIKTI DOĞRULAMASI ──────────────────────────────
 // Ajanların YZ çıktılarını doğrulamak için (Halüsinasyon Önleyici) Zırh
@@ -164,7 +165,7 @@ export function veriDogrula(schema, data) {
         const dogrulanmis = schema.parse(data);
         return { basarili: true, data: dogrulanmis };
     } catch (e) {
-        console.error("Zod Siber Kalkanı Devrede. Hack veya Halüsinasyon Engellendi:", e.errors);
+        handleError('ERR-SYS-LB-107', 'src/lib/zodSchemas.js', e, 'orta');
         return { basarili: false, error: e.errors };
     }
 }

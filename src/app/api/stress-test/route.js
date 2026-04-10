@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { handleError, logCatch } from '@/lib/errorCore';
 import { supabase } from '@/lib/supabase';
 
 /**
@@ -87,6 +88,7 @@ export async function POST(req) {
                         results.failed++;
                     }
                 } catch (error) {
+        handleError('ERR-SYS-RT-009', 'api/stress-test', error, 'yuksek');
                     const latency = Date.now() - reqStartTime;
                     results.latencies.push(latency);
                     results.failed++;
@@ -120,13 +122,13 @@ export async function POST(req) {
                 sonuc: results.failed === 0 ? 'basarili' : 'basarisiz'
             }]);
         } catch (e) {
-            console.error('Test logu kaydedilemedi:', e);
+            handleError('ERR-SYS-RT-005', 'api/stress-test', e, 'yuksek');
         }
 
         return NextResponse.json(results, { status: 200 });
 
     } catch (error) {
-        console.error('Stres test error:', error);
+        handleError('ERR-SYS-RT-005', 'api/stress-test', error, 'yuksek');
         return NextResponse.json({ error: error.message || 'Test yürütülürken dahili hata oluştu.' }, { status: 500 });
     }
 }

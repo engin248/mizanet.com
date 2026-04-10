@@ -1,9 +1,10 @@
-/**
+﻿/**
  * useUretim — İş Emirleri Hook
  */
 'use client';
+import { handleError, logCatch } from '@/lib/errorCore';
 import { useState, useCallback } from 'react';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/core/db/supabaseClient';
 import { createGoster, telegramBildirim } from '@/lib/utils';
 
 export function useUretim(kullanici) {
@@ -23,6 +24,7 @@ export function useUretim(kullanici) {
             if (error) throw error;
             setIsEmirleri(data || []);
         } catch (e) {
+        handleError('ERR-URT-HK-104', 'src/hooks/useUretim.js', e, 'orta');
             goster('İş emirleri alınamadı: ' + e.message, 'error');
         }
         setLoading(false);

@@ -1,10 +1,11 @@
-'use client';
+﻿'use client';
+import { handleError, logCatch } from '@/lib/errorCore';
 /**
  * features/imalat/hooks/useImalat.js
  * M7 İmalat Emirleri — Üretim Takibi
  */
 import { useState, useEffect, useCallback } from 'react';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/core/db/supabaseClient';
 import { silmeYetkiDogrula } from '@/lib/silmeYetkiDogrula';
 import {
     imalatEmirleriGetir, imalatEmriKaydet as apiKaydet,
@@ -30,6 +31,7 @@ export function useImalat(kullanici) {
             const { emirler: e, modeller: m } = await imalatEmirleriGetir();
             setEmirler(e); setModeller(m);
         } catch (e) { goster('İmalat emirleri yüklenemedi: ' + e.message, 'error'); }
+            handleError('ERR-URT-HK-101', 'src/features/imalat/hooks/useImalat.js', e, 'orta');
         setLoading(false);
     }, []);
 
@@ -48,12 +50,14 @@ export function useImalat(kullanici) {
             goster(offline ? '⚡ Çevrimdışı: Kuyruğa alındı.' : '✅ İmalat emri oluşturuldu!');
             setForm(BOSH_FORM); setFormAcik(false); yukle();
         } catch (e) { goster(e.message, 'error'); }
+            handleError('ERR-URT-HK-101', 'src/features/imalat/hooks/useImalat.js', e, 'orta');
         setLoading(false);
     };
 
     const durumGuncelle = async (id, durum) => {
         try { await imalatDurumGuncelle(id, durum); goster(`✅ Durum: ${durum}`); yukle(); }
         catch (e) { goster(e.message, 'error'); }
+            handleError('ERR-URT-HK-101', 'src/features/imalat/hooks/useImalat.js', e, 'orta');
     };
 
     const sil = async (id) => {
@@ -62,6 +66,7 @@ export function useImalat(kullanici) {
         if (!confirm('Silinsin mi?')) return;
         try { await apiSil(id, kullanici?.label); goster('Silindi.'); yukle(); }
         catch (e) { goster(e.message, 'error'); }
+            handleError('ERR-URT-HK-101', 'src/features/imalat/hooks/useImalat.js', e, 'orta');
     };
 
     const filtreliEmirler = emirler.filter(e => {

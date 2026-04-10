@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { handleError, logCatch } from '@/lib/errorCore';
 
 /**
  * /api/agent/kasif
@@ -78,6 +79,7 @@ Kısa ve veri odaklı yanıt ver. Kaynak belirt.
                 kaynaklar = perplexityData.citations || [];
             }
         } catch (perplexityErr) {
+        handleError('ERR-RPR-RT-009', 'api/agent/kasif', perplexityErr, 'yuksek');
             // Perplexity başarısız → Gemini tek başına çalışır
             piyasaVeri = null;
         }
@@ -156,6 +158,7 @@ Yukarıdaki pazar verilerine ve 119 Kriterlik üretim/kârlılık filtrelerimize
         });
 
     } catch (err) {
+        handleError('ERR-RPR-RT-009', 'api/agent/kasif', err, 'yuksek');
         return NextResponse.json({
             error: 'Kaşif Ajan hatası',
             mesaj: err.message,

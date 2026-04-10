@@ -1,9 +1,10 @@
-'use client';
+﻿'use client';
+import { handleError, logCatch } from '@/lib/errorCore';
 import { useState, useEffect } from 'react';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/core/db/supabaseClient';
 import { ShieldCheck, ShieldAlert, CheckCircle2, XCircle, Trash2, ArrowLeft, ExternalLink, Activity, Info, AlertTriangle, Eye } from 'lucide-react';
 import NextLink from 'next/link';
-import { useAuth } from '@/lib/auth';
+import { useAuth } from '@/core/auth';
 
 export default function ScraperKarantinaContainer() {
     const { kullanici, yukleniyor } = useAuth();
@@ -40,6 +41,7 @@ export default function ScraperKarantinaContainer() {
             if (error) throw error;
             setKarantinaListesi(data || []);
         } catch (error) {
+        handleError('ERR-ARG-CM-104', 'src/features/arge/components/ScraperKarantinaContainer.js', error, 'orta');
             goster('Hata: ' + error.message, 'error');
         } finally {
             setLoading(false);
@@ -100,6 +102,7 @@ export default function ScraperKarantinaContainer() {
             setKarantinaListesi(prev => prev.filter(p => p.id !== urun.id));
 
         } catch (error) {
+        handleError('ERR-ARG-CM-104', 'src/features/arge/components/ScraperKarantinaContainer.js', error, 'orta');
             goster('Aktarım hatası: ' + error.message, 'error');
         } finally {
             setIslemdeId(null);
@@ -121,6 +124,7 @@ export default function ScraperKarantinaContainer() {
             goster('🗑️ Kayıt reddedildi (Çöpe atıldı).', 'success');
             setKarantinaListesi(prev => prev.filter(p => p.id !== id));
         } catch (error) {
+        handleError('ERR-ARG-CM-104', 'src/features/arge/components/ScraperKarantinaContainer.js', error, 'orta');
             goster('Silme hatası: ' + error.message, 'error');
         } finally {
             setIslemdeId(null);

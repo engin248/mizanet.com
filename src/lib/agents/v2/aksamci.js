@@ -4,6 +4,7 @@
 // Her akşam 18:00 — günlük kapanış ve yarın hazırlık
 // ============================================================
 import { sb, AJAN_ISIMLERI, logYaz, alarmYaz } from './_ortak';
+import { handleError, logCatch } from '@/lib/errorCore';
 
 export async function aksamci() {
     const isim = AJAN_ISIMLERI.AKSAM;
@@ -81,6 +82,7 @@ export async function aksamci() {
         return { basarili: true, ozet: ozetMetin, sonuc };
 
     } catch (e) {
+        handleError('ERR-AJN-LB-107', 'src/lib/agents/v2/aksamci.js', e, 'orta');
         await logYaz(isim, 'aksam_kapanis', `Hata: ${e.message}`, 'hata');
         return { basarili: false, hata: e.message };
     }

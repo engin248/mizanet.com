@@ -8,8 +8,8 @@
  */
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useRouter } from 'next/navigation';
-import { supabase } from '@/lib/supabase';
-import { useAuth } from '@/lib/auth';
+import { supabase } from '@/core/db/supabaseClient';
+import { useAuth } from '@/core/auth';
 import { useLang } from '@/lib/langContext';
 import { MessageSquare, X, ChevronRight, AlertTriangle } from 'lucide-react';
 import { logCatch } from '@/lib/errorCore';
@@ -34,36 +34,35 @@ export default function MesajBildirimButonu() {
     const sayiGetir = useCallback(async () => {
         if (!kullaniciId) return;
         try {
+            // ASKERİ HABERLEŞME TABLOSUNDAN SAYI ÇEK
             const { count } = await supabase
-                .from('b1_ic_mesajlar')
+                .from('b1_askeri_haberlesme')
                 .select('id', { count: 'exact', head: true })
-                .or(`alici_grup.eq.${kGrup},alici_grup.eq.hepsi`)
-                .is('okundu_at', null)
-                .eq('copte', false); // ✅ Boolean için .eq() kullanılmalı, .is() null içindir
+                .or(`hedef_oda.eq.${kGrup},hedef_oda.eq.hepsi`)
+                .eq('okundu_mu', false);
             setOkunmamis(count || 0);
         } catch (e) { logCatch('MesajBildirim.sayiGetir', e); }
+            handleError('ERR-HBR-CM-101', 'src/components/MesajBildirimButonu.js', e, 'orta');
     }, [kullaniciId, kGrup]);
 
     // Detay — yalnızca popup açılınca (lazy)
     const detayGetir = useCallback(async () => {
         if (!kullaniciId) return;
         try {
-            const { data } = await supabase
-                .from('b1_ic_mesajlar')
-                .select('id, konu, oncelik, tip, created_at, gonderen_adi')
-                .or(`alici_grup.eq.${kGrup},alici_grup.eq.hepsi`)
-                .is('okundu_at', null)
-                .eq('copte', false) // ✅ Boolean için .eq()
-                .order('created_at', { ascending: false })
-                .limit(10);
-            const mesajlar = data || [];
+            // API ÜZERİNDEN ŞİFRESİ ÇÖZÜLMÜŞ SON MESAJLARI GETİR
+            const res = await fetch(`/api/haberlesme/oku?oda=${kGrup}`);
+            const result = await res.json();
+            if (result.error) throw new Error(result.error);
+
+            const mesajlar = result.mesajlar || [];
             if (JSON.stringify(mesajlar) !== JSON.stringify(sonMesajlar)) {
-                setSonMesajlar(mesajlar);
+                setSonMesajlar(mesajlar.slice(0, 5));
             }
             const kritik = mesajlar.filter(m => m.oncelik === 'kritik' || m.oncelik === 'acil');
             if (kritik.length > 0) { setAlarmMesajlar(kritik); setAlarmAcik(true); }
         } catch (e) { logCatch('MesajBildirim.detayGetir', e); }
-    }, [kullaniciId, kGrup]); // 🔴 DİKKAT: sonMesajlar listeden ÇIKARILDI (Sonsuz Renderı kırmak için)
+            handleError('ERR-HBR-CM-101', 'src/components/MesajBildirimButonu.js', e, 'orta');
+    }, [kullaniciId, kGrup, sonMesajlar]);
 
     // İlk yükleme
     useEffect(() => {
@@ -76,12 +75,11 @@ export default function MesajBildirimButonu() {
         if (!kullaniciId) return;
 
         let bekleme;
-        const kanal = supabase.channel(`mbtn-${kGrup}`)
-            .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'b1_ic_mesajlar' },
+        const kanal = supabase.channel(`mbtn-askeri-${kGrup}`)
+            .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'b1_askeri_haberlesme' },
                 () => {
-                    // Aşırı http isteğini engellemek için gecikme (throttle) 
                     clearTimeout(bekleme);
-                    bekleme = setTimeout(() => sayiGetir().catch(() => { }), 2000);
+                    bekleme = setTimeout(() => sayiGetir().catch(() => { }), 1000);
                 })
             .subscribe();
         kanalRef.current = kanal;

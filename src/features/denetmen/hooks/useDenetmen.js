@@ -1,10 +1,11 @@
 ﻿'use client';
+import { handleError, logCatch } from '@/lib/errorCore';
 /**
  * features/denetmen/hooks/useDenetmen.js
  * M13 Denetmen — Kalite Kontrol & Audit Log
  */
 import { useState, useEffect, useCallback } from 'react';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/core/db/supabaseClient';
 import {
     denetimLoglariniGetir, denetimKaydi,
     denetimDurumGuncelle, denetmenKanaliKur,
@@ -27,6 +28,7 @@ export function useDenetmen(kullanici) {
             const { denetimLoglari: d, sistemLoglari: s } = await denetimLoglariniGetir();
             setDenetimLoglari(d); setSistemLoglari(s);
         } catch (e) { goster('Loglar yüklenemedi: ' + e.message, 'error'); }
+            handleError('ERR-DNT-HK-101', 'src/features/denetmen/hooks/useDenetmen.js', e, 'orta');
         setLoading(false);
     }, []);
 
@@ -45,12 +47,14 @@ export function useDenetmen(kullanici) {
             goster('✅ Denetim kaydedildi!');
             setForm(BOSH_FORM); setFormAcik(false); yukle();
         } catch (e) { goster(e.message, 'error'); }
+            handleError('ERR-DNT-HK-101', 'src/features/denetmen/hooks/useDenetmen.js', e, 'orta');
         setLoading(false);
     };
 
     const durumGuncelle = async (id, durum) => {
         try { await denetimDurumGuncelle(id, durum); goster(`✅ Durum: ${durum}`); yukle(); }
         catch (e) { goster(e.message, 'error'); }
+            handleError('ERR-DNT-HK-101', 'src/features/denetmen/hooks/useDenetmen.js', e, 'orta');
     };
 
     const filtreliDenetim = denetimLoglari.filter(d => filtre === 'hepsi' || d.durum === filtre || d.tip === filtre);

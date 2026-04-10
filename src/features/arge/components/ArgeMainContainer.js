@@ -1,11 +1,12 @@
 ﻿'use client';
+import { handleError, logCatch } from '@/lib/errorCore';
 import { useState, useEffect } from 'react';
 import {
     TrendingUp, Plus, CheckCircle2, XCircle, Clock, AlertTriangle,
     Bot, Search, BarChart3, Tag, Layers, Zap, Activity, Network, ShieldAlert
 } from 'lucide-react';
-import { supabase } from '@/lib/supabase';
-import { useAuth } from '@/lib/auth';
+import { supabase } from '@/core/db/supabaseClient';
+import { useAuth } from '@/core/auth';
 
 export default function ArgeMainContainer() {
     const { kullanici, yukleniyor } = useAuth();
@@ -52,7 +53,7 @@ export default function ArgeMainContainer() {
                 if (!logHata && logData) setAgentLoglari(logData);
 
             } catch (err) {
-                console.error("M1 Veri çekme hatası:", err);
+                handleError('ERR-ARG-CM-102', 'src/features/arge/components/ArgeMainContainer.js', err, 'orta');
             }
             setLoading(false);
         };

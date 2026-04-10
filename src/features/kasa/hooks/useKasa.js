@@ -1,10 +1,11 @@
 ﻿'use client';
+import { handleError, logCatch } from '@/lib/errorCore';
 /**
  * features/kasa/hooks/useKasa.js
  * M6 Kasa — Nakit Akış Yönetimi
  */
 import { useState, useEffect, useCallback } from 'react';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/core/db/supabaseClient';
 import { silmeYetkiDogrula } from '@/lib/silmeYetkiDogrula';
 import {
     kasaHareketleriGetir, kasaHareketiKaydet as apiKaydet,
@@ -27,6 +28,7 @@ export function useKasa(kullanici) {
         setLoading(true);
         try { setHareketler(await kasaHareketleriGetir()); }
         catch (e) { goster('Kasa yüklenemedi: ' + e.message, 'error'); }
+            handleError('ERR-KSA-HK-101', 'src/features/kasa/hooks/useKasa.js', e, 'orta');
         setLoading(false);
     }, []);
 
@@ -44,6 +46,7 @@ export function useKasa(kullanici) {
             goster(offline ? '⚡ Çevrimdışı: Kuyruğa alındı.' : '✅ Kasa hareketi kaydedildi!');
             setForm(BOSH_HAREKET); setFormAcik(false); yukle();
         } catch (e) { goster(e.message, 'error'); }
+            handleError('ERR-KSA-HK-101', 'src/features/kasa/hooks/useKasa.js', e, 'orta');
         setLoading(false);
     };
 
@@ -53,6 +56,7 @@ export function useKasa(kullanici) {
         if (!confirm('Silinsin mi?')) return;
         try { await apiSil(id, kullanici?.label); goster('Silindi.'); yukle(); }
         catch (e) { goster(e.message, 'error'); }
+            handleError('ERR-KSA-HK-101', 'src/features/kasa/hooks/useKasa.js', e, 'orta');
     };
 
     const filtreliHareketler = hareketler.filter(h => {

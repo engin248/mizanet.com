@@ -1,10 +1,11 @@
 ﻿'use client';
+import { handleError, logCatch } from '@/lib/errorCore';
 /**
  * features/kesim/hooks/useKesim.js
  * M17 Kesim Emirleri — Kumaş Kesim Takibi
  */
 import { useState, useEffect, useCallback } from 'react';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/core/db/supabaseClient';
 import { silmeYetkiDogrula } from '@/lib/silmeYetkiDogrula';
 import {
     kesimVeriGetir, kesimEmriKaydet as apiKaydet,
@@ -29,6 +30,7 @@ export function useKesim(kullanici) {
             const { kesimler: k, kumaslar: km } = await kesimVeriGetir();
             setKesimler(k); setKumaslar(km);
         } catch (e) { goster('Kesimler yüklenemedi: ' + e.message, 'error'); }
+            handleError('ERR-KSM-HK-101', 'src/features/kesim/hooks/useKesim.js', e, 'orta');
         setLoading(false);
     }, []);
 
@@ -48,12 +50,14 @@ export function useKesim(kullanici) {
             goster(offline ? '⚡ Çevrimdışı: Kuyruğa alındı.' : '✅ Kesim emri oluşturuldu!');
             setForm(BOSH_FORM); setFormAcik(false); yukle();
         } catch (e) { goster(e.message, 'error'); }
+            handleError('ERR-KSM-HK-101', 'src/features/kesim/hooks/useKesim.js', e, 'orta');
         setLoading(false);
     };
 
     const durumGuncelle = async (id, durum) => {
         try { await kesimDurumGuncelle(id, durum); goster(`✅ Durum: ${durum}`); yukle(); }
         catch (e) { goster(e.message, 'error'); }
+            handleError('ERR-KSM-HK-101', 'src/features/kesim/hooks/useKesim.js', e, 'orta');
     };
 
     const sil = async (id) => {
@@ -62,6 +66,7 @@ export function useKesim(kullanici) {
         if (!confirm('Silinsin mi?')) return;
         try { await apiSil(id, kullanici?.label); goster('Silindi.'); yukle(); }
         catch (e) { goster(e.message, 'error'); }
+            handleError('ERR-KSM-HK-101', 'src/features/kesim/hooks/useKesim.js', e, 'orta');
     };
 
     const filtreliKesimler = kesimler.filter(k => filtreDurum === 'hepsi' || k.durum === filtreDurum);

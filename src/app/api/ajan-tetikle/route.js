@@ -1,12 +1,13 @@
-﻿import { NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
+import { handleError, logCatch } from '@/lib/errorCore';
 import { telegramBildirim } from '@/lib/utils';
 
 // GÜVENLİK DÜZELTME: Hardcoded fallback key kaldırıldı — ENV yoksa boş string kalır, hiçbir istek eşleşmez.
 const INTERNAL_API_KEY = (process.env.INTERNAL_API_KEY || '').replace(/[\r\n]+/g, '').trim();
 
 if (!INTERNAL_API_KEY) {
-    console.error('[AJAN-TETIKLE] KRİTİK: INTERNAL_API_KEY env değişkeni tanımlı değil! Tüm istekler reddedilecek.');
+    logCatch('ERR-AJN-RT-006', 'api/ajan-tetikle/env-check', new Error('INTERNAL_API_KEY env tanimsiz'));
 }
 
 export async function POST(request) {
@@ -14,7 +15,7 @@ export async function POST(request) {
         // 1. KÖK SEBEP (GÜVENLİK) ANALİZİ: İstek yetkili mi?
         const apiKey = request.headers.get('x-internal-api-key');
         if (apiKey !== INTERNAL_API_KEY) {
-            console.error(`[AJAN-TETIKLE] HATA: Yetkisiz erişim denemesi (401).`);
+            logCatch('ERR-AJN-RT-006', 'api/ajan-tetikle/auth-guard', new Error('Yetkisiz erisim denemesi'));
             return NextResponse.json({ hata: 'Yetkisiz erişim. API Key geçersiz.' }, { status: 401 });
         }
 
@@ -22,7 +23,7 @@ export async function POST(request) {
         const body = await request.json().catch(() => null);
 
         if (!body) {
-            console.error('[AJAN-TETIKLE] HATA: Boş veya geçersiz JSON payload (400).');
+            logCatch('ERR-AJN-RT-006', 'api/ajan-tetikle/payload-guard', new Error('Bos/gecersiz JSON'));
             return NextResponse.json({ hata: 'Geçersiz veri formatı.' }, { status: 400 });
         }
 
@@ -39,7 +40,7 @@ export async function POST(request) {
             }]);
 
             if (dbErr) {
-                console.error('[AJAN-TETIKLE] Supabase Log Hatası:', dbErr.message);
+                logCatch('ERR-AJN-RT-006', 'api/ajan-tetikle/db-log', dbErr);
             }
 
             // --- OpenAI Vision Analizi ---
@@ -83,6 +84,7 @@ export async function POST(request) {
                         }
                     }
                 } catch (aiErr) {
+        handleError('ERR-AJN-RT-005', 'api/ajan-tetikle', aiErr, 'yuksek');
                     aiSonucu = `AI Bağlantı Hatası: ${aiErr.message}`;
                 }
             }
@@ -113,7 +115,7 @@ export async function POST(request) {
                     telegramBildirim(mesaj); // Resim veya token yoksa sadece metin at fallback
                 }
             } catch (tgDigerHata) {
-                console.error('[AJAN-TETIKLE] Telegram Fotoğraf Atma Hatası. Metne geçiş yapılıyor:', tgDigerHata.message);
+                handleError('ERR-AJN-RT-006', 'api/ajan-tetikle', tgDigerHata, 'yuksek');
                 telegramBildirim(mesaj);
             }
 
@@ -133,8 +135,9 @@ export async function POST(request) {
         }
 
     } catch (error) {
+        handleError('ERR-AJN-RT-005', 'api/ajan-tetikle', error, 'yuksek');
         // 5. KÖK SEBEP TEMİZLİĞİ: Hata yakalama ve izole etme
-        console.error('[AJAN-TETIKLE] CRITICAL SERVER ERROR:', error.message);
+        handleError('ERR-AJN-RT-006', 'api/ajan-tetikle', error, 'yuksek');
         return NextResponse.json({
             hata: 'Sunucu tarafında işlem sırasında kritik bir hata oluştu.',
             detay: error.message

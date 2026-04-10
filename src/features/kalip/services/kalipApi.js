@@ -1,9 +1,9 @@
-/**
+﻿/**
  * features/kalip/services/kalipApi.js
  * Tablolar: b1_model_kaliplari (kalıplar), b1_model_taslaklari (modeller), b1_arge_trendler
  * (MainContainer'dan doğrulanan gerçek tablo adları)
  */
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/core/db/supabaseClient';
 import { cevrimeKuyrugaAl } from '@/lib/offlineKuyruk';
 
 export async function kaliplariGetir() {

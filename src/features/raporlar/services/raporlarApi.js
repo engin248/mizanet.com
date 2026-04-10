@@ -1,9 +1,9 @@
-/**
+﻿/**
  * features/raporlar/services/raporlarApi.js
  * KN-4: Bölgesel Satış, Haftalık Sipariş Trendi, Model Performansı
  * Recharts için hazır veri döndürür.
  */
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/core/db/supabaseClient';
 
 // KN-4: Bölgesel Satış Analizi
 export async function bolgeselSatisGetir() {

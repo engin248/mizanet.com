@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { handleError, logCatch } from '@/lib/errorCore';
 
 /**
  * /api/perplexity-arama — Zamansal Doğrulama için Perplexity Araması
@@ -68,6 +69,7 @@ export async function POST(request) {
         return NextResponse.json({ sonuc, basarili: true });
 
     } catch (err) {
+        handleError('ERR-ARG-RT-007', 'api/perplexity-arama', err, 'yuksek');
         return NextResponse.json({ error: err.message }, { status: 500 });
     }
 }

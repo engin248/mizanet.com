@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { handleError, logCatch } from '@/lib/errorCore';
 import { supabaseAdmin } from '@/lib/supabaseAdmin';
 const { KuyrugaEkle } = require('@/lib/redis_kuyruk');
 
@@ -31,6 +32,7 @@ export async function POST(req) {
         });
 
     } catch (error) {
+        handleError('ERR-SYS-RT-010', 'api/beyaz-saha', error, 'yuksek');
         await supabaseAdmin.from('b1_agent_loglari').insert([{
             ajan_adi: 'BEYAZ_SAHA_ORKESTRATOR',
             islem_tipi: 'FATAL_ERROR',

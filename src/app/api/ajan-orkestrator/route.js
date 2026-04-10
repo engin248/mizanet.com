@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { handleError, logCatch } from '@/lib/errorCore';
 import { supabaseAdmin } from '@/lib/supabaseAdmin';
 
 // ═══════════════════════════════════════════════════════════
@@ -262,7 +263,7 @@ export async function POST(req) {
         return NextResponse.json({ error: 'Geçersiz mod. tara | dagit | dogrula kullanın.' }, { status: 400 });
 
     } catch (e) {
-        console.error('[ORKESTRTOR HATA]', e);
-        return NextResponse.json({ error: e.message }, { status: 500 });
+        handleError('ERR-AJN-RT-004', 'api/ajan-orkestrator', e, 'yuksek');
+        return NextResponse.json({ error: e.message, hataKodu: 'ERR-AJN-RT-004' }, { status: 500 });
     }
 }

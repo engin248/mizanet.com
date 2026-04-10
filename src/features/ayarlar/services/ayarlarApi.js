@@ -4,7 +4,8 @@
  * Tüm Supabase sorguları tek yer.
  * Tablo: b1_sistem_ayarlari (JSON blob pattern)
  */
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/core/db/supabaseClient';
+import { handleError, logCatch } from '@/lib/errorCore';
 import { cevrimeKuyrugaAl } from '@/lib/offlineKuyruk';
 
 const TABLO = 'b1_sistem_ayarlari';
@@ -24,6 +25,7 @@ export async function ayarlariGetir() {
     if (error) throw error;
     if (!data?.deger) return null;
     try { return JSON.parse(data.deger); } catch (e) { console.error('[CATCH ayarlarApi]', e?.message || e); return null; }
+        handleError('ERR-AYR-SV-101', 'src/features/ayarlar/services/ayarlarApi.js', e, 'orta');
 }
 
 // ─── YAZMA ───────────────────────────────────────────────────────

@@ -1,4 +1,5 @@
 ﻿'use client';
+import { handleError, logCatch } from '@/lib/errorCore';
 /**
  * features/siparisler/hooks/useSiparisler.js
  * M10 Siparişler — Tüm State & İş Mantığı
@@ -8,7 +9,7 @@
  */
 import { useState, useEffect, useCallback } from 'react';
 import { silmeYetkiDogrula } from '@/lib/silmeYetkiDogrula';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/core/db/supabaseClient';
 import {
     fetchSiparisler, fetchSiparisDetay,
     siparisKaydet, durumGuncelle as apiDurumGuncelle,
@@ -52,12 +53,14 @@ export function useSiparisler(kullanici) {
             const { siparisler: s, musteriler: m, urunler: u } = await fetchSiparisler();
             setSiparisler(s); setMusteriler(m); setUrunler(u);
         } catch (e) { goster('Veriler alınamadı: ' + e.message, 'error'); }
+            handleError('ERR-SPR-HK-101', 'src/features/siparisler/hooks/useSiparisler.js', e, 'orta');
         setLoading(false);
     }, []);
 
     useEffect(() => {
         let satisPin = false;
         try { satisPin = !!atob(sessionStorage.getItem('sb47_uretim_pin') || ''); } catch { satisPin = !!sessionStorage.getItem('sb47_uretim_pin'); }
+            handleError('ERR-SPR-HK-101', 'src/features/siparisler/hooks/useSiparisler.js', e, 'orta');
         const ok = kullanici?.grup === 'tam' || satisPin;
         setYetkiliMi(ok);
         if (!ok) return;
@@ -96,6 +99,7 @@ export function useSiparisler(kullanici) {
             goster('✅ Sipariş oluşturuldu!');
             setForm(BOSH_FORM); setKalemler([]); setFormAcik(false); yukle();
         } catch (e) { goster(e.message, 'error'); }
+            handleError('ERR-SPR-HK-101', 'src/features/siparisler/hooks/useSiparisler.js', e, 'orta');
         setLoading(false);
     };
 
@@ -108,6 +112,7 @@ export function useSiparisler(kullanici) {
             yukle();
             if (aktifSiparis?.id === id) setAktifSiparis(p => ({ ...p, durum, ...ekstra }));
         } catch (e) { goster(e.message, 'error'); }
+            handleError('ERR-SPR-HK-101', 'src/features/siparisler/hooks/useSiparisler.js', e, 'orta');
     };
 
     const kargoGonder = async () => {
@@ -128,6 +133,7 @@ export function useSiparisler(kullanici) {
             if (aktifSiparis?.id === id) setAktifSiparis(null);
             yukle();
         } catch (e) { goster(e.message, 'error'); }
+            handleError('ERR-SPR-HK-101', 'src/features/siparisler/hooks/useSiparisler.js', e, 'orta');
     };
 
     // ── Detay ────────────────────────────────────────────────────────────────
@@ -137,6 +143,7 @@ export function useSiparisler(kullanici) {
             const detay = await fetchSiparisDetay(siparis.id);
             setAktifSiparis({ ...siparis, kalemler: detay });
         } catch (e) { goster('Detaylar okunamadı: ' + e.message, 'error'); }
+            handleError('ERR-SPR-HK-101', 'src/features/siparisler/hooks/useSiparisler.js', e, 'orta');
     };
 
     // ── Filtreli Liste ────────────────────────────────────────────────────────

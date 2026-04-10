@@ -1,10 +1,11 @@
 ﻿'use client';
+import { handleError, logCatch } from '@/lib/errorCore';
 import { cevrimeKuyrugaAl } from '@/lib/offlineKuyruk';
 import { useState, useEffect } from 'react';
 import { ShieldAlert, CheckCircle, XCircle, RefreshCw, Clock, TrendingUp, Package, AlertTriangle, Lock, Camera, UploadCloud, ScanEye, Database } from 'lucide-react';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/core/db/supabaseClient';
 import { createGoster, telegramBildirim, formatTarih, yetkiKontrol } from '@/lib/utils';
-import { useAuth } from '@/lib/auth';
+import { useAuth } from '@/core/auth';
 import { useLang } from '@/lib/langContext';
 import { videoVeResimDenetle } from '@/lib/ai/visionAjanCore';
 import SilBastanModal from '@/components/ui/SilBastanModal';
@@ -167,6 +168,7 @@ export default function DenetmenMainContainer() {
             setMesaj(`Tarama tamamlandı. ${yeniUyari} yeni uyarı oluşturuldu.`);
             yukle();
         } catch (e) {
+        handleError('ERR-DNT-CM-101', 'src/features/denetmen/components/DenetmenMainContainer.js', e, 'orta');
             setMesaj('Tarama hatası: ' + e.message);
         } finally {
             setTimeout(() => setTarama(false), 3000); // 3 saniye anti-spam bekleme süresi
@@ -192,6 +194,7 @@ export default function DenetmenMainContainer() {
             const data = await res.json();
             setAiAnaliz(data.ozet || data.sonuclar?.[0]?.aciklama || 'Analiz tamamlandı.');
         } catch (e) {
+        handleError('ERR-DNT-CM-101', 'src/features/denetmen/components/DenetmenMainContainer.js', e, 'orta');
             setAiAnaliz('Bağlantı hatası: ' + e.message);
         } finally {
             setTimeout(() => setAiYukleniyor(false), 3000); // 3 saniye anti-spam

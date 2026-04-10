@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { handleError, logCatch } from '@/lib/errorCore';
 import { supabase } from '@/lib/supabase';
 import { createClient } from '@supabase/supabase-js';
 import { spamKontrol } from '@/lib/ApiZirhi';
@@ -50,7 +51,7 @@ export async function POST(req) {
             .single();
 
         if (error) {
-            console.error('[M4 Vision Error]', error.message);
+            logCatch('ERR-KMR-RT-002', 'api/m4-vision/process', error);
             return NextResponse.json({ error: error.message }, { status: 500 });
         }
 
@@ -61,7 +62,8 @@ export async function POST(req) {
         });
 
     } catch (err) {
-        console.error('[M4 API Crash]', err.message);
+        handleError('ERR-KMR-RT-004', 'api/m4-vision', err, 'yuksek');
+        handleError('ERR-KMR-RT-002', 'api/m4-vision', err, 'yuksek');
         return NextResponse.json({ error: 'Sistemsel Hata', detail: err.message, stack: err.stack }, { status: 500 });
     }
 }

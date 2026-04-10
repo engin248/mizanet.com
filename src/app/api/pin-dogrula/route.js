@@ -4,6 +4,7 @@
 // Katman 3: JWT session token (8 saat süre, imzalı, HttpOnly cookie)
 
 import { NextResponse } from 'next/server';
+import { handleError, logCatch } from '@/lib/errorCore';
 
 // ── UPSTASH RATE LIMIT ─────────────────────────────────────────────
 // Upstash env varları yoksa in-memory fallback (geliştirme ortamı)
@@ -61,7 +62,7 @@ async function jwtOlustur(grup) {
     // JWT_SIRRI Vercel ENV'e girilmeli. Yoksa giriş sistemi devre dışıdır.
     const sirri = process.env.JWT_SIRRI || process.env.INTERNAL_API_KEY;
     if (!sirri) {
-        console.error('[MİMARİ ALARM] JWT_SIRRI ENV değişkeni eksik! Giriş sistemi devre dışı.');
+        logCatch('ERR-AUTH-RT-004', 'api/pin-dogrula/env-check', new Error('JWT_SIRRI ENV eksik'));
         throw new Error('Sistem yapılandırma hatası: JWT anahtarı tanımlı değil.');
     }
     const baslik = { alg: 'HS256', typ: 'JWT' };
@@ -167,7 +168,7 @@ export async function POST(request) {
                             detay: `IP: ${ip} | İstek tipi: ${tip} | Saat: ${new Date().toISOString()}`,
                             seviye: 'uyari',
                         }]);
-                    } catch (e) { console.error('[CATCH pin-dogrula]', e?.message || e); }
+                    } catch (e) { logCatch('ERR-AUTH-RT-004', 'api/pin-dogrula', e); }
                 })();
             }
         } catch { /* Log başarısız olsa bile sistemi engelleme */ }
@@ -195,7 +196,8 @@ export async function POST(request) {
                     detay: `IP: ${ip} | Grup: ${grup} | Token süresi: 8 saat`,
                     seviye: 'bilgi',
                 }]);
-            } catch (e) { console.error('[CATCH pin-dogrula]', e?.message || e); }
+            } catch (e) {
+        handleError('ERR-AUTH-RT-003', 'api/pin-dogrula', e, 'yuksek'); logCatch('ERR-AUTH-RT-004', 'api/pin-dogrula', e); }
         })();
     } catch { /* Log başarısız olsa bile sistemi engelleme */ }
 

@@ -4,6 +4,7 @@
 // İnternet geldiğinde Supabase'e gönderir.
 
 import { supabase } from './supabase';
+import { handleError, logCatch } from '@/lib/errorCore';
 
 const DB_ADI = 'Mizanet_Offline_DB';
 const STORE_ADI = 'bekleyen_kuyruk';
@@ -130,7 +131,7 @@ export async function offlineSenkronizasyonuBaslat() {
                 basariliAdet++;
 
             } catch (err) {
-                console.error(`[OFFLINE HATA] ${islem.tablo} tablosuna aktarım çöktü:`, err);
+                handleError('ERR-SYS-LB-104', 'src/lib/offlineKuyruk.js', err, 'orta');
                 basarisizAdet++;
             }
         }
@@ -138,7 +139,7 @@ export async function offlineSenkronizasyonuBaslat() {
         return { basarili: basariliAdet, basarisiz: basarisizAdet };
 
     } catch (dbHata) {
-        console.error("Kuyruk okunamadı", dbHata);
+        handleError('ERR-SYS-LB-104', 'src/lib/offlineKuyruk.js', dbHata, 'orta');
         return { basarili: 0, basarisiz: 0 };
     }
 }

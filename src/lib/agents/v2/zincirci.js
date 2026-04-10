@@ -4,6 +4,7 @@
 // Olay bazlı tetiklenir — her modül geçişinde devreye girer
 // ============================================================
 import { sb, AJAN_ISIMLERI, logYaz } from './_ortak';
+import { handleError, logCatch } from '@/lib/errorCore';
 
 export async function zincirci(tetikleyenModul = null, tetikleyenId = null) {
     const isim = AJAN_ISIMLERI.ZINCIR;
@@ -150,6 +151,7 @@ export async function zincirci(tetikleyenModul = null, tetikleyenId = null) {
         return { basarili: true, sonuc };
 
     } catch (e) {
+        handleError('ERR-AJN-LB-113', 'src/lib/agents/v2/zincirci.js', e, 'orta');
         await logYaz(isim, 'zincir_tarama', `Hata: ${e.message}`, 'hata');
         return { basarili: false, hata: e.message };
     }

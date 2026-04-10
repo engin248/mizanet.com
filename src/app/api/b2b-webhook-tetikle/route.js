@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { handleError, logCatch } from '@/lib/errorCore';
 
 /**
  * FAZ 5.2: B2B TOPTANCI (MAIL / WHATSAPP) OTONOM TETİKLEYİCİSİ (WEBHOOK)
@@ -42,7 +43,8 @@ export async function POST(req) {
         }, { status: 200 });
 
     } catch (e) {
-        console.error("[B2B WEBHOOK ÇÖKMESİ]:", e);
+        handleError('ERR-SYS-RT-006', 'api/b2b-webhook-tetikle', e, 'yuksek');
+        handleError('ERR-SYS-RT-002', 'api/b2b-webhook-tetikle', e, 'yuksek');
         return NextResponse.json({
             success: false,
             message: "Mail/WP ağına bağlanırken istasyon koptu: " + e.message

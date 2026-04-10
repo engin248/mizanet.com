@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { handleError, logCatch } from '@/lib/errorCore';
 
 export async function POST(request) {
     try {
@@ -32,6 +33,7 @@ export async function POST(request) {
         return NextResponse.json({ success: data.ok, data });
 
     } catch (error) {
+        handleError('ERR-HBR-RT-006', 'api/telegram-foto', error, 'yuksek');
         return NextResponse.json({ success: false, error: error.message }, { status: 500 });
     }
 }

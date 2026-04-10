@@ -1,7 +1,8 @@
-'use client';
+﻿'use client';
+import { handleError, logCatch } from '@/lib/errorCore';
 // @ts-nocheck
 import { useState, useCallback, useEffect } from 'react';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/core/db/supabaseClient';
 import { createGoster } from '@/lib/utils';
 import { cevrimeKuyrugaAl } from '@/lib/offlineKuyruk';
 
@@ -31,6 +32,7 @@ export function useUretimRecetesi(kullanici, modeller, aktifSekme) {
             if (mRes.data) setMakineler(mRes.data);
             if (oRes.data) setOperasyonlar(oRes.data);
         } catch (e) {
+        handleError('ERR-URT-HK-103', 'src/features/uretim/hooks/useUretimRecetesi.js', e, 'orta');
             goster('Reçete/Makine yükleme hatası: ' + e.message, 'error');
         }
         setLoading(false);
@@ -59,6 +61,7 @@ export function useUretimRecetesi(kullanici, modeller, aktifSekme) {
             setMakineFormAcik(false);
             yukle();
         } catch (e) {
+        handleError('ERR-URT-HK-103', 'src/features/uretim/hooks/useUretimRecetesi.js', e, 'orta');
             goster('Kayıt başarısız: ' + e.message, 'error');
         }
         setLoading(false);

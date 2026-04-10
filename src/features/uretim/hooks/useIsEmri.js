@@ -5,9 +5,10 @@
  * Bu hook SADECE state tutar ve UI aksiyonlarını koordine eder.
  */
 'use client';
+import { handleError, logCatch } from '@/lib/errorCore';
 // @ts-nocheck
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/core/db/supabaseClient';
 import { createGoster, telegramBildirim } from '@/lib/utils';
 import { cevrimeKuyrugaAl } from '@/lib/offlineKuyruk';
 import { silmeYetkiDogrula } from '@/lib/silmeYetkiDogrula';
@@ -101,6 +102,7 @@ export function useIsEmri(kullanici) {
                 if (perfRes) setAktifOperasyonlar(perfRes);
             }
         } catch (e) {
+        handleError('ERR-URT-HK-102', 'src/features/uretim/hooks/useIsEmri.js', e, 'orta');
             goster('Sistem veri yükleme hatası: ' + e.message, 'error');
         }
         setLoading(false);
@@ -322,6 +324,7 @@ export function useIsEmri(kullanici) {
                 }
             }
         } catch (e) {
+        handleError('ERR-URT-HK-102', 'src/features/uretim/hooks/useIsEmri.js', e, 'orta');
             goster(`Otonom Hata: ${e.message}`, 'error');
         } finally {
             setIslemdeId(null);

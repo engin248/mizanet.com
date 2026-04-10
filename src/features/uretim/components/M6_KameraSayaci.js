@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { supabase } from '@/lib/supabase';
+﻿import { useState, useEffect } from 'react';
+import { supabase } from '@/core/db/supabaseClient';
 import { Camera, Activity, ShieldCheck, AlertTriangle, Eye, Server } from 'lucide-react';
 
 export default function M6_KameraSayaci() {

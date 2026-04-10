@@ -15,6 +15,7 @@ const PIN_KEY = 'sb47_uretim_pin';
  * Eski tekrarlanan kalıp:
  *   try { pin = !!atob(sessionStorage.getItem('sb47_uretim_pin') || ''); }
  *   catch { pin = !!sessionStorage.getItem('sb47_uretim_pin'); }
+     handleError('ERR-AUTH-LB-101', 'src/lib/pinUtils.js', e, 'orta');
  *
  * @returns {boolean} PIN mevcut mu
  */
@@ -23,6 +24,7 @@ export function getPinDurumu() {
     try {
         return !!atob(sessionStorage.getItem(PIN_KEY) || '');
     } catch (e) {
+        handleError('ERR-AUTH-LB-101', 'src/lib/pinUtils.js', e, 'orta');
         logCatch('pinUtils.getPinDurumu', e);
         return !!sessionStorage.getItem(PIN_KEY);
     }
@@ -37,6 +39,7 @@ export function setPinDurumu(pin) {
     try {
         sessionStorage.setItem(PIN_KEY, btoa(pin));
     } catch (e) {
+        handleError('ERR-AUTH-LB-101', 'src/lib/pinUtils.js', e, 'orta');
         logCatch('pinUtils.setPinDurumu', e);
         sessionStorage.setItem(PIN_KEY, pin);
     }

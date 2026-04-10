@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { handleError, logCatch } from '@/lib/errorCore';
 import { supabaseAdmin as sb } from '@/lib/supabaseAdmin';
 
 // ============================================================
@@ -104,6 +105,7 @@ export async function GET(req) {
         });
 
     } catch (e) {
+        handleError('ERR-RPR-RT-003', 'api/rapor/kor-nokta', e, 'yuksek');
         return NextResponse.json({ error: e.message }, { status: 500 });
     }
 }
@@ -130,6 +132,7 @@ export async function POST(req) {
 
         return NextResponse.json({ basarili: true, kayit: data });
     } catch (e) {
+        handleError('ERR-RPR-RT-003', 'api/rapor/kor-nokta', e, 'yuksek');
         return NextResponse.json({ error: e.message }, { status: 500 });
     }
 }

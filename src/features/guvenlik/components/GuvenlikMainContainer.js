@@ -1,4 +1,5 @@
 ﻿'use client';
+import { handleError, logCatch } from '@/lib/errorCore';
 /**
  * features/guvenlik/components/GuvenlikMainContainer.js
  * Kaynak: app/guvenlik/page.js → features mimarisine taşındı
@@ -9,7 +10,7 @@ import { useLang } from '@/lib/langContext';
 import { useState, useEffect } from 'react';
 import { silmeYetkiDogrula } from '@/lib/silmeYetkiDogrula';
 import { Shield, Clock, RefreshCw, CheckCircle2, AlertTriangle, LogOut } from 'lucide-react';
-import { useAuth, ERISIM_GRUPLARI, ERISIM_MATRISI, pindenGrupBul } from '@/lib/auth';
+import { useAuth, ERISIM_GRUPLARI, ERISIM_MATRISI, pindenGrupBul } from '@/core/auth';
 import { createGoster, telegramBildirim, formatTarih } from '@/lib/utils';
 
 
@@ -33,7 +34,7 @@ export default function GuvenlikMainContainer() {
                 uretim: localStorage.getItem('sb47_uretim_pin') || '',
                 genel: localStorage.getItem('sb47_genel_pin') || '',
             });
-        } catch (e) { console.error('Log okuma hatasi', e); }
+        } catch (e) { logCatch('ERR-GVN-CM-101', 'src/features/guvenlik/components/GuvenlikMainContainer.js', e); }
     }, []);
 
     // telegramBildirim → @/lib/utils'den import ediliyor (yerel tanım kaldırıldı)
@@ -191,7 +192,7 @@ export default function GuvenlikMainContainer() {
                         try {
                             const mevcut = JSON.parse(localStorage.getItem('sb47_auth') || 'null');
                             if (mevcut?.grup === grup) localStorage.removeItem('sb47_auth');
-                        } catch (e) { console.error('[CATCH GuvenlikMain]', e?.message || e); }
+                        } catch (e) { logCatch('ERR-GVN-CM-101', 'src/features/guvenlik/components/GuvenlikMainContainer.js', e); }
                         telegramBildirim(`🔴 YETKİ İPTAL EDİLDİ\nErişim yetkisi kapatıldı.\nGrup: ${grup.toUpperCase()}`);
                         goster(`Erişim kapatıldı. Aktif oturumlar sonlandırıldı.`);
                     } catch (error) { goster('Hata: ' + error.message, 'error'); }

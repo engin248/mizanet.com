@@ -3,8 +3,9 @@
  * AR-GE Trend Araştırma Sayfası — Tüm Logic
  */
 'use client';
+import { handleError, logCatch } from '@/lib/errorCore';
 import { useState, useEffect, useCallback } from 'react';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/core/db/supabaseClient';
 import { createGoster } from '@/lib/utils';
 import { cevrimeKuyrugaAl } from '@/lib/offlineKuyruk';
 import { silmeYetkiDogrula } from '@/lib/silmeYetkiDogrula';
@@ -45,6 +46,7 @@ export function useArge(kullanici, isAR = false) {
             if (loglarRes.status === 'fulfilled' && loglarRes.value.data) setAgentLoglari(loglarRes.value.data);
             if (trendlerRes.status === 'rejected') throw trendlerRes.reason;
         } catch (error) {
+        handleError('ERR-ARG-HK-101', 'src/features/arge/hooks/useArge.js', error, 'orta');
             goster('Veri yüklenirken hata: ' + error.message, 'error');
         }
         setLoading(false);
@@ -77,6 +79,7 @@ export function useArge(kullanici, isAR = false) {
             if (data.error && !data.demo) { goster('⚠️ ' + data.error, 'error'); }
             else { setAiSonuclar(data); setAiPanelAcik(true); }
         } catch (e) {
+        handleError('ERR-ARG-HK-101', 'src/features/arge/hooks/useArge.js', e, 'orta');
             clearTimeout(timeoutId);
             goster(e.name === 'AbortError' ? 'Zaman aşımı (15sn).' : 'Bağlantı hatası: ' + e.message, 'error');
         } finally { setAiAraniyor(false); }
